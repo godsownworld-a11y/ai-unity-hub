@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Profile — AI Unity Hub</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#08080d;
+    color:white;
+    min-height:100vh;
+}
+
+header{
+    height:72px;
+    padding:0 6%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid #1d1d28;
+    background:#0b0b11;
+}
+
+.logo{
+    font-size:21px;
+    font-weight:800;
+}
+
+.logo span{
+    color:#9b6cff;
+}
+
+.nav{
+    display:flex;
+    gap:9px;
+}
+
+.nav a{
+    text-decoration:none;
+    color:#aaa;
+    background:#15151f;
+    border:1px solid #29293a;
+    padding:10px 14px;
+    border-radius:9px;
+    font-size:13px;
+}
+
+.nav a:hover{
+    color:white;
+    border-color:#555;
+}
+
+.container{
+    width:90%;
+    max-width:850px;
+    margin:auto;
+    padding:55px 0 70px;
+}
+
+.title{
+    margin-bottom:30px;
+}
+
+.title small{
+    color:#9b6cff;
+    font-weight:bold;
+    letter-spacing:2px;
+    font-size:11px;
+}
+
+.title h1{
+    font-size:38px;
+    margin-top:8px;
+}
+
+.profile-card{
+    background:#101018;
+    border:1px solid #252533;
+    border-radius:20px;
+    padding:30px;
+}
+
+.profile-top{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    padding-bottom:28px;
+    border-bottom:1px solid #22222f;
+}
+
+.avatar{
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    background:#8b5cf6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    font-weight:bold;
+}
+
+.profile-top h2{
+    font-size:22px;
+    margin-bottom:6px;
+}
+
+.email{
+    color:#9292a2;
+    font-size:14px;
+}
+
+.plan-badge{
+    display:inline-block;
+    margin-left:7px;
+    padding:4px 8px;
+    border-radius:6px;
+    background:#20183b;
+    color:#bda7ff;
+    font-size:9px;
+    font-weight:bold;
+    vertical-align:middle;
+}
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    margin-top:25px;
+}
+
+.info{
+    background:#0b0b12;
+    border:1px solid #20202d;
+    border-radius:13px;
+    padding:20px;
+}
+
+.info-label{
+    color:#777787;
+    font-size:12px;
+    margin-bottom:8px;
+}
+
+.info-value{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.free{
+    color:#aaa;
+}
+
+.usage-value{
+    color:#b99aff;
+}
+
+.actions{
+    display:flex;
+    gap:12px;
+    margin-top:25px;
+    flex-wrap:wrap;
+}
+
+.action{
+    flex:1;
+    min-width:130px;
+    text-align:center;
+    text-decoration:none;
+    color:white;
+    background:#15151f;
+    border:1px solid #29293a;
+    padding:12px 18px;
+    border-radius:9px;
+    font-weight:bold;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.action:hover{
+    background:#222232;
+}
+
+.upgrade{
+    background:#8b5cf6;
+    border-color:#8b5cf6;
+}
+
+.upgrade:hover{
+    background:#7c3aed;
+}
+
+.logout{
+    color:#ff8d8d;
+}
+
+.status{
+    margin-top:20px;
+    padding:14px;
+    border-radius:10px;
+    background:#0b0b12;
+    border:1px solid #20202d;
+    color:#777787;
+    font-size:12px;
+    text-align:center;
+    line-height:1.5;
+}
+
+footer{
+    text-align:center;
+    border-top:1px solid #1d1d28;
+    padding:25px;
+    color:#666675;
+    font-size:12px;
+}
+
+@media(max-width:600px){
+
+    header{
+        padding:0 4%;
+    }
+
+    .logo{
+        font-size:18px;
+    }
+
+    .nav{
+        gap:5px;
+    }
+
+    .nav a{
+        padding:8px 9px;
+        font-size:11px;
+    }
+
+    .container{
+        padding:40px 0;
+    }
+
+    .title h1{
+        font-size:30px;
+    }
+
+    .profile-card{
+        padding:22px;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .action{
+        width:100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        AI <span>Unity Hub</span>
+    </div>
+
+    <div class="nav">
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="history.html">
+            History
+        </a>
+
+        <a href="premium.html">
+            Premium
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+    <div class="title">
+
+        <small>ACCOUNT</small>
+
+        <h1>
+            My Profile
+        </h1>
+
+    </div>
+
+
+    <div class="profile-card">
+
+
+        <div class="profile-top">
+
+            <div class="avatar">
+                U
+            </div>
+
+            <div>
+
+                <h2>
+                    AI Unity User
+                    <span class="plan-badge">
+                        FREE PLAN
+                    </span>
+                </h2>
+
+                <div class="email">
+                    Login will be connected soon
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-grid">
+
+
+            <div class="info">
+
+                <div class="info-label">
+                    Account Status
+                </div>
+
+                <div class="info-value">
+                    Preview Mode
+                </div>
+
+            </div>
+
+
+            <div class="info">
+
+                <div class="info-label">
+                    Current Plan
+                </div>
+
+                <div class="info-value free">
+                    🆓 Free
+                </div>
+
+            </div>
+
+
+            <div class="info">
+
+                <div class="info-label">
+                    AI Uses Today
+                </div>
+
+                <div class="info-value usage-value">
+                    0 / 5
+                </div>
+
+            </div>
+
+
+            <div class="info">
+
+                <div class="info-label">
+                    Premium Features
+                </div>
+
+                <div class="info-value">
+                    Coming Soon
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="actions">
+
+
+            <a
+                href="dashboard.html"
+                class="action">
+
+                Dashboard
+
+            </a>
+
+
+            <a
+                href="history.html"
+                class="action">
+
+                History
+
+            </a>
+
+
+            <a
+                href="premium.html"
+                class="action upgrade">
+
+                ✨ Upgrade
+
+            </a>
+
+
+            <button
+                class="action logout"
+                onclick="logoutMessage()">
+
+                Logout
+
+            </button>
+
+
+        </div>
+
+
+        <div class="status">
+
+            🟣 Free plan active · 5 AI uses available per day.
+            <br>
+            Firebase login connection will be added later.
+
+        </div>
+
+
+    </div>
+
+
+</main>
+
+
+<footer>
+
+    AI Unity Hub — by CK Izyaan
+
+</footer>
+
+
+<script>
+
+function logoutMessage(){
+
+    alert(
+        "Firebase login is currently being connected. Logout will be available after login is fixed."
+    );
+
+}
+
+</script>
+
+
+</body>
+</html>

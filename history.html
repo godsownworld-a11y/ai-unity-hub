@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>History — AI Unity Hub</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#08080d;
+    color:white;
+    min-height:100vh;
+}
+
+header{
+    height:72px;
+    padding:0 6%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid #1d1d28;
+    background:#0b0b11;
+}
+
+.logo{
+    font-size:21px;
+    font-weight:800;
+}
+
+.logo span{
+    color:#9b6cff;
+}
+
+.nav{
+    display:flex;
+    gap:10px;
+}
+
+.nav a{
+    text-decoration:none;
+    color:#aaa;
+    background:#15151f;
+    border:1px solid #29293a;
+    padding:10px 14px;
+    border-radius:9px;
+    font-size:13px;
+}
+
+.nav a:hover{
+    color:white;
+}
+
+.container{
+    width:90%;
+    max-width:1000px;
+    margin:auto;
+    padding:55px 0 75px;
+}
+
+.top{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.title small{
+    color:#9b6cff;
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:2px;
+}
+
+.title h1{
+    font-size:38px;
+    margin-top:8px;
+}
+
+.title p{
+    color:#888896;
+    font-size:14px;
+    margin-top:8px;
+}
+
+.clear-btn{
+    background:#171720;
+    color:#ff8d8d;
+    border:1px solid #3a2525;
+    padding:11px 16px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.clear-btn:hover{
+    background:#241719;
+}
+
+.history-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.history-item{
+    background:#101018;
+    border:1px solid #20202d;
+    border-radius:15px;
+    padding:18px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    transition:.2s;
+}
+
+.history-item:hover{
+    border-color:#3a3155;
+    transform:translateY(-1px);
+}
+
+.history-icon{
+    width:46px;
+    height:46px;
+    border-radius:12px;
+    background:#1b1730;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+    flex-shrink:0;
+}
+
+.history-info{
+    flex:1;
+}
+
+.history-info h3{
+    font-size:15px;
+    margin-bottom:5px;
+}
+
+.history-info p{
+    color:#777787;
+    font-size:12px;
+}
+
+.empty{
+    text-align:center;
+    padding:85px 20px;
+    background:#101018;
+    border:1px solid #20202d;
+    border-radius:19px;
+}
+
+.empty-icon{
+    font-size:45px;
+    margin-bottom:15px;
+}
+
+.empty h2{
+    font-size:22px;
+    margin-bottom:9px;
+}
+
+.empty p{
+    color:#777787;
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+.explore{
+    display:inline-block;
+    text-decoration:none;
+    background:#8b5cf6;
+    color:white;
+    padding:12px 19px;
+    border-radius:9px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.explore:hover{
+    background:#7c3aed;
+}
+
+footer{
+    border-top:1px solid #1d1d28;
+    text-align:center;
+    padding:25px;
+    color:#666675;
+    font-size:12px;
+}
+
+@media(max-width:600px){
+
+    header{
+        padding:0 4%;
+    }
+
+    .logo{
+        font-size:18px;
+    }
+
+    .nav{
+        gap:5px;
+    }
+
+    .nav a{
+        padding:9px 10px;
+        font-size:11px;
+    }
+
+    .container{
+        width:92%;
+        padding-top:40px;
+    }
+
+    .top{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .title h1{
+        font-size:30px;
+    }
+
+    .clear-btn{
+        width:100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        AI <span>Unity Hub</span>
+    </div>
+
+    <div class="nav">
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="profile.html">
+            Profile
+        </a>
+
+        <a href="premium.html">
+            Premium
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+    <div class="top">
+
+        <div class="title">
+
+            <small>ACTIVITY</small>
+
+            <h1>
+                History
+            </h1>
+
+            <p>
+                Your recent AI Unity Hub activity
+            </p>
+
+        </div>
+
+
+        <button
+            class="clear-btn"
+            id="clearBtn">
+
+            Clear History
+
+        </button>
+
+    </div>
+
+
+    <div id="historyContainer"></div>
+
+
+</main>
+
+
+<footer>
+
+    AI Unity Hub — by CK Izyaan
+
+</footer>
+
+
+<script>
+
+const historyContainer =
+    document.getElementById("historyContainer");
+
+const clearBtn =
+    document.getElementById("clearBtn");
+
+
+function loadHistory(){
+
+    const history =
+        JSON.parse(
+            localStorage.getItem("aiUnityHistory") || "[]"
+        );
+
+
+    if(history.length === 0){
+
+        historyContainer.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🕘
+                </div>
+
+                <h2>
+                    No history yet
+                </h2>
+
+                <p>
+                    Your recent AI Unity Hub activities
+                    will appear here.
+                </p>
+
+                <a
+                    href="dashboard.html"
+                    class="explore">
+
+                    Explore Tools
+
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    historyContainer.innerHTML = `
+
+        <div class="history-list">
+
+            ${history.map(item => `
+
+                <div class="history-item">
+
+                    <div class="history-icon">
+                        ${item.icon || "⚡"}
+                    </div>
+
+                    <div class="history-info">
+
+                        <h3>
+                            ${item.title || "Tool Used"}
+                        </h3>
+
+                        <p>
+                            ${item.time || "Recently"}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `).join("")}
+
+        </div>
+
+    `;
+
+}
+
+
+clearBtn.addEventListener("click", () => {
+
+    if(confirm("Clear all history?")){
+
+        localStorage.removeItem("aiUnityHistory");
+
+        loadHistory();
+
+    }
+
+});
+
+
+loadHistory();
+
+</script>
+
+
+</body>
+</html>

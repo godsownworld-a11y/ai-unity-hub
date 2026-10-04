@@ -1,0 +1,172 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #080808;
+    color: white;
+    min-height: 100vh;
+}
+
+/* HEADER */
+
+header {
+    height: 75px;
+    padding: 0 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #222;
+    background: #0b0b0b;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+nav {
+    display: flex;
+    gap: 35px;
+}
+
+nav a {
+    color: #aaa;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: white;
+}
+
+.login-btn {
+    background: white;
+    color: black;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* HERO */
+
+.hero {
+    text-align: center;
+    padding: 110px 20px 80px;
+}
+
+.small-title {
+    color: #888;
+    font-size: 13px;
+    letter-spacing: 4px;
+    margin-bottom: 18px;
+}
+
+.hero h1 {
+    font-size: clamp(48px, 8vw, 90px);
+    line-height: 1;
+    margin-bottom: 25px;
+    letter-spacing: -3px;
+}
+
+.subtitle {
+    color: #aaa;
+    font-size: 18px;
+    margin-bottom: 35px;
+}
+
+.start-btn {
+    background: white;
+    color: black;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.start-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* CATEGORIES */
+
+.categories {
+    width: 86%;
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    padding-bottom: 80px;
+}
+
+.category {
+    background: #101010;
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 28px;
+    transition: 0.3s;
+}
+
+.category:hover {
+    transform: translateY(-4px);
+    border-color: #444;
+}
+
+.icon {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.category h3 {
+    font-size: 19px;
+    margin-bottom: 10px;
+}
+
+.category p {
+    color: #888;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    border-top: 1px solid #222;
+    padding: 25px;
+    color: #666;
+    font-size: 13px;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    header {
+        padding: 0 20px;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .hero {
+        padding-top: 80px;
+    }
+
+    .categories {
+        grid-template-columns: 1fr;
+        width: 90%;
+    }
+}

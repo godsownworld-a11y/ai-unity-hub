@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Premium — AI Unity Hub</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#07070b;
+    color:white;
+    min-height:100vh;
+}
+
+header{
+    height:72px;
+    padding:0 6%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid #20202b;
+    background:#0b0b10;
+}
+
+.logo{
+    font-size:21px;
+    font-weight:800;
+}
+
+.logo span{
+    color:#a970ff;
+}
+
+.nav{
+    display:flex;
+    gap:9px;
+}
+
+.nav a{
+    text-decoration:none;
+    color:#aaa;
+    background:#12121a;
+    border:1px solid #292936;
+    padding:10px 14px;
+    border-radius:9px;
+    font-size:13px;
+}
+
+.nav a:hover{
+    color:white;
+    border-color:#555;
+}
+
+.container{
+    width:90%;
+    max-width:1150px;
+    margin:auto;
+    padding:65px 0 80px;
+}
+
+.hero{
+    text-align:center;
+    margin-bottom:48px;
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 16px;
+    border-radius:30px;
+    background:#171022;
+    border:1px solid #3d2865;
+    color:#c7a9ff;
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:.7px;
+    margin-bottom:20px;
+}
+
+.hero h1{
+    font-size:clamp(38px,6vw,62px);
+    line-height:1.05;
+    margin-bottom:17px;
+}
+
+.hero h1 span{
+    color:#a970ff;
+}
+
+.hero p{
+    color:#8d8d9b;
+    font-size:16px;
+    line-height:1.6;
+}
+
+.plans{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+}
+
+.plan{
+    position:relative;
+    background:#101016;
+    border:1px solid #252530;
+    border-radius:20px;
+    padding:32px;
+    overflow:hidden;
+}
+
+.plan.premium{
+    border-color:#8b5cf6;
+    box-shadow:
+        0 0 50px rgba(139,92,246,.12),
+        inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.popular{
+    position:absolute;
+    top:18px;
+    right:18px;
+    background:#8b5cf6;
+    color:white;
+    padding:6px 10px;
+    border-radius:20px;
+    font-size:9px;
+    font-weight:bold;
+}
+
+.plan h2{
+    font-size:25px;
+    margin-bottom:8px;
+}
+
+.plan-desc{
+    color:#858592;
+    font-size:14px;
+    line-height:1.5;
+    margin-bottom:25px;
+}
+
+.price{
+    font-size:35px;
+    font-weight:800;
+    margin-bottom:25px;
+}
+
+.price small{
+    color:#777783;
+    font-size:13px;
+    font-weight:normal;
+}
+
+.features{
+    list-style:none;
+    margin-bottom:28px;
+}
+
+.features li{
+    padding:11px 0;
+    color:#c9c9d2;
+    border-bottom:1px solid #1d1d27;
+    font-size:14px;
+}
+
+.features li:last-child{
+    border-bottom:none;
+}
+
+.check{
+    color:#a970ff;
+    font-weight:bold;
+    margin-right:7px;
+}
+
+.button{
+    width:100%;
+    padding:14px;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.free-button{
+    background:#18181f;
+    color:#aaa;
+    border:1px solid #292933;
+}
+
+.premium-button{
+    background:#8b5cf6;
+    color:white;
+    border:none;
+}
+
+.premium-button:hover{
+    background:#7c3aed;
+}
+
+.status{
+    text-align:center;
+    margin-top:20px;
+    padding:12px;
+    border-radius:10px;
+    background:#12121a;
+    border:1px solid #252530;
+    color:#777783;
+    font-size:12px;
+}
+
+.note{
+    text-align:center;
+    color:#666673;
+    font-size:12px;
+    margin-top:30px;
+    line-height:1.6;
+}
+
+footer{
+    border-top:1px solid #20202b;
+    text-align:center;
+    padding:25px;
+    color:#555562;
+    font-size:12px;
+}
+
+@media(max-width:750px){
+
+    header{
+        padding:0 4%;
+    }
+
+    .logo{
+        font-size:18px;
+    }
+
+    .container{
+        padding:45px 0 60px;
+    }
+
+    .plans{
+        grid-template-columns:1fr;
+    }
+
+    .plan{
+        padding:25px;
+    }
+
+}
+
+@media(max-width:450px){
+
+    .nav a{
+        padding:8px 9px;
+        font-size:11px;
+    }
+
+    .hero h1{
+        font-size:38px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        AI <span>Unity Hub</span>
+    </div>
+
+    <div class="nav">
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="profile.html">
+            Profile
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+    <section class="hero">
+
+        <div class="badge">
+            ✨ AI UNITY HUB PREMIUM
+        </div>
+
+        <h1>
+            Choose Your <span>Plan.</span>
+        </h1>
+
+        <p>
+            Start free today. Upgrade when you need more power.
+        </p>
+
+    </section>
+
+
+    <section class="plans">
+
+
+        <!-- FREE PLAN -->
+
+        <div class="plan">
+
+            <h2>
+                Free
+            </h2>
+
+            <p class="plan-desc">
+                Everything you need to get started.
+            </p>
+
+            <div class="price">
+                ₹0
+                <small>/ forever</small>
+            </div>
+
+            <ul class="features">
+
+                <li>
+                    <span class="check">✓</span>
+                    AI Tools — 5 uses/day
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    Background Remover — 3/day
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    PDF Tools — 3/day
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    Image Tools — 10/day
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    Creator Tools
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    Student Tools
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    Calculators
+                </li>
+
+            </ul>
+
+            <button
+                class="button free-button">
+
+                ✓ Current Plan
+
+            </button>
+
+        </div>
+
+
+        <!-- PREMIUM PLAN -->
+
+        <div class="plan premium">
+
+            <div class="popular">
+                COMING SOON
+            </div>
+
+            <h2>
+                ✨ Premium
+            </h2>
+
+            <p class="plan-desc">
+                More power for creators and everyday users.
+            </p>
+
+            <div class="price">
+                Coming Soon
+            </div>
+
+            <ul class="features">
+
+                <li>
+                    <span class="check">✓</span>
+                    Higher AI usage limits
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    More Background Remover usage
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    More PDF processing
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    Higher Creator Tool limits
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    Higher Student Tool limits
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    Priority processing
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    Advanced tools
+                </li>
+
+                <li>
+                    <span class="check">✓</span>
+                    History & future premium features
+                </li>
+
+            </ul>
+
+            <button
+                class="button premium-button"
+                onclick="comingSoon()">
+
+                ✨ Premium Coming Soon
+
+            </button>
+
+            <div class="status">
+                Payments & subscriptions will be added later.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <div class="note">
+        Premium will be available after AI Unity Hub is ready for launch.
+    </div>
+
+
+</main>
+
+
+<footer>
+    AI Unity Hub — by CK Izyaan
+</footer>
+
+
+<script>
+
+function comingSoon(){
+
+    alert(
+        "✨ AI Unity Hub Premium is coming soon!"
+    );
+
+}
+
+</script>
+
+
+</body>
+</html>

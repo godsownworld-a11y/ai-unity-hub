@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Unity Hub — AI & Digital Tools</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, sans-serif;
+    background:#07070b;
+    color:#fff;
+    overflow-x:hidden;
+}
+
+a{
+    text-decoration:none;
+}
+
+/* HEADER */
+
+header{
+    height:74px;
+    padding:0 6%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid #1c1c27;
+    background:rgba(8,8,13,.88);
+    backdrop-filter:blur(14px);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    font-size:21px;
+    font-weight:800;
+    letter-spacing:-.4px;
+}
+
+.logo span{
+    color:#9b6cff;
+}
+
+nav{
+    display:flex;
+    align-items:center;
+    gap:26px;
+}
+
+nav a{
+    color:#9696a5;
+    font-size:14px;
+    transition:.2s;
+}
+
+nav a:hover{
+    color:#fff;
+}
+
+.login-btn{
+    background:#8b5cf6;
+    color:#fff !important;
+    padding:10px 18px;
+    border-radius:9px;
+    box-shadow:0 8px 25px rgba(139,92,246,.2);
+}
+
+.login-btn:hover{
+    background:#7c3aed;
+}
+
+/* HERO */
+
+.hero{
+    min-height:610px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:80px 20px;
+    position:relative;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 50% 35%,#25144b 0%,#120b25 25%,#07070b 65%);
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:#8b5cf6;
+    opacity:.08;
+    filter:blur(120px);
+    border-radius:50%;
+}
+
+.hero-content{
+    max-width:900px;
+    position:relative;
+    z-index:2;
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 16px;
+    border-radius:30px;
+    background:rgba(139,92,246,.08);
+    border:1px solid rgba(139,92,246,.35);
+    color:#c2aaff;
+    font-size:13px;
+    margin-bottom:25px;
+}
+
+.hero h1{
+    font-size:64px;
+    line-height:1.02;
+    letter-spacing:-2px;
+    margin-bottom:24px;
+}
+
+.hero h1 span{
+    color:#a477ff;
+}
+
+.hero p{
+    max-width:680px;
+    margin:auto;
+    color:#9b9baa;
+    font-size:18px;
+    line-height:1.7;
+}
+
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-top:34px;
+}
+
+.primary-btn,
+.secondary-btn{
+    padding:14px 24px;
+    border-radius:10px;
+    font-weight:700;
+    transition:.2s;
+}
+
+.primary-btn{
+    background:#8b5cf6;
+    color:#fff;
+    box-shadow:0 10px 30px rgba(139,92,246,.25);
+}
+
+.primary-btn:hover{
+    background:#7c3aed;
+    transform:translateY(-2px);
+}
+
+.secondary-btn{
+    background:#11111a;
+    border:1px solid #292936;
+    color:#fff;
+}
+
+.secondary-btn:hover{
+    background:#191923;
+    transform:translateY(-2px);
+}
+
+/* TRUST BAR */
+
+.trust{
+    width:88%;
+    max-width:1050px;
+    margin:-35px auto 0;
+    position:relative;
+    z-index:5;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    background:#0e0e16;
+    border:1px solid #242432;
+    border-radius:18px;
+    overflow:hidden;
+}
+
+.stat{
+    text-align:center;
+    padding:22px;
+    border-right:1px solid #242432;
+}
+
+.stat:last-child{
+    border-right:0;
+}
+
+.stat strong{
+    display:block;
+    font-size:20px;
+    margin-bottom:5px;
+}
+
+.stat span{
+    color:#777787;
+    font-size:12px;
+}
+
+/* GENERAL SECTION */
+
+section{
+    width:88%;
+    max-width:1200px;
+    margin:auto;
+    padding:85px 0;
+}
+
+.section-head{
+    text-align:center;
+    margin-bottom:38px;
+}
+
+.section-title{
+    font-size:32px;
+    margin-bottom:10px;
+    letter-spacing:-.5px;
+}
+
+.section-subtitle{
+    color:#858593;
+    font-size:14px;
+}
+
+/* TOOLS */
+
+.tools{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.tool{
+    position:relative;
+    padding:27px;
+    min-height:185px;
+    border-radius:17px;
+    background:linear-gradient(145deg,#11111a,#0d0d14);
+    border:1px solid #22222f;
+    color:#fff;
+    transition:.25s;
+    overflow:hidden;
+}
+
+.tool::after{
+    content:"";
+    position:absolute;
+    width:120px;
+    height:120px;
+    right:-50px;
+    bottom:-60px;
+    background:#8b5cf6;
+    opacity:.05;
+    filter:blur(30px);
+    border-radius:50%;
+}
+
+.tool:hover{
+    transform:translateY(-6px);
+    border-color:#7650d5;
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
+}
+
+.icon{
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#181522;
+    border:1px solid #2a243b;
+    border-radius:13px;
+    font-size:23px;
+    margin-bottom:20px;
+}
+
+.tool h3{
+    font-size:18px;
+    margin-bottom:9px;
+}
+
+.tool p{
+    color:#81818f;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.arrow{
+    position:absolute;
+    right:22px;
+    top:28px;
+    color:#777;
+    font-size:18px;
+    transition:.2s;
+}
+
+.tool:hover .arrow{
+    color:#a477ff;
+    transform:translateX(3px);
+}
+
+/* ABOUT */
+
+.about{
+    border-top:1px solid #1b1b25;
+    text-align:center;
+}
+
+.about-box{
+    max-width:750px;
+    margin:auto;
+}
+
+.about p{
+    color:#858593;
+    line-height:1.8;
+    font-size:15px;
+}
+
+/* FINAL CTA */
+
+.cta{
+    padding-top:20px;
+}
+
+.cta-box{
+    text-align:center;
+    padding:60px 25px;
+    border-radius:22px;
+    border:1px solid #29243b;
+    background:
+        radial-gradient(circle at center,#211442 0%,#101019 55%,#0c0c12 100%);
+}
+
+.cta-box h2{
+    font-size:32px;
+    margin-bottom:12px;
+}
+
+.cta-box p{
+    color:#888896;
+    margin-bottom:25px;
+}
+
+/* FOOTER */
+
+footer{
+    margin-top:40px;
+    border-top:1px solid #1d1d28;
+    text-align:center;
+    padding:28px 20px;
+    color:#656573;
+    font-size:13px;
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+    nav{
+        gap:12px;
+    }
+
+    nav a:not(.login-btn){
+        display:none;
+    }
+
+    .hero h1{
+        font-size:48px;
+    }
+
+    .tools{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:560px){
+
+    header{
+        padding:0 5%;
+    }
+
+    .logo{
+        font-size:18px;
+    }
+
+    .hero{
+        min-height:570px;
+        padding:70px 18px;
+    }
+
+    .hero h1{
+        font-size:38px;
+        letter-spacing:-1px;
+    }
+
+    .hero p{
+        font-size:15px;
+    }
+
+    .buttons{
+        flex-direction:column;
+        max-width:280px;
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .trust{
+        grid-template-columns:1fr;
+        margin-top:-25px;
+    }
+
+    .stat{
+        border-right:0;
+        border-bottom:1px solid #242432;
+    }
+
+    .stat:last-child{
+        border-bottom:0;
+    }
+
+    section{
+        width:90%;
+        padding:65px 0;
+    }
+
+    .section-title{
+        font-size:27px;
+    }
+
+    .tools{
+        grid-template-columns:1fr;
+    }
+
+    .cta-box h2{
+        font-size:27px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        AI <span>Unity Hub</span>
+    </div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#tools">Tools</a>
+        <a href="#about">About</a>
+        <a href="login.html" class="login-btn">Login</a>
+    </nav>
+
+</header>
+
+
+<main>
+
+<!-- HERO -->
+
+<section class="hero" id="home">
+
+    <div class="hero-content">
+
+        <div class="badge">
+            ⚡ AI & Digital Tools Platform
+        </div>
+
+        <h1>
+            Your AI & Digital Tools,
+            <span>One Place.</span>
+        </h1>
+
+        <p>
+            Create, edit, calculate and get things done faster
+            with powerful AI and digital tools — all in one place.
+        </p>
+
+        <div class="buttons">
+
+            <a href="dashboard.html" class="primary-btn">
+                Explore Tools →
+            </a>
+
+            <a href="login.html" class="secondary-btn">
+                Get Started
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- STATS -->
+
+<div class="trust">
+
+    <div class="stat">
+        <strong>6+</strong>
+        <span>Tool Categories</span>
+    </div>
+
+    <div class="stat">
+        <strong>20+</strong>
+        <span>Useful Tools</span>
+    </div>
+
+    <div class="stat">
+        <strong>100% Free</strong>
+        <span>Core Tools</span>
+    </div>
+
+</div>
+
+
+<!-- TOOLS -->
+
+<section id="tools">
+
+    <div class="section-head">
+
+        <h2 class="section-title">
+            Everything You Need
+        </h2>
+
+        <p class="section-subtitle">
+            Powerful tools. Simple experience.
+        </p>
+
+    </div>
+
+
+    <div class="tools">
+
+        <a href="image-tools.html" class="tool">
+
+            <div class="arrow">→</div>
+
+            <div class="icon">🖼️</div>
+
+            <h3>Image Tools</h3>
+
+            <p>
+                Remove backgrounds, resize, compress and convert images.
+            </p>
+
+        </a>
+
+
+        <a href="ai-tools-new.html" class="tool">
+
+            <div class="arrow">→</div>
+
+            <div class="icon">🤖</div>
+
+            <h3>AI Tools</h3>
+
+            <p>
+                Write, rewrite, improve and generate useful content.
+            </p>
+
+        </a>
+
+
+        <a href="pdf-tools.html" class="tool">
+
+            <div class="arrow">→</div>
+
+            <div class="icon">📄</div>
+
+            <h3>PDF Tools</h3>
+
+            <p>
+                Merge, split, convert and optimize PDF files.
+            </p>
+
+        </a>
+
+
+        <a href="creator-tools.html" class="tool">
+
+            <div class="arrow">→</div>
+
+            <div class="icon">🎬</div>
+
+            <h3>Creator Tools</h3>
+
+            <p>
+                Generate reels, hooks, scripts, captions and hashtags.
+            </p>
+
+        </a>
+
+
+        <a href="student-tools.html" class="tool">
+
+            <div class="arrow">→</div>
+
+            <div class="icon">📚</div>
+
+            <h3>Student Tools</h3>
+
+            <p>
+                Create notes, study plans, questions and essays.
+            </p>
+
+        </a>
+
+
+        <a href="calculator-tools.html" class="tool">
+
+            <div class="arrow">→</div>
+
+            <div class="icon">🧮</div>
+
+            <h3>Calculators</h3>
+
+            <p>
+                Percentage, GST, EMI, age, discount and unit calculations.
+            </p>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ABOUT -->
+
+<section class="about" id="about">
+
+    <div class="about-box">
+
+        <h2 class="section-title">
+            Built for Everyone
+        </h2>
+
+        <p>
+            AI Unity Hub brings AI, image, PDF, creator,
+            student and calculation tools together in one
+            clean and simple platform.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- CTA -->
+
+<section class="cta">
+
+    <div class="cta-box">
+
+        <h2>
+            Everything. One Place.
+        </h2>
+
+        <p>
+            Start exploring the tools built to make your work easier.
+        </p>
+
+        <a href="dashboard.html" class="primary-btn">
+            Explore AI Unity Hub →
+        </a>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+    AI Unity Hub — by CK Izyaan
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Calculators — AI Unity Hub</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#080808;
+    color:white;
+    min-height:100vh;
+}
+
+header{
+    height:70px;
+    padding:0 7%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid #222;
+    background:#0b0b0b;
+}
+
+.logo{
+    font-size:21px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#aaa;
+}
+
+nav{
+    display:flex;
+    gap:22px;
+}
+
+nav a{
+    color:#aaa;
+    text-decoration:none;
+    font-size:14px;
+}
+
+nav a:hover{
+    color:#fff;
+}
+
+.hero{
+    padding:55px 6% 25px;
+}
+
+.small{
+    color:#777;
+    font-size:12px;
+    letter-spacing:3px;
+    margin-bottom:12px;
+}
+
+h1{
+    font-size:clamp(35px,6vw,58px);
+    margin-bottom:12px;
+}
+
+.subtitle{
+    color:#888;
+    font-size:16px;
+}
+
+.calculators{
+    width:88%;
+    max-width:1250px;
+    margin:35px auto 80px;
+
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.card{
+    background:#101010;
+    border:1px solid #242424;
+    border-radius:17px;
+    padding:25px;
+    min-height:300px;
+}
+
+.icon{
+    font-size:30px;
+    margin-bottom:15px;
+}
+
+.card h2{
+    font-size:19px;
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    color:#888;
+    font-size:12px;
+    margin-top:12px;
+    margin-bottom:6px;
+}
+
+input,
+select{
+    width:100%;
+    padding:11px;
+    border-radius:8px;
+    border:1px solid #333;
+    background:#080808;
+    color:white;
+    outline:none;
+}
+
+button{
+    width:100%;
+    margin-top:15px;
+    padding:11px;
+    border:none;
+    border-radius:8px;
+    background:white;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+.result{
+    margin-top:15px;
+    padding:12px;
+    border-radius:8px;
+    background:#181818;
+    color:#ddd;
+    font-size:13px;
+    line-height:1.5;
+    min-height:20px;
+}
+
+footer{
+    border-top:1px solid #222;
+    text-align:center;
+    padding:25px;
+    color:#555;
+    font-size:12px;
+}
+
+@media(max-width:900px){
+
+    .calculators{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    header{
+        padding:0 5%;
+    }
+
+    nav{
+        gap:10px;
+    }
+
+    .hero{
+        padding:45px 20px 25px;
+    }
+
+    .calculators{
+        width:90%;
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        AI <span>Unity Hub</span>
+    </div>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="history.html">History</a>
+        <a href="profile.html">Profile</a>
+    </nav>
+
+</header>
+
+
+<section class="hero">
+
+    <div class="small">
+        CALCULATORS
+    </div>
+
+    <h1>
+        Useful Calculators.
+    </h1>
+
+    <p class="subtitle">
+        Simple tools for everyday calculations.
+    </p>
+
+</section>
+
+
+<section class="calculators">
+
+
+<!-- PERCENTAGE -->
+
+<div class="card">
+
+    <div class="icon">📊</div>
+
+    <h2>Percentage</h2>
+
+    <label>Percentage (%)</label>
+
+    <input
+        type="number"
+        id="percentValue"
+        placeholder="Example: 20"
+    >
+
+    <label>Number</label>
+
+    <input
+        type="number"
+        id="percentNumber"
+        placeholder="Example: 500"
+    >
+
+    <button onclick="calculatePercentage()">
+        Calculate
+    </button>
+
+    <div class="result" id="percentResult"></div>
+
+</div>
+
+
+<!-- AGE -->
+
+<div class="card">
+
+    <div class="icon">🎂</div>
+
+    <h2>Age Calculator</h2>
+
+    <label>Date of Birth</label>
+
+    <input
+        type="date"
+        id="birthDate"
+    >
+
+    <button onclick="calculateAge()">
+        Calculate Age
+    </button>
+
+    <div class="result" id="ageResult"></div>
+
+</div>
+
+
+<!-- DISCOUNT -->
+
+<div class="card">
+
+    <div class="icon">🏷️</div>
+
+    <h2>Discount</h2>
+
+    <label>Original Price</label>
+
+    <input
+        type="number"
+        id="originalPrice"
+        placeholder="Example: 1000"
+    >
+
+    <label>Discount (%)</label>
+
+    <input
+        type="number"
+        id="discountPercent"
+        placeholder="Example: 20"
+    >
+
+    <button onclick="calculateDiscount()">
+        Calculate
+    </button>
+
+    <div class="result" id="discountResult"></div>
+
+</div>
+
+
+<!-- GST -->
+
+<div class="card">
+
+    <div class="icon">🧾</div>
+
+    <h2>GST Calculator</h2>
+
+    <label>Amount</label>
+
+    <input
+        type="number"
+        id="gstAmount"
+        placeholder="Example: 1000"
+    >
+
+    <label>GST (%)</label>
+
+    <input
+        type="number"
+        id="gstPercent"
+        placeholder="Example: 18"
+    >
+
+    <button onclick="calculateGST()">
+        Calculate
+    </button>
+
+    <div class="result" id="gstResult"></div>
+
+</div>
+
+
+<!-- SIMPLE INTEREST -->
+
+<div class="card">
+
+    <div class="icon">💰</div>
+
+    <h2>Simple Interest</h2>
+
+    <label>Principal Amount</label>
+
+    <input
+        type="number"
+        id="siPrincipal"
+        placeholder="Example: 10000"
+    >
+
+    <label>Rate (%)</label>
+
+    <input
+        type="number"
+        id="siRate"
+        placeholder="Example: 5"
+    >
+
+    <label>Time (Years)</label>
+
+    <input
+        type="number"
+        id="siTime"
+        placeholder="Example: 2"
+    >
+
+    <button onclick="calculateSI()">
+        Calculate
+    </button>
+
+    <div class="result" id="siResult"></div>
+
+</div>
+
+
+<!-- EMI -->
+
+<div class="card">
+
+    <div class="icon">🏦</div>
+
+    <h2>EMI Calculator</h2>
+
+    <label>Loan Amount</label>
+
+    <input
+        type="number"
+        id="loanAmount"
+        placeholder="Example: 500000"
+    >
+
+    <label>Annual Interest (%)</label>
+
+    <input
+        type="number"
+        id="loanRate"
+        placeholder="Example: 8.5"
+    >
+
+    <label>Loan Period (Years)</label>
+
+    <input
+        type="number"
+        id="loanYears"
+        placeholder="Example: 5"
+    >
+
+    <button onclick="calculateEMI()">
+        Calculate
+    </button>
+
+    <div class="result" id="emiResult"></div>
+
+</div>
+
+
+<!-- UNIT CONVERTER -->
+
+<div class="card">
+
+    <div class="icon">📏</div>
+
+    <h2>Unit Converter</h2>
+
+    <label>Value</label>
+
+    <input
+        type="number"
+        id="unitValue"
+        placeholder="Example: 10"
+    >
+
+    <label>Conversion</label>
+
+    <select id="unitType">
+
+        <option value="km-miles">
+            Kilometres → Miles
+        </option>
+
+        <option value="miles-km">
+            Miles → Kilometres
+        </option>
+
+        <option value="kg-lb">
+            Kilograms → Pounds
+        </option>
+
+        <option value="lb-kg">
+            Pounds → Kilograms
+        </option>
+
+        <option value="c-f">
+            Celsius → Fahrenheit
+        </option>
+
+        <option value="f-c">
+            Fahrenheit → Celsius
+        </option>
+
+        <option value="m-ft">
+            Metres → Feet
+        </option>
+
+        <option value="ft-m">
+            Feet → Metres
+        </option>
+
+    </select>
+
+    <button onclick="convertUnit()">
+        Convert
+    </button>
+
+    <div class="result" id="unitResult"></div>
+
+</div>
+
+</section>
+
+
+<footer>
+    AI Unity Hub — by CK Izyaan
+</footer>
+
+
+<script>
+
+function calculatePercentage(){
+
+    const percent =
+        parseFloat(
+            document.getElementById("percentValue").value
+        );
+
+    const number =
+        parseFloat(
+            document.getElementById("percentNumber").value
+        );
+
+    if(isNaN(percent) || isNaN(number)){
+
+        document.getElementById("percentResult").textContent =
+            "Please enter both values.";
+
+        return;
+    }
+
+    const result =
+        (percent / 100) * number;
+
+    document.getElementById("percentResult").textContent =
+        `${percent}% of ${number} = ${result}`;
+
+}
+
+
+function calculateAge(){
+
+    const birth =
+        document.getElementById("birthDate").value;
+
+    if(!birth){
+
+        document.getElementById("ageResult").textContent =
+            "Please select your date of birth.";
+
+        return;
+    }
+
+    const dob = new Date(birth);
+    const today = new Date();
+
+    let years =
+        today.getFullYear() - dob.getFullYear();
+
+    let months =
+        today.getMonth() - dob.getMonth();
+
+    let days =
+        today.getDate() - dob.getDate();
+
+    if(days < 0){
+        months--;
+    }
+
+    if(months < 0){
+        years--;
+        months += 12;
+    }
+
+    document.getElementById("ageResult").textContent =
+        `Age: ${years} years, ${months} months`;
+
+}
+
+
+function calculateDiscount(){
+
+    const price =
+        parseFloat(
+            document.getElementById("originalPrice").value
+        );
+
+    const discount =
+        parseFloat(
+            document.getElementById("discountPercent").value
+        );
+
+    if(isNaN(price) || isNaN(discount)){
+
+        document.getElementById("discountResult").textContent =
+            "Please enter both values.";
+
+        return;
+    }
+
+    const saved =
+        price * discount / 100;
+
+    const finalPrice =
+        price - saved;
+
+    document.getElementById("discountResult").textContent =
+        `You save ₹${saved.toFixed(2)} | Final Price: ₹${finalPrice.toFixed(2)}`;
+
+}
+
+
+function calculateGST(){
+
+    const amount =
+        parseFloat(
+            document.getElementById("gstAmount").value
+        );
+
+    const gst =
+        parseFloat(
+            document.getElementById("gstPercent").value
+        );
+
+    if(isNaN(amount) || isNaN(gst)){
+
+        document.getElementById("gstResult").textContent =
+            "Please enter both values.";
+
+        return;
+    }
+
+    const tax =
+        amount * gst / 100;
+
+    const total =
+        amount + tax;
+
+    document.getElementById("gstResult").textContent =
+        `GST: ₹${tax.toFixed(2)} | Total: ₹${total.toFixed(2)}`;
+
+}
+
+
+function calculateSI(){
+
+    const principal =
+        parseFloat(
+            document.getElementById("siPrincipal").value
+        );
+
+    const rate =
+        parseFloat(
+            document.getElementById("siRate").value
+        );
+
+    const time =
+        parseFloat(
+            document.getElementById("siTime").value
+        );
+
+    if(
+        isNaN(principal) ||
+        isNaN(rate) ||
+        isNaN(time)
+    ){
+
+        document.getElementById("siResult").textContent =
+            "Please enter all values.";
+
+        return;
+    }
+
+    const interest =
+        (principal * rate * time) / 100;
+
+    const total =
+        principal + interest;
+
+    document.getElementById("siResult").textContent =
+        `Interest: ₹${interest.toFixed(2)} | Total: ₹${total.toFixed(2)}`;
+
+}
+
+
+function calculateEMI(){
+
+    const principal =
+        parseFloat(
+            document.getElementById("loanAmount").value
+        );
+
+    const annualRate =
+        parseFloat(
+            document.getElementById("loanRate").value
+        );
+
+    const years =
+        parseFloat(
+            document.getElementById("loanYears").value
+        );
+
+    if(
+        isNaN(principal) ||
+        isNaN(annualRate) ||
+        isNaN(years)
+    ){
+
+        document.getElementById("emiResult").textContent =
+            "Please enter all values.";
+
+        return;
+    }
+
+    const monthlyRate =
+        annualRate / 12 / 100;
+
+    const months =
+        years * 12;
+
+    let emi;
+
+    if(monthlyRate === 0){
+
+        emi = principal / months;
+
+    }else{
+
+        emi =
+            principal *
+            monthlyRate *
+            Math.pow(1 + monthlyRate, months) /
+            (
+                Math.pow(1 + monthlyRate, months) - 1
+            );
+
+    }
+
+    const totalPayment =
+        emi * months;
+
+    const totalInterest =
+        totalPayment - principal;
+
+    document.getElementById("emiResult").innerHTML =
+        `Monthly EMI: ₹${emi.toFixed(2)}<br>
+         Total Interest: ₹${totalInterest.toFixed(2)}<br>
+         Total Payment: ₹${totalPayment.toFixed(2)}`;
+
+}
+
+
+function convertUnit(){
+
+    const value =
+        parseFloat(
+            document.getElementById("unitValue").value
+        );
+
+    const type =
+        document.getElementById("unitType").value;
+
+    if(isNaN(value)){
+
+        document.getElementById("unitResult").textContent =
+            "Please enter a value.";
+
+        return;
+    }
+
+    let result;
+    let unit;
+
+    switch(type){
+
+        case "km-miles":
+            result = value * 0.621371;
+            unit = "miles";
+            break;
+
+        case "miles-km":
+            result = value * 1.609344;
+            unit = "km";
+            break;
+
+        case "kg-lb":
+            result = value * 2.20462;
+            unit = "lb";
+            break;
+
+        case "lb-kg":
+            result = value * 0.453592;
+            unit = "kg";
+            break;
+
+        case "c-f":
+            result = (value * 9 / 5) + 32;
+            unit = "°F";
+            break;
+
+        case "f-c":
+            result = (value - 32) * 5 / 9;
+            unit = "°C";
+            break;
+
+        case "m-ft":
+            result = value * 3.28084;
+            unit = "ft";
+            break;
+
+        case "ft-m":
+            result = value * 0.3048;
+            unit = "m";
+            break;
+
+    }
+
+    document.getElementById("unitResult").textContent =
+        `${value} → ${result.toFixed(4)} ${unit}`;
+
+}
+
+</script>
+<script type="module" src="auth-guard.js"></script>
+</body>
+</html>

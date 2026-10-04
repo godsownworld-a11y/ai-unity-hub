@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Tools — AI Unity Hub</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #050505;
+    color: white;
+}
+
+header {
+    padding: 18px 7%;
+    border-bottom: 1px solid #222;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #aaa;
+}
+
+nav {
+    display: flex;
+    gap: 18px;
+}
+
+nav a {
+    color: #aaa;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: white;
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 40px auto;
+}
+
+h1 {
+    font-size: 38px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.tab {
+    background: #111;
+    color: white;
+    border: 1px solid #333;
+    padding: 12px 16px;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.tab:hover {
+    background: #1b1b1b;
+}
+
+.tool {
+    display: none;
+    background: #0d0d0d;
+    border: 1px solid #242424;
+    border-radius: 14px;
+    padding: 25px;
+}
+
+.tool.active {
+    display: block;
+}
+
+.tool h2 {
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    margin: 18px 0 8px;
+    color: #ddd;
+}
+
+textarea,
+input,
+select {
+    width: 100%;
+    padding: 13px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #080808;
+    color: white;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+button.generate {
+    margin-top: 20px;
+    padding: 13px 20px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button.generate:hover {
+    opacity: 0.85;
+}
+
+.output {
+    margin-top: 25px;
+    padding: 18px;
+    min-height: 100px;
+    background: #050505;
+    border: 1px solid #292929;
+    border-radius: 10px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+
+.output-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.small-btn {
+    padding: 9px 14px;
+    background: #171717;
+    color: white;
+    border: 1px solid #333;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    color: #777;
+    padding: 35px 10px;
+    border-top: 1px solid #222;
+    margin-top: 60px;
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 30px;
+    }
+
+    .container {
+        width: 94%;
+        margin-top: 25px;
+    }
+
+    .tool {
+        padding: 18px;
+    }
+
+    .tab {
+        flex: 1 1 45%;
+    }
+
+    nav {
+        gap: 10px;
+        font-size: 13px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        AI <span>Unity Hub</span>
+    </div>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="history.html">History</a>
+        <a href="profile.html">Profile</a>
+    </nav>
+
+</header>
+
+<div class="container">
+
+    <h1>📚 Student Tools</h1>
+
+    <p class="subtitle">
+        Study smarter with AI-powered learning tools.
+    </p>
+
+    <div class="tabs">
+
+        <button class="tab" onclick="openTool('notes')">
+            📚 Notes Generator
+        </button>
+
+        <button class="tab" onclick="openTool('simplifier')">
+            📝 Simplify Answer
+        </button>
+
+        <button class="tab" onclick="openTool('study')">
+            📅 Study Plan
+        </button>
+
+        <button class="tab" onclick="openTool('questions')">
+            ❓ Questions
+        </button>
+
+        <button class="tab" onclick="openTool('essay')">
+            ✍️ Essay Writer
+        </button>
+
+    </div>
+
+
+    <div class="tool active" id="notes">
+
+        <h2>📚 Notes Generator</h2>
+
+        <label>What topic do you want notes for?</label>
+
+        <textarea
+            id="notesTopic"
+            placeholder="Example: Photosynthesis"
+        ></textarea>
+
+        <label>Level</label>
+
+        <select id="notesLevel">
+            <option>School</option>
+            <option>College</option>
+            <option>Beginner</option>
+        </select>
+
+        <button class="generate" onclick="generateNotes()">
+            Generate Notes
+        </button>
+
+    </div>
+
+
+    <div class="tool" id="simplifier">
+
+        <h2>📝 Answer Simplifier</h2>
+
+        <label>Paste your answer</label>
+
+        <textarea
+            id="simplifyText"
+            placeholder="Paste a difficult answer here..."
+        ></textarea>
+
+        <button class="generate" onclick="simplifyAnswer()">
+            Simplify Answer
+        </button>
+
+    </div>
+
+
+    <div class="tool" id="study">
+
+        <h2>📅 Study Plan</h2>
+
+        <label>Subjects / topics</label>
+
+        <textarea
+            id="studySubjects"
+            placeholder="Example: Maths, Physics, Biology"
+        ></textarea>
+
+        <label>Available study time per day</label>
+
+        <select id="studyTime">
+            <option>1 hour</option>
+            <option>2 hours</option>
+            <option>3 hours</option>
+            <option>4 hours</option>
+            <option>5+ hours</option>
+        </select>
+
+        <button class="generate" onclick="generateStudyPlan()">
+            Create Study Plan
+        </button>
+
+    </div>
+
+
+    <div class="tool" id="questions">
+
+        <h2>❓ Question Generator</h2>
+
+        <label>Topic</label>
+
+        <textarea
+            id="questionTopic"
+            placeholder="Example: Class 10 Physics - Light"
+        ></textarea>
+
+        <label>Number of questions</label>
+
+        <select id="questionCount">
+            <option>5</option>
+            <option>10</option>
+            <option>15</option>
+            <option>20</option>
+        </select>
+
+        <button class="generate" onclick="generateQuestions()">
+            Generate Questions
+        </button>
+
+    </div>
+
+
+    <div class="tool" id="essay">
+
+        <h2>✍️ Essay Writer</h2>
+
+        <label>Essay topic</label>
+
+        <textarea
+            id="essayTopic"
+            placeholder="Example: Importance of protecting nature"
+        ></textarea>
+
+        <label>Length</label>
+
+        <select id="essayLength">
+            <option>Short</option>
+            <option>Medium</option>
+            <option>Long</option>
+        </select>
+
+        <button class="generate" onclick="generateEssay()">
+            Write Essay
+        </button>
+
+    </div>
+
+
+    <div class="output" id="output">
+        Your AI result will appear here...
+    </div>
+
+    <div class="output-actions">
+
+        <button class="small-btn" onclick="copyResult()">
+            Copy
+        </button>
+
+        <button class="small-btn" onclick="clearResult()">
+            Clear
+        </button>
+
+    </div>
+
+</div>
+
+
+<footer>
+    AI Unity Hub — by CK Izyaan
+</footer>
+
+
+<script>
+
+const BACKEND_URL = "http://127.0.0.1:3000/api/generate";
+
+
+function openTool(id) {
+
+    document.querySelectorAll(".tool").forEach(tool => {
+        tool.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    document.getElementById("output").textContent =
+        "Your AI result will appear here...";
+}
+
+
+async function sendRequest(tool, text, action, tone = "Natural") {
+
+    const output = document.getElementById("output");
+
+    output.textContent = "Generating...";
+
+    try {
+
+        const response = await fetch(BACKEND_URL, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                tool: tool,
+                text: text,
+                action: action,
+                tone: tone
+            })
+
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Request failed");
+        }
+
+        output.textContent = data.result;
+
+    } catch (error) {
+
+        output.textContent =
+            "Connection error: " + error.message;
+
+    }
+}
+
+
+function generateNotes() {
+
+    const topic =
+        document.getElementById("notesTopic").value;
+
+    const level =
+        document.getElementById("notesLevel").value;
+
+    if (!topic) {
+        alert("Please enter a topic.");
+        return;
+    }
+
+    sendRequest(
+        "Student Tool",
+        `Create clear, well-structured ${level} study notes about: ${topic}. Include important points and key terms.`,
+        "Generate Notes"
+    );
+}
+
+
+function simplifyAnswer() {
+
+    const text =
+        document.getElementById("simplifyText").value;
+
+    if (!text) {
+        alert("Please paste an answer.");
+        return;
+    }
+
+    sendRequest(
+        "Student Tool",
+        `Rewrite this answer using simple, clear language while keeping the important meaning:\n\n${text}`,
+        "Simplify Answer"
+    );
+}
+
+
+function generateStudyPlan() {
+
+    const subjects =
+        document.getElementById("studySubjects").value;
+
+    const time =
+        document.getElementById("studyTime").value;
+
+    if (!subjects) {
+        alert("Please enter your subjects.");
+        return;
+    }
+
+    sendRequest(
+        "Student Tool",
+        `Create a practical study plan for these subjects: ${subjects}. The student has ${time} available per day. Include breaks and revision.`,
+        "Create Study Plan"
+    );
+}
+
+
+function generateQuestions() {
+
+    const topic =
+        document.getElementById("questionTopic").value;
+
+    const count =
+        document.getElementById("questionCount").value;
+
+    if (!topic) {
+        alert("Please enter a topic.");
+        return;
+    }
+
+    sendRequest(
+        "Student Tool",
+        `Generate ${count} useful practice questions about: ${topic}. Mix easy, medium and challenging questions.`,
+        "Generate Questions"
+    );
+}
+
+
+function generateEssay() {
+
+    const topic =
+        document.getElementById("essayTopic").value;
+
+    const length =
+        document.getElementById("essayLength").value;
+
+    if (!topic) {
+        alert("Please enter an essay topic.");
+        return;
+    }
+
+    sendRequest(
+        "Student Tool",
+        `Write a ${length} school-level essay about: ${topic}. Use a clear introduction, body and conclusion.`,
+        "Write Essay"
+    );
+}
+
+
+function copyResult() {
+
+    const text =
+        document.getElementById("output").textContent;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Copied!");
+}
+
+
+function clearResult() {
+
+    document.getElementById("output").textContent =
+        "Your AI result will appear here...";
+}
+
+</script>
+<script type="module" src="auth-guard.js"></script>
+</body>
+</html>

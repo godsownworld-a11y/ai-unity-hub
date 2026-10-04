@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Image Tools — AI Unity Hub</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#080808;
+    color:#fff;
+    min-height:100vh;
+}
+
+header{
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 7%;
+    border-bottom:1px solid #222;
+    background:#0b0b0b;
+}
+
+.logo{
+    font-size:21px;
+    font-weight:bold;
+}
+
+nav{
+    display:flex;
+    gap:22px;
+}
+
+nav a,
+.back-btn{
+    text-decoration:none;
+    color:#aaa;
+    font-size:14px;
+}
+
+nav a:hover,
+.back-btn:hover{
+    color:#fff;
+}
+
+.container{
+    width:92%;
+    max-width:1100px;
+    margin:45px auto;
+}
+
+.title{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.title h1{
+    font-size:38px;
+    margin-bottom:10px;
+}
+
+.title p{
+    color:#999;
+    font-size:15px;
+}
+
+.tabs{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
+}
+
+.tab-btn{
+    border:1px solid #292929;
+    background:#111;
+    color:#aaa;
+    padding:12px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.tab-btn.active{
+    background:#fff;
+    color:#000;
+    border-color:#fff;
+}
+
+.tool-section{
+    display:none;
+}
+
+.tool-section.active{
+    display:block;
+}
+
+.tool-card{
+    background:#101010;
+    border:1px solid #242424;
+    border-radius:18px;
+    padding:28px;
+    max-width:850px;
+    margin:auto;
+}
+
+.tool-card h2{
+    font-size:25px;
+    margin-bottom:8px;
+}
+
+.tool-description{
+    color:#888;
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+input[type="file"]{
+    width:100%;
+    padding:14px;
+    background:#0a0a0a;
+    border:1px dashed #333;
+    border-radius:10px;
+    color:#aaa;
+    margin-bottom:20px;
+}
+
+.preview{
+    display:none;
+    width:100%;
+    max-height:420px;
+    object-fit:contain;
+    background:#080808;
+    border:1px solid #222;
+    border-radius:12px;
+    margin:15px 0;
+}
+
+button.action{
+    border:none;
+    background:#fff;
+    color:#000;
+    padding:13px 20px;
+    border-radius:9px;
+    font-weight:bold;
+    cursor:pointer;
+    margin:5px 5px 5px 0;
+}
+
+button.secondary{
+    background:#1c1c1c;
+    color:#fff;
+    border:1px solid #333;
+}
+
+button:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+}
+
+.status{
+    color:#aaa;
+    font-size:14px;
+    margin:12px 0;
+    min-height:20px;
+}
+
+.loader{
+    display:none;
+    margin:15px 0;
+    color:#aaa;
+}
+
+.settings{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin:20px 0;
+}
+
+.setting-box{
+    background:#0b0b0b;
+    border:1px solid #222;
+    border-radius:10px;
+    padding:15px;
+}
+
+.setting-box label{
+    display:block;
+    color:#aaa;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.setting-box input,
+.setting-box select{
+    width:100%;
+    padding:11px;
+    border-radius:8px;
+    border:1px solid #333;
+    background:#151515;
+    color:#fff;
+    outline:none;
+}
+
+.checkbox-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:15px;
+    color:#aaa;
+    font-size:14px;
+}
+
+.checkbox-row input{
+    width:auto;
+}
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin:20px 0;
+}
+
+.info-box{
+    background:#0b0b0b;
+    border:1px solid #222;
+    border-radius:10px;
+    padding:14px;
+    text-align:center;
+}
+
+.info-box span{
+    display:block;
+    color:#777;
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+.info-box strong{
+    font-size:15px;
+}
+
+.range-value{
+    color:#fff;
+    font-weight:bold;
+    margin-left:5px;
+}
+
+footer{
+    text-align:center;
+    padding:35px 15px;
+    color:#555;
+    font-size:13px;
+    border-top:1px solid #181818;
+    margin-top:50px;
+}
+
+@media(max-width:700px){
+
+    header{
+        padding:0 5%;
+    }
+
+    nav{
+        gap:10px;
+    }
+
+    .title h1{
+        font-size:30px;
+    }
+
+    .tool-card{
+        padding:20px;
+    }
+
+    .settings{
+        grid-template-columns:1fr;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .tab-btn{
+        flex:1;
+        min-width:140px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        AI Unity Hub
+    </div>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="history.html">History</a>
+        <a href="profile.html">Profile</a>
+    </nav>
+
+</header>
+
+
+<div class="container">
+
+    <div class="title">
+        <h1>Image Tools</h1>
+        <p>Simple, fast and useful image tools — all in one place.</p>
+    </div>
+
+
+    <div class="tabs">
+
+        <button class="tab-btn active" data-tab="remove">
+            ✨ Background Remover
+        </button>
+
+        <button class="tab-btn" data-tab="resize">
+            📐 Resize Image
+        </button>
+
+        <button class="tab-btn" data-tab="compress">
+            🗜️ Compress Image
+        </button>
+
+        <button class="tab-btn" data-tab="convert">
+            🔄 Convert Image
+        </button>
+
+    </div>
+
+
+    <!-- BACKGROUND REMOVER -->
+
+    <section class="tool-section active" id="remove">
+
+        <div class="tool-card">
+
+            <h2>✨ Background Remover</h2>
+
+            <p class="tool-description">
+                Remove the background from your image automatically.
+            </p>
+
+            <input
+                type="file"
+                id="removeInput"
+                accept="image/png,image/jpeg,image/webp"
+            >
+
+            <img
+                id="removePreview"
+                class="preview"
+            >
+
+            <div class="loader" id="removeLoader">
+                Removing background... Please wait.
+            </div>
+
+            <div class="status" id="removeStatus"></div>
+
+            <button
+                class="action"
+                id="removeBtn"
+                disabled
+            >
+                Remove Background
+            </button>
+
+            <button
+                class="action secondary"
+                id="downloadRemove"
+                disabled
+            >
+                Download PNG
+            </button>
+
+            <button
+                class="action secondary"
+                id="resetRemove"
+            >
+                Reset
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- RESIZE -->
+
+    <section class="tool-section" id="resize">
+
+        <div class="tool-card">
+
+            <h2>📐 Resize Image</h2>
+
+            <p class="tool-description">
+                Change your image width and height while keeping the quality.
+            </p>
+
+            <input
+                type="file"
+                id="resizeInput"
+                accept="image/png,image/jpeg,image/webp"
+            >
+
+            <img
+                id="resizePreview"
+                class="preview"
+            >
+
+            <div class="settings">
+
+                <div class="setting-box">
+
+                    <label>Width (px)</label>
+
+                    <input
+                        type="number"
+                        id="resizeWidth"
+                        min="1"
+                    >
+
+                </div>
+
+                <div class="setting-box">
+
+                    <label>Height (px)</label>
+
+                    <input
+                        type="number"
+                        id="resizeHeight"
+                        min="1"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="checkbox-row">
+
+                <input
+                    type="checkbox"
+                    id="keepRatio"
+                    checked
+                >
+
+                <label>
+                    Keep aspect ratio
+                </label>
+
+            </div>
+
+
+            <div
+                class="status"
+                id="resizeStatus"
+            ></div>
+
+
+            <button
+                class="action"
+                id="resizeBtn"
+                disabled
+            >
+                Resize Image
+            </button>
+
+            <button
+                class="action secondary"
+                id="downloadResize"
+                disabled
+            >
+                Download Image
+            </button>
+
+            <button
+                class="action secondary"
+                id="resetResize"
+            >
+                Reset
+            </button>
+
+            <canvas
+                id="resizeCanvas"
+                style="display:none"
+            ></canvas>
+
+        </div>
+
+    </section>
+
+
+    <!-- COMPRESS -->
+
+    <section class="tool-section" id="compress">
+
+        <div class="tool-card">
+
+            <h2>🗜️ Compress Image</h2>
+
+            <p class="tool-description">
+                Reduce image file size while keeping good visual quality.
+            </p>
+
+            <input
+                type="file"
+                id="compressInput"
+                accept="image/png,image/jpeg,image/webp"
+            >
+
+            <img
+                id="compressPreview"
+                class="preview"
+            >
+
+
+            <div class="info-grid">
+
+                <div class="info-box">
+                    <span>Original Size</span>
+                    <strong id="originalSize">—</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Compressed Size</span>
+                    <strong id="compressedSize">—</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Saved</span>
+                    <strong id="savedSize">—</strong>
+                </div>
+
+            </div>
+
+
+            <div class="setting-box">
+
+                <label>
+                    Quality:
+                    <span
+                        class="range-value"
+                        id="qualityValue"
+                    >
+                        80%
+                    </span>
+                </label>
+
+                <input
+                    type="range"
+                    id="quality"
+                    min="10"
+                    max="100"
+                    value="80"
+                >
+
+            </div>
+
+
+            <div
+                class="status"
+                id="compressStatus"
+            ></div>
+
+
+            <button
+                class="action"
+                id="compressBtn"
+                disabled
+            >
+                Compress Image
+            </button>
+
+            <button
+                class="action secondary"
+                id="downloadCompress"
+                disabled
+            >
+                Download Image
+            </button>
+
+            <button
+                class="action secondary"
+                id="resetCompress"
+            >
+                Reset
+            </button>
+
+            <canvas
+                id="compressCanvas"
+                style="display:none"
+            ></canvas>
+
+        </div>
+
+    </section>
+
+
+    <!-- CONVERT -->
+
+    <section class="tool-section" id="convert">
+
+        <div class="tool-card">
+
+            <h2>🔄 Convert Image</h2>
+
+            <p class="tool-description">
+                Convert your image between JPG, PNG and WebP formats.
+            </p>
+
+            <input
+                type="file"
+                id="convertInput"
+                accept="image/png,image/jpeg,image/webp"
+            >
+
+            <img
+                id="convertPreview"
+                class="preview"
+            >
+
+
+            <div class="settings">
+
+                <div class="setting-box">
+
+                    <label>Convert To</label>
+
+                    <select id="convertFormat">
+
+                        <option value="image/jpeg">
+                            JPG
+                        </option>
+
+                        <option value="image/png">
+                            PNG
+                        </option>
+
+                        <option value="image/webp">
+                            WebP
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="setting-box">
+
+                    <label>
+                        Quality
+                        <span
+                            class="range-value"
+                            id="convertQualityValue"
+                        >
+                            90%
+                        </span>
+                    </label>
+
+                    <input
+                        type="range"
+                        id="convertQuality"
+                        min="10"
+                        max="100"
+                        value="90"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="status"
+                id="convertStatus"
+            ></div>
+
+
+            <button
+                class="action"
+                id="convertBtn"
+                disabled
+            >
+                Convert Image
+            </button>
+
+            <button
+                class="action secondary"
+                id="downloadConvert"
+                disabled
+            >
+                Download Converted Image
+            </button>
+
+            <button
+                class="action secondary"
+                id="resetConvert"
+            >
+                Reset
+            </button>
+
+            <canvas
+                id="convertCanvas"
+                style="display:none"
+            ></canvas>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<footer>
+    AI Unity Hub — by CK Izyaan
+</footer>
+
+
+<script type="module">
+
+/* =========================
+   TAB SYSTEM
+========================= */
+
+const tabButtons =
+    document.querySelectorAll(".tab-btn");
+
+const sections =
+    document.querySelectorAll(".tool-section");
+
+
+tabButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        tabButtons.forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+        sections.forEach(section =>
+            section.classList.remove("active")
+        );
+
+        button.classList.add("active");
+
+        document
+            .getElementById(button.dataset.tab)
+            .classList.add("active");
+
+    });
+
+});
+
+
+/* =========================
+   BACKGROUND REMOVER
+========================= */
+
+let remover = null;
+let removeBlob = null;
+
+const removeInput =
+    document.getElementById("removeInput");
+
+const removePreview =
+    document.getElementById("removePreview");
+
+const removeBtn =
+    document.getElementById("removeBtn");
+
+const downloadRemove =
+    document.getElementById("downloadRemove");
+
+const removeStatus =
+    document.getElementById("removeStatus");
+
+const removeLoader =
+    document.getElementById("removeLoader");
+
+
+removeInput.addEventListener("change", () => {
+
+    const file = removeInput.files[0];
+
+    if (!file) return;
+
+    removePreview.src =
+        URL.createObjectURL(file);
+
+    removePreview.style.display =
+        "block";
+
+    removeBtn.disabled = false;
+
+    downloadRemove.disabled = true;
+
+    removeStatus.textContent =
+        "Image ready.";
+
+});
+
+
+removeBtn.addEventListener("click", async () => {
+
+    try {
+
+        removeBtn.disabled = true;
+
+        removeLoader.style.display =
+            "block";
+
+        removeStatus.textContent =
+            "Loading background remover...";
+
+        if (!remover) {
+
+            const {
+                pipeline,
+                env
+            } = await import(
+                "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1"
+            );
+
+            env.allowLocalModels = false;
+
+            remover = await pipeline(
+                "background-removal",
+                "Xenova/modnet"
+            );
+
+        }
+
+        removeStatus.textContent =
+            "Removing background...";
+
+        const result =
+            await remover(removeInput.files[0]);
+
+        removeBlob = result;
+
+        if (result instanceof Blob) {
+
+            removePreview.src =
+                URL.createObjectURL(result);
+
+        }
+
+        downloadRemove.disabled =
+            false;
+
+        removeStatus.textContent =
+            "Background removed successfully.";
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        removeStatus.textContent =
+            "Something went wrong. Please try again.";
+
+    }
+
+    finally {
+
+        removeLoader.style.display =
+            "none";
+
+        removeBtn.disabled =
+            false;
+
+    }
+
+});
+
+
+downloadRemove.addEventListener("click", () => {
+
+    if (!removeBlob) return;
+
+    const url =
+        URL.createObjectURL(removeBlob);
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+        "ai-unity-hub-background-removed.png";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+});
+
+
+document
+.getElementById("resetRemove")
+.addEventListener("click", () => {
+
+    removeInput.value = "";
+
+    removePreview.src = "";
+
+    removePreview.style.display =
+        "none";
+
+    removeBtn.disabled = true;
+
+    downloadRemove.disabled = true;
+
+    removeStatus.textContent = "";
+
+    removeBlob = null;
+
+});
+
+
+/* =========================
+   RESIZE
+========================= */
+
+let resizeFile = null;
+let resizeBlob = null;
+
+const resizeInput =
+    document.getElementById("resizeInput");
+
+const resizePreview =
+    document.getElementById("resizePreview");
+
+const resizeWidth =
+    document.getElementById("resizeWidth");
+
+const resizeHeight =
+    document.getElementById("resizeHeight");
+
+const resizeBtn =
+    document.getElementById("resizeBtn");
+
+const downloadResize =
+    document.getElementById("downloadResize");
+
+const resizeStatus =
+    document.getElementById("resizeStatus");
+
+const resizeCanvas =
+    document.getElementById("resizeCanvas");
+
+const keepRatio =
+    document.getElementById("keepRatio");
+
+
+resizeInput.addEventListener("change", () => {
+
+    const file = resizeInput.files[0];
+
+    if (!file) return;
+
+    resizeFile = file;
+
+    const url =
+        URL.createObjectURL(file);
+
+    resizePreview.src = url;
+
+    resizePreview.style.display =
+        "block";
+
+    const img = new Image();
+
+    img.onload = () => {
+
+        resizeWidth.value =
+            img.naturalWidth;
+
+        resizeHeight.value =
+            img.naturalHeight;
+
+    };
+
+    img.src = url;
+
+    resizeBtn.disabled = false;
+
+    downloadResize.disabled = true;
+
+    resizeStatus.textContent =
+        "Image ready.";
+
+});
+
+
+resizeWidth.addEventListener("input", () => {
+
+    if (!keepRatio.checked || !resizeFile)
+        return;
+
+    const img = new Image();
+
+    img.onload = () => {
+
+        const ratio =
+            img.naturalHeight /
+            img.naturalWidth;
+
+        resizeHeight.value =
+            Math.round(
+                Number(resizeWidth.value) *
+                ratio
+            );
+
+    };
+
+    img.src =
+        resizePreview.src;
+
+});
+
+
+resizeHeight.addEventListener("input", () => {
+
+    if (!keepRatio.checked || !resizeFile)
+        return;
+
+    const img = new Image();
+
+    img.onload = () => {
+
+        const ratio =
+            img.naturalWidth /
+            img.naturalHeight;
+
+        resizeWidth.value =
+            Math.round(
+                Number(resizeHeight.value) *
+                ratio
+            );
+
+    };
+
+    img.src =
+        resizePreview.src;
+
+});
+
+
+resizeBtn.addEventListener("click", () => {
+
+    if (!resizeFile) return;
+
+    const img = new Image();
+
+    img.onload = () => {
+
+        const width =
+            Number(resizeWidth.value);
+
+        const height =
+            Number(resizeHeight.value);
+
+        if (!width || !height ||
+            width < 1 || height < 1) {
+
+            resizeStatus.textContent =
+                "Enter a valid width and height.";
+
+            return;
+
+        }
+
+        resizeCanvas.width =
+            width;
+
+        resizeCanvas.height =
+            height;
+
+        const ctx =
+            resizeCanvas.getContext("2d");
+
+        ctx.drawImage(
+            img,
+            0,
+            0,
+            width,
+            height
+        );
+
+        const type =
+            resizeFile.type === "image/png"
+                ? "image/png"
+                : resizeFile.type === "image/webp"
+                    ? "image/webp"
+                    : "image/jpeg";
+
+        resizeCanvas.toBlob(
+            blob => {
+
+                resizeBlob = blob;
+
+                downloadResize.disabled =
+                    false;
+
+                resizeStatus.textContent =
+                    "Image resized successfully.";
+
+            },
+            type,
+            0.95
+        );
+
+    };
+
+    img.src =
+        resizePreview.src;
+
+});
+
+
+downloadResize.addEventListener("click", () => {
+
+    if (!resizeBlob) return;
+
+    const ext =
+        resizeFile.type === "image/png"
+            ? "png"
+            : resizeFile.type === "image/webp"
+                ? "webp"
+                : "jpg";
+
+    const url =
+        URL.createObjectURL(resizeBlob);
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+        "ai-unity-hub-resized." + ext;
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+});
+
+
+document
+.getElementById("resetResize")
+.addEventListener("click", () => {
+
+    resizeInput.value = "";
+
+    resizePreview.src = "";
+
+    resizePreview.style.display =
+        "none";
+
+    resizeWidth.value = "";
+
+    resizeHeight.value = "";
+
+    resizeBtn.disabled = true;
+
+    downloadResize.disabled = true;
+
+    resizeStatus.textContent = "";
+
+    resizeFile = null;
+
+    resizeBlob = null;
+
+});
+
+
+/* =========================
+   COMPRESS
+========================= */
+
+let compressFile = null;
+let compressBlob = null;
+
+const compressInput =
+    document.getElementById("compressInput");
+
+const compressPreview =
+    document.getElementById("compressPreview");
+
+const originalSize =
+    document.getElementById("originalSize");
+
+const compressedSize =
+    document.getElementById("compressedSize");
+
+const savedSize =
+    document.getElementById("savedSize");
+
+const quality =
+    document.getElementById("quality");
+
+const qualityValue =
+    document.getElementById("qualityValue");
+
+const compressBtn =
+    document.getElementById("compressBtn");
+
+const downloadCompress =
+    document.getElementById("downloadCompress");
+
+const compressStatus =
+    document.getElementById("compressStatus");
+
+const compressCanvas =
+    document.getElementById("compressCanvas");
+
+
+quality.addEventListener("input", () => {
+
+    qualityValue.textContent =
+        quality.value + "%";
+
+});
+
+
+compressInput.addEventListener("change", () => {
+
+    const file = compressInput.files[0];
+
+    if (!file) return;
+
+    compressFile = file;
+
+    compressPreview.src =
+        URL.createObjectURL(file);
+
+    compressPreview.style.display =
+        "block";
+
+    originalSize.textContent =
+        formatBytes(file.size);
+
+    compressedSize.textContent =
+        "—";
+
+    savedSize.textContent =
+        "—";
+
+    compressBtn.disabled = false;
+
+    downloadCompress.disabled = true;
+
+    compressStatus.textContent =
+        "Image ready.";
+
+});
+
+
+compressBtn.addEventListener("click", () => {
+
+    if (!compressFile) return;
+
+    const img = new Image();
+
+    img.onload = () => {
+
+        compressCanvas.width =
+            img.naturalWidth;
+
+        compressCanvas.height =
+            img.naturalHeight;
+
+        const ctx =
+            compressCanvas.getContext("2d");
+
+        ctx.drawImage(img,0,0);
+
+        let type =
+            compressFile.type;
+
+        if (
+            type !== "image/jpeg" &&
+            type !== "image/webp"
+        ) {
+
+            type = "image/jpeg";
+
+        }
+
+        const q =
+            Number(quality.value) / 100;
+
+        compressCanvas.toBlob(
+            blob => {
+
+                compressBlob = blob;
+
+                compressedSize.textContent =
+                    formatBytes(blob.size);
+
+                if (blob.size < compressFile.size) {
+
+                    const saved =
+                        (
+                            (1 - blob.size /
+                            compressFile.size) *
+                            100
+                        ).toFixed(1);
+
+                    savedSize.textContent =
+                        saved + "%";
+
+                    compressStatus.textContent =
+                        "Compression completed.";
+
+                } else {
+
+                    savedSize.textContent =
+                        "0%";
+
+                    compressStatus.textContent =
+                        "The compressed file is not smaller than the original.";
+
+                }
+
+                downloadCompress.disabled =
+                    false;
+
+            },
+            type,
+            q
+        );
+
+    };
+
+    img.src =
+        compressPreview.src;
+
+});
+
+
+downloadCompress.addEventListener("click", () => {
+
+    if (!compressBlob) return;
+
+    const ext =
+        compressBlob.type === "image/webp"
+            ? "webp"
+            : "jpg";
+
+    const url =
+        URL.createObjectURL(compressBlob);
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+        "ai-unity-hub-compressed." + ext;
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+});
+
+
+document
+.getElementById("resetCompress")
+.addEventListener("click", () => {
+
+    compressInput.value = "";
+
+    compressPreview.src = "";
+
+    compressPreview.style.display =
+        "none";
+
+    originalSize.textContent =
+        "—";
+
+    compressedSize.textContent =
+        "—";
+
+    savedSize.textContent =
+        "—";
+
+    compressBtn.disabled = true;
+
+    downloadCompress.disabled = true;
+
+    compressStatus.textContent = "";
+
+    compressFile = null;
+
+    compressBlob = null;
+
+});
+
+
+/* =========================
+   CONVERTER
+========================= */
+
+let convertFile = null;
+let convertBlob = null;
+
+const convertInput =
+    document.getElementById("convertInput");
+
+const convertPreview =
+    document.getElementById("convertPreview");
+
+const convertFormat =
+    document.getElementById("convertFormat");
+
+const convertQuality =
+    document.getElementById("convertQuality");
+
+const convertQualityValue =
+    document.getElementById("convertQualityValue");
+
+const convertBtn =
+    document.getElementById("convertBtn");
+
+const downloadConvert =
+    document.getElementById("downloadConvert");
+
+const convertStatus =
+    document.getElementById("convertStatus");
+
+const convertCanvas =
+    document.getElementById("convertCanvas");
+
+
+convertQuality.addEventListener("input", () => {
+
+    convertQualityValue.textContent =
+        convertQuality.value + "%";
+
+});
+
+
+convertInput.addEventListener("change", () => {
+
+    const file = convertInput.files[0];
+
+    if (!file) return;
+
+    convertFile = file;
+
+    convertPreview.src =
+        URL.createObjectURL(file);
+
+    convertPreview.style.display =
+        "block";
+
+    convertBtn.disabled = false;
+
+    downloadConvert.disabled = true;
+
+    convertStatus.textContent =
+        "Image ready.";
+
+});
+
+
+convertBtn.addEventListener("click", () => {
+
+    if (!convertFile) return;
+
+    const img = new Image();
+
+    img.onload = () => {
+
+        convertCanvas.width =
+            img.naturalWidth;
+
+        convertCanvas.height =
+            img.naturalHeight;
+
+        const ctx =
+            convertCanvas.getContext("2d");
+
+        const target =
+            convertFormat.value;
+
+        if (target === "image/jpeg") {
+
+            ctx.fillStyle = "#ffffff";
+
+            ctx.fillRect(
+                0,
+                0,
+                convertCanvas.width,
+                convertCanvas.height
+            );
+
+        }
+
+        ctx.drawImage(img,0,0);
+
+        const q =
+            Number(convertQuality.value) / 100;
+
+        convertCanvas.toBlob(
+            blob => {
+
+                if (!blob) {
+
+                    convertStatus.textContent =
+                        "Conversion failed.";
+
+                    return;
+
+                }
+
+                convertBlob = blob;
+
+                downloadConvert.disabled =
+                    false;
+
+                convertStatus.textContent =
+                    "Image converted successfully.";
+
+            },
+            target,
+            q
+        );
+
+    };
+
+    img.src =
+        convertPreview.src;
+
+});
+
+
+downloadConvert.addEventListener("click", () => {
+
+    if (!convertBlob) return;
+
+    let ext = "jpg";
+
+    if (convertBlob.type === "image/png") {
+
+        ext = "png";
+
+    } else if (
+        convertBlob.type === "image/webp"
+    ) {
+
+        ext = "webp";
+
+    }
+
+    const url =
+        URL.createObjectURL(convertBlob);
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+        "ai-unity-hub-converted." + ext;
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+});
+
+
+document
+.getElementById("resetConvert")
+.addEventListener("click", () => {
+
+    convertInput.value = "";
+
+    convertPreview.src = "";
+
+    convertPreview.style.display =
+        "none";
+
+    convertBtn.disabled = true;
+
+    downloadConvert.disabled = true;
+
+    convertStatus.textContent = "";
+
+    convertFile = null;
+
+    convertBlob = null;
+
+});
+
+
+/* =========================
+   FORMAT SIZE
+========================= */
+
+function formatBytes(bytes) {
+
+    if (bytes === 0)
+        return "0 Bytes";
+
+    const units = [
+        "Bytes",
+        "KB",
+        "MB",
+        "GB"
+    ];
+
+    const i =
+        Math.floor(
+            Math.log(bytes) /
+            Math.log(1024)
+        );
+
+    return (
+        parseFloat(
+            (
+                bytes /
+                Math.pow(1024,i)
+            ).toFixed(2)
+        )
+        + " "
+        + units[i]
+    );
+
+}
+
+</script>
+<script type="module" src="auth-guard.js"></script>
+</body>
+</html>

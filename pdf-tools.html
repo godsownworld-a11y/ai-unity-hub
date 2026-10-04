@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Tools — AI Unity Hub</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#080808;
+    color:#fff;
+    min-height:100vh;
+}
+
+header{
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 7%;
+    border-bottom:1px solid #222;
+    background:#0b0b0b;
+}
+
+.logo{
+    font-size:21px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#aaa;
+}
+
+nav{
+    display:flex;
+    gap:22px;
+}
+
+nav a{
+    color:#aaa;
+    text-decoration:none;
+    font-size:14px;
+}
+
+nav a:hover{
+    color:#fff;
+}
+
+.container{
+    width:92%;
+    max-width:1100px;
+    margin:45px auto;
+}
+
+.title{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.title h1{
+    font-size:38px;
+    margin-bottom:10px;
+}
+
+.title p{
+    color:#999;
+    font-size:15px;
+}
+
+.tabs{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
+}
+
+.tab{
+    padding:12px 17px;
+    border:1px solid #292929;
+    background:#111;
+    color:#aaa;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.tab.active{
+    background:#fff;
+    color:#000;
+}
+
+.tool{
+    display:none;
+}
+
+.tool.active{
+    display:block;
+}
+
+.card{
+    max-width:850px;
+    margin:auto;
+    background:#101010;
+    border:1px solid #242424;
+    border-radius:18px;
+    padding:28px;
+}
+
+.card h2{
+    font-size:25px;
+    margin-bottom:8px;
+}
+
+.desc{
+    color:#888;
+    font-size:14px;
+    margin-bottom:22px;
+}
+
+input[type=file]{
+    width:100%;
+    padding:14px;
+    background:#090909;
+    border:1px dashed #333;
+    border-radius:10px;
+    color:#aaa;
+    margin-bottom:18px;
+}
+
+button.action{
+    padding:13px 20px;
+    border:0;
+    border-radius:9px;
+    background:#fff;
+    color:#000;
+    font-weight:bold;
+    cursor:pointer;
+    margin:5px 5px 5px 0;
+}
+
+button.secondary{
+    background:#1b1b1b;
+    color:#fff;
+    border:1px solid #333;
+}
+
+button:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+}
+
+.status{
+    min-height:22px;
+    color:#aaa;
+    font-size:14px;
+    margin:12px 0;
+}
+
+.file-list{
+    margin:15px 0;
+}
+
+.file-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px;
+    margin:7px 0;
+    background:#0a0a0a;
+    border:1px solid #222;
+    border-radius:9px;
+    font-size:13px;
+    color:#bbb;
+}
+
+.file-item button{
+    background:#222;
+    color:#fff;
+    border:1px solid #333;
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.settings{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin:18px 0;
+}
+
+.box{
+    background:#0b0b0b;
+    border:1px solid #222;
+    border-radius:10px;
+    padding:15px;
+}
+
+.box label{
+    display:block;
+    color:#999;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.box input,
+.box select{
+    width:100%;
+    padding:11px;
+    background:#151515;
+    border:1px solid #333;
+    border-radius:8px;
+    color:#fff;
+}
+
+.preview-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    gap:15px;
+    margin:20px 0;
+}
+
+.page-preview{
+    background:#0b0b0b;
+    border:1px solid #222;
+    border-radius:10px;
+    padding:10px;
+    text-align:center;
+}
+
+.page-preview img{
+    max-width:100%;
+    border-radius:5px;
+}
+
+.page-preview p{
+    color:#888;
+    font-size:12px;
+    margin:7px 0;
+}
+
+footer{
+    text-align:center;
+    color:#555;
+    font-size:13px;
+    padding:35px 15px;
+    margin-top:45px;
+    border-top:1px solid #181818;
+}
+
+@media(max-width:700px){
+    header{
+        padding:0 5%;
+    }
+
+    nav{
+        gap:10px;
+    }
+
+    .title h1{
+        font-size:30px;
+    }
+
+    .card{
+        padding:20px;
+    }
+
+    .settings{
+        grid-template-columns:1fr;
+    }
+
+    .tab{
+        flex:1;
+        min-width:130px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        AI <span>Unity Hub</span>
+    </div>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="history.html">History</a>
+        <a href="profile.html">Profile</a>
+    </nav>
+</header>
+
+<div class="container">
+
+<div class="title">
+    <h1>PDF Tools</h1>
+    <p>Simple PDF tools — all in one place.</p>
+</div>
+
+<div class="tabs">
+
+<button class="tab active" data-tool="merge">
+    📎 Merge PDF
+</button>
+
+<button class="tab" data-tool="split">
+    ✂️ Split PDF
+</button>
+
+<button class="tab" data-tool="compress">
+    🗜️ Compress PDF
+</button>
+
+<button class="tab" data-tool="pdfjpg">
+    🖼️ PDF → JPG
+</button>
+
+<button class="tab" data-tool="jpgpdf">
+    📄 JPG → PDF
+</button>
+
+</div>
+
+
+<!-- MERGE -->
+
+<section class="tool active" id="merge">
+
+<div class="card">
+
+<h2>📎 Merge PDF</h2>
+
+<p class="desc">
+Combine multiple PDF files into one PDF.
+</p>
+
+<input
+type="file"
+id="mergeInput"
+accept="application/pdf"
+multiple
+>
+
+<div id="mergeList" class="file-list"></div>
+
+<div id="mergeStatus" class="status"></div>
+
+<button class="action" id="mergeBtn" disabled>
+Merge PDFs
+</button>
+
+<button class="action secondary" id="mergeDownload" disabled>
+Download PDF
+</button>
+
+<button class="action secondary" id="mergeReset">
+Reset
+</button>
+
+</div>
+</section>
+
+
+<!-- SPLIT -->
+
+<section class="tool" id="split">
+
+<div class="card">
+
+<h2>✂️ Split PDF</h2>
+
+<p class="desc">
+Extract selected pages from a PDF into a new PDF.
+</p>
+
+<input
+type="file"
+id="splitInput"
+accept="application/pdf"
+>
+
+<div class="settings">
+
+<div class="box">
+<label>Start Page</label>
+<input type="number" id="startPage" min="1" value="1">
+</div>
+
+<div class="box">
+<label>End Page</label>
+<input type="number" id="endPage" min="1" value="1">
+</div>
+
+</div>
+
+<div id="splitStatus" class="status"></div>
+
+<button class="action" id="splitBtn" disabled>
+Split PDF
+</button>
+
+<button class="action secondary" id="splitDownload" disabled>
+Download PDF
+</button>
+
+<button class="action secondary" id="splitReset">
+Reset
+</button>
+
+</div>
+</section>
+
+
+<!-- COMPRESS -->
+
+<section class="tool" id="compress">
+
+<div class="card">
+
+<h2>🗜️ Compress PDF</h2>
+
+<p class="desc">
+Create a new optimized PDF from the selected PDF.
+</p>
+
+<input
+type="file"
+id="compressInput"
+accept="application/pdf"
+>
+
+<div id="compressStatus" class="status"></div>
+
+<button class="action" id="compressBtn" disabled>
+Optimize PDF
+</button>
+
+<button class="action secondary" id="compressDownload" disabled>
+Download PDF
+</button>
+
+<button class="action secondary" id="compressReset">
+Reset
+</button>
+
+</div>
+</section>
+
+
+<!-- PDF JPG -->
+
+<section class="tool" id="pdfjpg">
+
+<div class="card">
+
+<h2>🖼️ PDF → JPG</h2>
+
+<p class="desc">
+Convert PDF pages into JPG images.
+</p>
+
+<input
+type="file"
+id="pdfJpgInput"
+accept="application/pdf"
+>
+
+<div class="settings">
+
+<div class="box">
+<label>Image Quality</label>
+
+<select id="jpgQuality">
+<option value="1.5">Standard</option>
+<option value="2">High</option>
+<option value="2.5">Very High</option>
+</select>
+</div>
+
+<div class="box">
+<label>Pages</label>
+
+<select id="jpgPages">
+<option value="all">All Pages</option>
+<option value="first">First Page</option>
+</select>
+</div>
+
+</div>
+
+<div id="pdfJpgPreview" class="preview-grid"></div>
+
+<div id="pdfJpgStatus" class="status"></div>
+
+<button class="action" id="pdfJpgBtn" disabled>
+Convert to JPG
+</button>
+
+<button class="action secondary" id="pdfJpgReset">
+Reset
+</button>
+
+</div>
+</section>
+
+
+<!-- JPG PDF -->
+
+<section class="tool" id="jpgpdf">
+
+<div class="card">
+
+<h2>📄 JPG → PDF</h2>
+
+<p class="desc">
+Convert one or multiple images into a PDF.
+</p>
+
+<input
+type="file"
+id="jpgPdfInput"
+accept="image/jpeg,image/png,image/webp"
+multiple
+>
+
+<div id="jpgPdfList" class="file-list"></div>
+
+<div id="jpgPdfStatus" class="status"></div>
+
+<button class="action" id="jpgPdfBtn" disabled>
+Create PDF
+</button>
+
+<button class="action secondary" id="jpgPdfDownload" disabled>
+Download PDF
+</button>
+
+<button class="action secondary" id="jpgPdfReset">
+Reset
+</button>
+
+</div>
+</section>
+
+</div>
+
+<footer>
+AI Unity Hub — by CK Izyaan
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+
+<script type="module">
+
+import * as pdfjsLib from
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
+
+const { PDFDocument } = window.PDFLib;
+
+
+/* TABS */
+
+document.querySelectorAll(".tab").forEach(tab => {
+
+    tab.addEventListener("click", () => {
+
+        document.querySelectorAll(".tab")
+        .forEach(x => x.classList.remove("active"));
+
+        document.querySelectorAll(".tool")
+        .forEach(x => x.classList.remove("active"));
+
+        tab.classList.add("active");
+
+        document
+        .getElementById(tab.dataset.tool)
+        .classList.add("active");
+
+    });
+
+});
+
+
+/* MERGE */
+
+let mergeFiles = [];
+let mergedBlob = null;
+
+const mergeInput =
+document.getElementById("mergeInput");
+
+const mergeList =
+document.getElementById("mergeList");
+
+const mergeBtn =
+document.getElementById("mergeBtn");
+
+const mergeDownload =
+document.getElementById("mergeDownload");
+
+const mergeStatus =
+document.getElementById("mergeStatus");
+
+
+mergeInput.addEventListener("change", () => {
+
+    mergeFiles = Array.from(mergeInput.files);
+
+    renderMergeList();
+
+});
+
+
+function renderMergeList(){
+
+    mergeList.innerHTML = "";
+
+    mergeFiles.forEach((file,index) => {
+
+        const item = document.createElement("div");
+
+        item.className = "file-item";
+
+        item.innerHTML = `
+            <span>${index + 1}. ${file.name}</span>
+            <button>Remove</button>
+        `;
+
+        item.querySelector("button").onclick = () => {
+
+            mergeFiles.splice(index,1);
+
+            renderMergeList();
+
+        };
+
+        mergeList.appendChild(item);
+
+    });
+
+    mergeBtn.disabled = mergeFiles.length < 2;
+
+}
+
+
+mergeBtn.addEventListener("click", async () => {
+
+    try{
+
+        mergeBtn.disabled = true;
+
+        mergeStatus.textContent = "Merging PDFs...";
+
+        const output = await PDFDocument.create();
+
+        for(const file of mergeFiles){
+
+            const bytes = await file.arrayBuffer();
+
+            const source = await PDFDocument.load(bytes);
+
+            const pages = await output.copyPages(
+                source,
+                source.getPageIndices()
+            );
+
+            pages.forEach(page => output.addPage(page));
+
+        }
+
+        const bytes = await output.save();
+
+        mergedBlob = new Blob(
+            [bytes],
+            {type:"application/pdf"}
+        );
+
+        mergeDownload.disabled = false;
+
+        mergeStatus.textContent =
+        "PDFs merged successfully.";
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        mergeStatus.textContent =
+        "Could not merge the PDFs.";
+
+    }
+
+    mergeBtn.disabled = false;
+
+});
+
+
+mergeDownload.onclick = () => {
+
+    if(mergedBlob)
+        downloadBlob(
+            mergedBlob,
+            "ai-unity-hub-merged.pdf"
+        );
+
+};
+
+
+document.getElementById("mergeReset").onclick = () => {
+
+    mergeInput.value = "";
+
+    mergeFiles = [];
+
+    mergedBlob = null;
+
+    mergeList.innerHTML = "";
+
+    mergeStatus.textContent = "";
+
+    mergeBtn.disabled = true;
+
+    mergeDownload.disabled = true;
+
+};
+
+
+/* SPLIT */
+
+let splitFile = null;
+let splitBlob = null;
+
+const splitInput =
+document.getElementById("splitInput");
+
+const splitBtn =
+document.getElementById("splitBtn");
+
+const splitDownload =
+document.getElementById("splitDownload");
+
+const splitStatus =
+document.getElementById("splitStatus");
+
+
+splitInput.addEventListener("change", async () => {
+
+    splitFile = splitInput.files[0];
+
+    if(!splitFile) return;
+
+    try{
+
+        const bytes = await splitFile.arrayBuffer();
+
+        const pdf = await PDFDocument.load(bytes);
+
+        const pages = pdf.getPageCount();
+
+        document.getElementById("endPage").value = pages;
+
+        document.getElementById("endPage").max = pages;
+
+        document.getElementById("startPage").max = pages;
+
+        splitBtn.disabled = false;
+
+        splitStatus.textContent =
+        `${pages} page(s) detected.`;
+
+    }
+    catch(error){
+
+        splitStatus.textContent =
+        "Invalid PDF file.";
+
+    }
+
+});
+
+
+splitBtn.onclick = async () => {
+
+    try{
+
+        const start =
+        Number(document.getElementById("startPage").value) - 1;
+
+        const end =
+        Number(document.getElementById("endPage").value) - 1;
+
+        const bytes = await splitFile.arrayBuffer();
+
+        const source = await PDFDocument.load(bytes);
+
+        if(
+            start < 0 ||
+            end >= source.getPageCount() ||
+            start > end
+        ){
+
+            splitStatus.textContent =
+            "Please enter valid page numbers.";
+
+            return;
+
+        }
+
+        const output = await PDFDocument.create();
+
+        const pages = await output.copyPages(
+            source,
+            Array.from(
+                {length:end-start+1},
+                (_,i)=>start+i
+            )
+        );
+
+        pages.forEach(page => output.addPage(page));
+
+        const result = await output.save();
+
+        splitBlob = new Blob(
+            [result],
+            {type:"application/pdf"}
+        );
+
+        splitDownload.disabled = false;
+
+        splitStatus.textContent =
+        "PDF split successfully.";
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        splitStatus.textContent =
+        "Could not split PDF.";
+
+    }
+
+};
+
+
+splitDownload.onclick = () => {
+
+    if(splitBlob)
+        downloadBlob(
+            splitBlob,
+            "ai-unity-hub-split.pdf"
+        );
+
+};
+
+
+document.getElementById("splitReset").onclick = () => {
+
+    splitInput.value = "";
+
+    splitFile = null;
+
+    splitBlob = null;
+
+    splitBtn.disabled = true;
+
+    splitDownload.disabled = true;
+
+    splitStatus.textContent = "";
+
+};
+
+
+/* COMPRESS */
+
+let compressPdfFile = null;
+let compressedPdfBlob = null;
+
+const compressInput =
+document.getElementById("compressInput");
+
+const compressBtn =
+document.getElementById("compressBtn");
+
+const compressDownload =
+document.getElementById("compressDownload");
+
+const compressStatus =
+document.getElementById("compressStatus");
+
+
+compressInput.onchange = () => {
+
+    compressPdfFile = compressInput.files[0];
+
+    compressBtn.disabled = !compressPdfFile;
+
+    compressStatus.textContent =
+    compressPdfFile ? "PDF ready." : "";
+
+};
+
+
+compressBtn.onclick = async () => {
+
+    try{
+
+        compressBtn.disabled = true;
+
+        compressStatus.textContent =
+        "Optimizing PDF...";
+
+        const bytes =
+        await compressPdfFile.arrayBuffer();
+
+        const source =
+        await PDFDocument.load(bytes);
+
+        const output =
+        await PDFDocument.create();
+
+        const pages =
+        await output.copyPages(
+            source,
+            source.getPageIndices()
+        );
+
+        pages.forEach(page => output.addPage(page));
+
+        const result =
+        await output.save({
+            useObjectStreams:true,
+            addDefaultPage:false
+        });
+
+        compressedPdfBlob =
+        new Blob(
+            [result],
+            {type:"application/pdf"}
+        );
+
+        compressDownload.disabled = false;
+
+        compressStatus.textContent =
+        "PDF optimization completed.";
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        compressStatus.textContent =
+        "Could not optimize PDF.";
+
+    }
+
+    compressBtn.disabled = false;
+
+};
+
+
+compressDownload.onclick = () => {
+
+    if(compressedPdfBlob)
+        downloadBlob(
+            compressedPdfBlob,
+            "ai-unity-hub-compressed.pdf"
+        );
+
+};
+
+
+document.getElementById("compressReset").onclick = () => {
+
+    compressInput.value = "";
+
+    compressPdfFile = null;
+
+    compressedPdfBlob = null;
+
+    compressBtn.disabled = true;
+
+    compressDownload.disabled = true;
+
+    compressStatus.textContent = "";
+
+};
+
+
+/* PDF → JPG */
+
+let pdfJpgFile = null;
+
+const pdfJpgInput =
+document.getElementById("pdfJpgInput");
+
+const pdfJpgBtn =
+document.getElementById("pdfJpgBtn");
+
+const pdfJpgPreview =
+document.getElementById("pdfJpgPreview");
+
+const pdfJpgStatus =
+document.getElementById("pdfJpgStatus");
+
+
+pdfJpgInput.onchange = () => {
+
+    pdfJpgFile = pdfJpgInput.files[0];
+
+    pdfJpgBtn.disabled = !pdfJpgFile;
+
+    pdfJpgPreview.innerHTML = "";
+
+    pdfJpgStatus.textContent =
+    pdfJpgFile ? "PDF ready." : "";
+
+};
+
+
+pdfJpgBtn.onclick = async () => {
+
+    try{
+
+        pdfJpgBtn.disabled = true;
+
+        pdfJpgStatus.textContent =
+        "Converting PDF pages...";
+
+        pdfJpgPreview.innerHTML = "";
+
+        const bytes =
+        await pdfJpgFile.arrayBuffer();
+
+        const pdf =
+        await pdfjsLib.getDocument({
+            data:bytes
+        }).promise;
+
+        const mode =
+        document.getElementById("jpgPages").value;
+
+        const scale =
+        Number(document.getElementById("jpgQuality").value);
+
+        let total = pdf.numPages;
+
+        if(mode === "first")
+            total = 1;
+
+        for(let pageNo=1; pageNo<=total; pageNo++){
+
+            const page = await pdf.getPage(pageNo);
+
+            const viewport =
+            page.getViewport({scale});
+
+            const canvas =
+            document.createElement("canvas");
+
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            const ctx =
+            canvas.getContext("2d");
+
+            await page.render({
+                canvasContext:ctx,
+                viewport:viewport
+            }).promise;
+
+            const preview =
+            document.createElement("div");
+
+            preview.className = "page-preview";
+
+            const image =
+            document.createElement("img");
+
+            image.src =
+            canvas.toDataURL(
+                "image/jpeg",
+                0.92
+            );
+
+            const title =
+            document.createElement("p");
+
+            title.textContent =
+            `Page ${pageNo}`;
+
+            const download =
+            document.createElement("button");
+
+            download.className = "action";
+
+            download.textContent =
+            "Download JPG";
+
+            download.onclick = () => {
+
+                const a =
+                document.createElement("a");
+
+                a.href = image.src;
+
+                a.download =
+                `ai-unity-hub-page-${pageNo}.jpg`;
+
+                a.click();
+
+            };
+
+            preview.appendChild(image);
+
+            preview.appendChild(title);
+
+            preview.appendChild(download);
+
+            pdfJpgPreview.appendChild(preview);
+
+        }
+
+        pdfJpgStatus.textContent =
+        "Conversion completed.";
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        pdfJpgStatus.textContent =
+        "Could not convert PDF.";
+
+    }
+
+    pdfJpgBtn.disabled = false;
+
+};
+
+
+document.getElementById("pdfJpgReset").onclick = () => {
+
+    pdfJpgInput.value = "";
+
+    pdfJpgFile = null;
+
+    pdfJpgPreview.innerHTML = "";
+
+    pdfJpgStatus.textContent = "";
+
+    pdfJpgBtn.disabled = true;
+
+};
+
+
+/* JPG → PDF */
+
+let jpgPdfFiles = [];
+let jpgPdfBlob = null;
+
+const jpgPdfInput =
+document.getElementById("jpgPdfInput");
+
+const jpgPdfList =
+document.getElementById("jpgPdfList");
+
+const jpgPdfBtn =
+document.getElementById("jpgPdfBtn");
+
+const jpgPdfDownload =
+document.getElementById("jpgPdfDownload");
+
+const jpgPdfStatus =
+document.getElementById("jpgPdfStatus");
+
+
+jpgPdfInput.onchange = () => {
+
+    jpgPdfFiles =
+    Array.from(jpgPdfInput.files);
+
+    renderJpgPdfList();
+
+};
+
+
+function renderJpgPdfList(){
+
+    jpgPdfList.innerHTML = "";
+
+    jpgPdfFiles.forEach((file,index) => {
+
+        const item =
+        document.createElement("div");
+
+        item.className = "file-item";
+
+        item.innerHTML = `
+            <span>${index+1}. ${file.name}</span>
+            <button>Remove</button>
+        `;
+
+        item.querySelector("button").onclick = () => {
+
+            jpgPdfFiles.splice(index,1);
+
+            renderJpgPdfList();
+
+        };
+
+        jpgPdfList.appendChild(item);
+
+    });
+
+    jpgPdfBtn.disabled =
+    jpgPdfFiles.length === 0;
+
+}
+
+
+jpgPdfBtn.onclick = async () => {
+
+    try{
+
+        jpgPdfBtn.disabled = true;
+
+        jpgPdfStatus.textContent =
+        "Creating PDF...";
+
+        const pdf =
+        await PDFDocument.create();
+
+        for(const file of jpgPdfFiles){
+
+            const bytes =
+            await file.arrayBuffer();
+
+            let image;
+
+            if(file.type === "image/jpeg"){
+
+                image =
+                await pdf.embedJpg(bytes);
+
+            }
+            else{
+
+                image =
+                await pdf.embedPng(
+                    await convertImageToPng(bytes)
+                );
+
+            }
+
+            const page =
+            pdf.addPage([
+                image.width,
+                image.height
+            ]);
+
+            page.drawImage(image,{
+                x:0,
+                y:0,
+                width:image.width,
+                height:image.height
+            });
+
+        }
+
+        const result =
+        await pdf.save();
+
+        jpgPdfBlob =
+        new Blob(
+            [result],
+            {type:"application/pdf"}
+        );
+
+        jpgPdfDownload.disabled = false;
+
+        jpgPdfStatus.textContent =
+        "PDF created successfully.";
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        jpgPdfStatus.textContent =
+        "Could not create PDF.";
+
+    }
+
+    jpgPdfBtn.disabled = false;
+
+};
+
+
+jpgPdfDownload.onclick = () => {
+
+    if(jpgPdfBlob)
+        downloadBlob(
+            jpgPdfBlob,
+            "ai-unity-hub-images.pdf"
+        );
+
+};
+
+
+document.getElementById("jpgPdfReset").onclick = () => {
+
+    jpgPdfInput.value = "";
+
+    jpgPdfFiles = [];
+
+    jpgPdfBlob = null;
+
+    jpgPdfList.innerHTML = "";
+
+    jpgPdfStatus.textContent = "";
+
+    jpgPdfBtn.disabled = true;
+
+    jpgPdfDownload.disabled = true;
+
+};
+
+
+/* IMAGE → PNG */
+
+async function convertImageToPng(bytes){
+
+    const blob = new Blob([bytes]);
+
+    const url = URL.createObjectURL(blob);
+
+    const img = new Image();
+
+    await new Promise((resolve,reject) => {
+
+        img.onload = resolve;
+
+        img.onerror = reject;
+
+        img.src = url;
+
+    });
+
+    const canvas =
+    document.createElement("canvas");
+
+    canvas.width = img.naturalWidth;
+
+    canvas.height = img.naturalHeight;
+
+    const ctx =
+    canvas.getContext("2d");
+
+    ctx.drawImage(img,0,0);
+
+    URL.revokeObjectURL(url);
+
+    return new Promise(resolve => {
+
+        canvas.toBlob(
+            async blob => {
+                resolve(await blob.arrayBuffer());
+            },
+            "image/png"
+        );
+
+    });
+
+}
+
+
+/* DOWNLOAD */
+
+function downloadBlob(blob,filename){
+
+    const url =
+    URL.createObjectURL(blob);
+
+    const a =
+    document.createElement("a");
+
+    a.href = url;
+
+    a.download = filename;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    setTimeout(() => {
+        URL.revokeObjectURL(url);
+    },1000);
+
+}
+
+</script>
+<script type="module" src="auth-guard.js"></script>
+</body>
+</html>

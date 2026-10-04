@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login — AI Unity Hub</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#080808;
+    color:white;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.login-box{
+    width:100%;
+    max-width:420px;
+    background:#101010;
+    border:1px solid #252525;
+    border-radius:20px;
+    padding:40px;
+}
+
+.logo{
+    text-align:center;
+    font-size:25px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.welcome{
+    text-align:center;
+    color:#888;
+    font-size:14px;
+    margin-bottom:35px;
+}
+
+h1{
+    font-size:28px;
+    margin-bottom:25px;
+}
+
+label{
+    display:block;
+    color:#aaa;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    margin-bottom:18px;
+    background:#181818;
+    border:1px solid #2c2c2c;
+    border-radius:9px;
+    color:white;
+    outline:none;
+}
+
+input:focus{
+    border-color:#666;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:9px;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:15px;
+}
+
+button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.login-btn{
+    background:white;
+    color:black;
+    margin-bottom:15px;
+}
+
+.google-btn{
+    background:#181818;
+    color:white;
+    border:1px solid #333;
+}
+
+.forgot{
+    display:block;
+    text-align:right;
+    color:#aaa;
+    font-size:12px;
+    margin-top:-8px;
+    margin-bottom:20px;
+    cursor:pointer;
+}
+
+.divider{
+    text-align:center;
+    color:#666;
+    margin:20px 0;
+    font-size:13px;
+}
+
+.signup{
+    text-align:center;
+    color:#777;
+    font-size:13px;
+    margin-top:25px;
+}
+
+.signup a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.brand{
+    text-align:center;
+    color:#555;
+    font-size:11px;
+    margin-top:30px;
+}
+
+#message{
+    text-align:center;
+    font-size:13px;
+    color:#aaa;
+    margin-bottom:15px;
+    min-height:18px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-box">
+
+    <div class="logo">
+        AI Unity Hub
+    </div>
+
+    <div class="welcome">
+        Your AI & Digital Tools, One Place
+    </div>
+
+    <h1 id="title">
+        Welcome Back
+    </h1>
+
+    <div id="message"></div>
+
+
+    <label>Email</label>
+
+    <input
+        type="email"
+        id="email"
+        placeholder="Enter your email"
+    >
+
+
+    <label>Password</label>
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Enter your password"
+    >
+
+
+    <span
+        class="forgot"
+        id="forgotBtn"
+    >
+        Forgot Password?
+    </span>
+
+
+    <button
+        class="login-btn"
+        id="mainBtn"
+    >
+        Login
+    </button>
+
+
+    <div class="divider">
+        OR
+    </div>
+
+
+    <button
+        class="google-btn"
+        id="googleBtn"
+    >
+        Continue with Google
+    </button>
+
+
+    <div class="signup">
+
+        <span id="switchText">
+            Don't have an account?
+        </span>
+
+        <a id="switchBtn">
+            Sign Up
+        </a>
+
+    </div>
+
+
+    <div class="brand">
+        AI Unity Hub — by CK Izyaan
+    </div>
+
+</div>
+
+
+
+<script type="module">
+
+
+/* ================================
+   FIREBASE IMPORTS
+================================ */
+
+import {
+    initializeApp
+} from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+
+import {
+    getAuth,
+    setPersistence,
+    browserLocalPersistence,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signInWithPopup,
+    GoogleAuthProvider,
+    sendPasswordResetEmail
+} from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    serverTimestamp
+} from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+
+
+/* ================================
+   FIREBASE CONFIG
+================================ */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyA4aQj8bxLOmIdxJai3LEt6I1jV8BF0zJc",
+
+    authDomain:
+        "ai-unity-hub.firebaseapp.com",
+
+    projectId:
+        "ai-unity-hub",
+
+    storageBucket:
+        "ai-unity-hub.firebasestorage.app",
+
+    messagingSenderId:
+        "499702999885",
+
+    appId:
+        "1:499702999885:web:8f599c540741c39c4aa504",
+
+    measurementId:
+        "G-W3GGBB7VYX"
+
+};
+
+
+
+/* ================================
+   START FIREBASE
+================================ */
+
+const app =
+    initializeApp(firebaseConfig);
+
+
+const auth =
+    getAuth(app);
+
+
+const db =
+    getFirestore(app);
+
+
+const provider =
+    new GoogleAuthProvider();
+
+
+
+/* ================================
+   FORCE LOCAL LOGIN PERSISTENCE
+================================ */
+
+await setPersistence(
+    auth,
+    browserLocalPersistence
+);
+
+
+
+/* ================================
+   ELEMENTS
+================================ */
+
+const title =
+    document.getElementById("title");
+
+const mainBtn =
+    document.getElementById("mainBtn");
+
+const switchBtn =
+    document.getElementById("switchBtn");
+
+const switchText =
+    document.getElementById("switchText");
+
+const googleBtn =
+    document.getElementById("googleBtn");
+
+const forgotBtn =
+    document.getElementById("forgotBtn");
+
+const message =
+    document.getElementById("message");
+
+const emailInput =
+    document.getElementById("email");
+
+const passwordInput =
+    document.getElementById("password");
+
+
+
+/* ================================
+   MODE
+================================ */
+
+let signupMode = false;
+
+
+
+/* ================================
+   MESSAGE
+================================ */
+
+function showMessage(text){
+
+    message.textContent = text;
+
+}
+
+
+
+/* ================================
+   LOGIN / SIGNUP
+================================ */
+
+mainBtn.addEventListener(
+    "click",
+    async () => {
+
+        const email =
+            emailInput.value.trim();
+
+        const password =
+            passwordInput.value;
+
+
+        if(!email || !password){
+
+            showMessage(
+                "Please enter email and password."
+            );
+
+            return;
+
+        }
+
+
+        mainBtn.disabled = true;
+
+
+        try{
+
+
+            /* ==========================
+               SIGN UP
+            ========================== */
+
+            if(signupMode){
+
+                const userCredential =
+                    await createUserWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
+
+
+                const user =
+                    userCredential.user;
+
+
+                await setDoc(
+    doc(db, "users", user.uid),
+    {
+        lastUsageDate:
+            new Date()
+            .toISOString()
+            .split("T")[0]
+    },
+    {
+        merge: true
+    }
+);
+
+
+                showMessage(
+                    "Account created successfully!"
+                );
+
+            }
+
+
+            /* ==========================
+               LOGIN
+            ========================== */
+
+            else{
+
+                await signInWithEmailAndPassword(
+
+                    auth,
+
+                    email,
+
+                    password
+
+                );
+
+
+                showMessage(
+                    "Login successful!"
+                );
+
+            }
+
+
+
+            /* ==========================
+               GO DASHBOARD
+            ========================== */
+
+            setTimeout(
+
+                () => {
+
+                    window.location.replace(
+                        "dashboard.html"
+                    );
+
+                },
+
+                500
+
+            );
+
+
+        }
+
+
+        catch(error){
+
+            console.error(
+                "LOGIN ERROR:",
+                error
+            );
+
+
+            showMessage(
+                error.message
+            );
+
+            mainBtn.disabled = false;
+
+        }
+
+    }
+);
+
+
+
+/* ================================
+   SWITCH LOGIN / SIGNUP
+================================ */
+
+switchBtn.addEventListener(
+    "click",
+    () => {
+
+        signupMode =
+            !signupMode;
+
+
+        if(signupMode){
+
+            title.textContent =
+                "Create Account";
+
+            mainBtn.textContent =
+                "Create Account";
+
+            switchText.textContent =
+                "Already have an account?";
+
+            switchBtn.textContent =
+                "Login";
+
+            forgotBtn.style.display =
+                "none";
+
+        }
+
+
+        else{
+
+            title.textContent =
+                "Welcome Back";
+
+            mainBtn.textContent =
+                "Login";
+
+            switchText.textContent =
+                "Don't have an account?";
+
+            switchBtn.textContent =
+                "Sign Up";
+
+            forgotBtn.style.display =
+                "block";
+
+        }
+
+
+        showMessage("");
+
+    }
+);
+
+
+
+/* ================================
+   GOOGLE LOGIN
+================================ */
+
+googleBtn.addEventListener(
+    "click",
+    async () => {
+
+        googleBtn.disabled = true;
+
+
+        try{
+
+            const result =
+                await signInWithPopup(
+                    auth,
+                    provider
+                );
+
+
+            const user =
+                result.user;
+
+
+            await setDoc(
+
+                doc(
+                    db,
+                    "users",
+                    user.uid
+                ),
+
+                {
+
+                    plan:"free",
+
+                    aiUsesToday:0,
+
+                    imageUsesToday:0,
+
+                    pdfUsesToday:0,
+
+                    lastUsageDate:
+                        new Date()
+                        .toISOString()
+                        .split("T")[0],
+
+                    createdAt:
+                        serverTimestamp()
+
+                },
+
+                {
+                    merge:true
+                }
+
+            );
+
+
+            showMessage(
+                "Google login successful!"
+            );
+
+
+            setTimeout(
+
+                () => {
+
+                    window.location.replace(
+                        "dashboard.html"
+                    );
+
+                },
+
+                500
+
+            );
+
+        }
+
+
+        catch(error){
+
+            console.error(
+                "GOOGLE LOGIN ERROR:",
+                error
+            );
+
+
+            showMessage(
+                error.message
+            );
+
+
+            googleBtn.disabled = false;
+
+        }
+
+    }
+);
+
+
+
+/* ================================
+   FORGOT PASSWORD
+================================ */
+
+forgotBtn.addEventListener(
+    "click",
+    async () => {
+
+        const email =
+            emailInput.value.trim();
+
+
+        if(!email){
+
+            showMessage(
+                "Enter your email first."
+            );
+
+            return;
+
+        }
+
+
+        try{
+
+            await sendPasswordResetEmail(
+                auth,
+                email
+            );
+
+
+            showMessage(
+                "Password reset email sent!"
+            );
+
+        }
+
+
+        catch(error){
+
+            console.error(
+                "RESET ERROR:",
+                error
+            );
+
+
+            showMessage(
+                error.message
+            );
+
+        }
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>

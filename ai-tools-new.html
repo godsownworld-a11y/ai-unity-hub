@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Tools — AI Unity Hub</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#0b0b0f;
+    color:white;
+}
+
+header{
+    padding:18px 7%;
+    border-bottom:1px solid #222;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:bold;
+}
+
+nav{
+    display:flex;
+    gap:18px;
+}
+
+nav a{
+    color:#aaa;
+    text-decoration:none;
+    font-size:14px;
+}
+
+nav a:hover{
+    color:white;
+}
+
+.container{
+    max-width:950px;
+    margin:40px auto;
+    padding:20px;
+}
+
+h1{
+    margin-bottom:8px;
+}
+
+.subtitle{
+    color:#aaa;
+    margin-bottom:25px;
+}
+
+.usage{
+    background:#15151c;
+    border:1px solid #292934;
+    border-radius:12px;
+    padding:15px 18px;
+    margin-bottom:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.usage-title{
+    color:#aaa;
+    font-size:14px;
+}
+
+.usage-count{
+    font-weight:bold;
+}
+
+.tools-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.tool-tab{
+    padding:13px;
+    border:1px solid #333;
+    background:#15151c;
+    color:#aaa;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:bold;
+    text-align:left;
+}
+
+.tool-tab:hover{
+    border-color:#8b5cf6;
+    color:white;
+}
+
+.tool-tab.active{
+    background:#8b5cf6;
+    color:white;
+    border-color:#8b5cf6;
+}
+
+.tool-box{
+    background:#15151c;
+    border:1px solid #292934;
+    border-radius:14px;
+    padding:25px;
+}
+
+label{
+    display:block;
+    margin:18px 0 8px;
+    font-weight:bold;
+}
+
+textarea{
+    width:100%;
+    min-height:200px;
+    resize:vertical;
+    background:#0d0d12;
+    color:white;
+    border:1px solid #333;
+    border-radius:10px;
+    padding:14px;
+    font-size:15px;
+    outline:none;
+}
+
+textarea:focus{
+    border-color:#8b5cf6;
+}
+
+select{
+    width:100%;
+    padding:13px;
+    background:#0d0d12;
+    color:white;
+    border:1px solid #333;
+    border-radius:10px;
+    font-size:15px;
+}
+
+.generate{
+    width:100%;
+    margin-top:22px;
+    padding:14px;
+    background:#8b5cf6;
+    color:white;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.generate:hover{
+    background:#7c3aed;
+}
+
+.generate:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.output-box{
+    margin-top:25px;
+    background:#0d0d12;
+    border:1px solid #292934;
+    border-radius:10px;
+    padding:18px;
+    min-height:180px;
+    white-space:pre-wrap;
+    line-height:1.6;
+}
+
+.status{
+    color:#aaa;
+    margin-top:10px;
+    font-size:14px;
+}
+
+.actions{
+    margin-top:12px;
+    display:flex;
+    gap:10px;
+}
+
+.small-btn{
+    padding:9px 15px;
+    border-radius:7px;
+    background:#222;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+footer{
+    text-align:center;
+    color:#777;
+    padding:35px 10px;
+}
+
+@media(max-width:650px){
+
+    header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    nav{
+        flex-wrap:wrap;
+    }
+
+    .tools-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+AI Unity Hub
+</div>
+
+<nav>
+<a href="dashboard.html">Dashboard</a>
+<a href="history.html">History</a>
+<a href="profile.html">Profile</a>
+<a href="premium.html">Premium</a>
+</nav>
+
+</header>
+
+
+<div class="container">
+
+<h1 id="pageTitle">AI Writer</h1>
+
+<div class="subtitle" id="pageSubtitle">
+Write, rewrite or improve your content.
+</div>
+
+
+<div class="usage">
+
+<div class="usage-title">
+AI Uses Today
+</div>
+
+<div class="usage-count" id="usageCount">
+0 / 5
+</div>
+
+</div>
+
+
+<div class="tools-grid">
+
+<button class="tool-tab active" data-tool="AI Writer">
+✍️ AI Writer
+</button>
+
+<button class="tool-tab" data-tool="Summarizer">
+📝 Summarizer
+</button>
+
+<button class="tool-tab" data-tool="Caption Generator">
+📸 Caption Generator
+</button>
+
+<button class="tool-tab" data-tool="Idea Generator">
+💡 Idea Generator
+</button>
+
+<button class="tool-tab" data-tool="Translator">
+🌍 Translator
+</button>
+
+<button class="tool-tab" data-tool="Email Writer">
+📧 Email Writer
+</button>
+
+<button class="tool-tab" data-tool="Text Improver">
+✨ Text Improver
+</button>
+
+<button class="tool-tab" data-tool="Rewriter">
+🔄 Rewriter
+</button>
+
+<button class="tool-tab" data-tool="Grammar Helper">
+📝 Grammar Helper
+</button>
+
+<button class="tool-tab" data-tool="Title Generator">
+🎯 Title Generator
+</button>
+
+</div>
+
+
+<div class="tool-box">
+
+
+<label id="inputLabel">
+What do you want to write?
+</label>
+
+<textarea
+id="userText"
+placeholder="Write your request here..."
+></textarea>
+
+
+<div id="optionsArea">
+
+<label id="optionLabel">
+Style
+</label>
+
+<select id="option">
+
+<option>Professional</option>
+<option>Casual</option>
+<option>Creative</option>
+<option>Friendly</option>
+<option>Short & Clean</option>
+
+</select>
+
+</div>
+
+
+<button
+class="generate"
+id="generateBtn">
+
+Generate
+
+</button>
+
+
+<div
+class="output-box"
+id="output">
+
+AI OUTPUT
+
+</div>
+
+
+<div
+class="status"
+id="status">
+
+Ready
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="small-btn"
+id="copyBtn">
+
+Copy
+
+</button>
+
+<button
+class="small-btn"
+id="clearBtn">
+
+Clear
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<footer>
+AI Unity Hub — by CK Izyaan
+</footer>
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+import {
+getAuth,
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyA4aQj8bxLOmIdxJai3LEt6I1jV8BF0zJc",
+
+authDomain: "ai-unity-hub.firebaseapp.com",
+
+projectId: "ai-unity-hub",
+
+storageBucket: "ai-unity-hub.firebasestorage.app",
+
+messagingSenderId: "499702999885",
+
+appId: "1:499702999885:web:8f599c540741c39c4aa504",
+
+measurementId: "G-W3GGBB7VYX"
+
+};
+
+
+const app =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(app);
+
+
+let currentUser = null;
+
+let currentTool = "AI Writer";
+
+
+const usageCount =
+document.getElementById("usageCount");
+
+const generateBtn =
+document.getElementById("generateBtn");
+
+const output =
+document.getElementById("output");
+
+const status =
+document.getElementById("status");
+
+const userText =
+document.getElementById("userText");
+
+const pageTitle =
+document.getElementById("pageTitle");
+
+const pageSubtitle =
+document.getElementById("pageSubtitle");
+
+const inputLabel =
+document.getElementById("inputLabel");
+
+const option =
+document.getElementById("option");
+
+const optionLabel =
+document.getElementById("optionLabel");
+
+
+onAuthStateChanged(auth,(user)=>{
+
+if(user){
+
+currentUser=user;
+
+console.log(
+"LOGIN FOUND:",
+user.email
+);
+
+}else{
+
+currentUser=null;
+
+console.log("NO LOGIN");
+
+}
+
+});
+
+
+const savedUsage =
+localStorage.getItem(
+"aiUnityAiUsesToday"
+);
+
+if(savedUsage){
+
+usageCount.innerText =
+savedUsage+" / 5";
+
+}
+
+
+/* Tool information */
+
+const toolInfo = {
+
+"AI Writer":{
+
+title:"AI Writer",
+
+subtitle:
+"Write, rewrite or improve your content.",
+
+label:
+"What do you want to write?",
+
+placeholder:
+"Write your request here...",
+
+optionLabel:"Tone",
+
+options:[
+"Professional",
+"Casual",
+"Creative",
+"Friendly",
+"Short & Clean"
+]
+
+},
+
+"Summarizer":{
+
+title:"AI Summarizer",
+
+subtitle:
+"Summarize long text quickly and clearly.",
+
+label:
+"Paste the text you want to summarize",
+
+placeholder:
+"Paste your text here...",
+
+optionLabel:"Summary Style",
+
+options:[
+"Short",
+"Detailed",
+"Bullet Points",
+"Simple"
+]
+
+},
+
+"Caption Generator":{
+
+title:"Caption Generator",
+
+subtitle:
+"Create captions for Instagram, reels and social media.",
+
+label:
+"What should the caption be about?",
+
+placeholder:
+"Example: sunset beach photo",
+
+optionLabel:"Caption Style",
+
+options:[
+"Clean",
+"Creative",
+"Emotional",
+"Mass",
+"Short"
+]
+
+},
+
+"Idea Generator":{
+
+title:"Idea Generator",
+
+subtitle:
+"Generate fresh creative ideas.",
+
+label:
+"What do you need ideas for?",
+
+placeholder:
+"Example: Instagram reel ideas",
+
+optionLabel:"Idea Style",
+
+options:[
+"Creative",
+"Viral",
+"Professional",
+"Simple",
+"Unique"
+]
+
+},
+
+"Translator":{
+
+title:"Translator",
+
+subtitle:
+"Translate your text into another language.",
+
+label:
+"What text do you want to translate?",
+
+placeholder:
+"Enter your text here...",
+
+optionLabel:"Target Language",
+
+options:[
+"English",
+"Malayalam",
+"Hindi",
+"Arabic",
+"Spanish"
+]
+
+},
+
+"Email Writer":{
+
+title:"Email Writer",
+
+subtitle:
+"Create clear and professional emails.",
+
+label:
+"What should the email say?",
+
+placeholder:
+"Describe what the email is about...",
+
+optionLabel:"Email Tone",
+
+options:[
+"Professional",
+"Friendly",
+"Formal",
+"Short",
+"Apology"
+]
+
+},
+
+"Text Improver":{
+
+title:"Text Improver",
+
+subtitle:
+"Make your text clearer and better.",
+
+label:
+"Paste your text",
+
+placeholder:
+"Paste your text here...",
+
+optionLabel:"Improvement Style",
+
+options:[
+"Professional",
+"Clear",
+"Natural",
+"Short",
+"Creative"
+]
+
+},
+
+"Rewriter":{
+
+title:"Rewriter",
+
+subtitle:
+"Rewrite your text in a better way.",
+
+label:
+"Paste the text you want to rewrite",
+
+placeholder:
+"Paste your text here...",
+
+optionLabel:"Rewrite Style",
+
+options:[
+"Professional",
+"Simple",
+"Creative",
+"Natural",
+"Short"
+]
+
+},
+
+"Grammar Helper":{
+
+title:"Grammar Helper",
+
+subtitle:
+"Fix grammar, spelling and sentence problems.",
+
+label:
+"Paste your text",
+
+placeholder:
+"Paste your text here...",
+
+optionLabel:"Correction Style",
+
+options:[
+"Fix Grammar",
+"Simple English",
+"Professional",
+"Natural",
+"Keep Original"
+]
+
+},
+
+"Title Generator":{
+
+title:"Title Generator",
+
+subtitle:
+"Generate strong titles for your content.",
+
+label:
+"What is your content about?",
+
+placeholder:
+"Example: YouTube video about Kerala",
+
+optionLabel:"Title Style",
+
+options:[
+"Professional",
+"Creative",
+"Short",
+"Viral",
+"Click-worthy"
+]
+
+}
+
+};
+
+
+/* Change tool */
+
+document
+.querySelectorAll(".tool-tab")
+.forEach(button=>{
+
+button.addEventListener(
+"click",
+()=>{
+
+document
+.querySelectorAll(".tool-tab")
+.forEach(btn=>{
+btn.classList.remove("active");
+});
+
+button.classList.add("active");
+
+currentTool =
+button.dataset.tool;
+
+const info =
+toolInfo[currentTool];
+
+
+pageTitle.innerText =
+info.title;
+
+pageSubtitle.innerText =
+info.subtitle;
+
+inputLabel.innerText =
+info.label;
+
+userText.placeholder =
+info.placeholder;
+
+optionLabel.innerText =
+info.optionLabel;
+
+
+option.innerHTML="";
+
+
+info.options.forEach(item=>{
+
+const opt =
+document.createElement("option");
+
+opt.value=item;
+
+opt.textContent=item;
+
+option.appendChild(opt);
+
+});
+
+
+userText.value="";
+
+output.innerText =
+"AI OUTPUT";
+
+status.innerText =
+"Ready";
+
+}
+
+);
+
+});
+
+
+/* Generate */
+
+generateBtn.addEventListener(
+"click",
+async()=>{
+
+const text =
+userText.value.trim();
+
+const selectedOption =
+option.value;
+
+
+if(!text){
+
+output.innerText =
+"Please enter something first.";
+
+status.innerText =
+"Waiting for your request.";
+
+return;
+
+}
+
+
+let attempts=0;
+
+
+while(
+!currentUser &&
+attempts<30
+){
+
+await new Promise(
+resolve=>
+setTimeout(resolve,100)
+);
+
+attempts++;
+
+}
+
+
+if(!currentUser){
+
+output.innerText =
+"Please login first.";
+
+status.innerText =
+"Login session not found.";
+
+return;
+
+}
+
+
+generateBtn.disabled=true;
+
+generateBtn.innerText=
+"Generating...";
+
+output.innerText=
+"Connecting to AI Unity Hub...";
+
+status.innerText=
+"Generating...";
+
+
+try{
+
+const idToken =
+await currentUser.getIdToken(true);
+
+
+const response =
+await fetch(
+"http://127.0.0.1:3000/api/generate",
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":
+"application/json",
+
+"Authorization":
+"Bearer "+idToken
+
+},
+
+body:JSON.stringify({
+
+tool:currentTool,
+
+text:text,
+
+action:selectedOption,
+
+tone:selectedOption
+
+})
+
+}
+);
+
+
+const result =
+await response.json();
+
+
+if(!response.ok){
+
+throw new Error(
+result.error ||
+"Server error"
+);
+
+}
+
+
+output.innerText =
+result.result ||
+"No result received.";
+
+
+status.innerText =
+"Completed ✓";
+
+
+if(
+typeof result.aiUsesToday
+==="number"
+){
+
+usageCount.innerText =
+result.aiUsesToday+" / 5";
+
+localStorage.setItem(
+"aiUnityAiUsesToday",
+result.aiUsesToday
+);
+
+}
+
+
+}catch(error){
+
+console.error(error);
+
+output.innerText =
+error.message;
+
+status.innerText =
+"Error";
+
+}
+
+
+generateBtn.disabled=false;
+
+generateBtn.innerText=
+"Generate";
+
+}
+);
+
+
+/* Copy */
+
+document
+.getElementById("copyBtn")
+.addEventListener(
+"click",
+async()=>{
+
+const text =
+output.innerText;
+
+
+if(
+!text ||
+text==="AI OUTPUT"
+){
+
+return;
+
+}
+
+
+await navigator.clipboard
+.writeText(text);
+
+status.innerText =
+"Copied ✓";
+
+}
+);
+
+
+/* Clear */
+
+document
+.getElementById("clearBtn")
+.addEventListener(
+"click",
+()=>{
+
+userText.value="";
+
+output.innerText=
+"AI OUTPUT";
+
+status.innerText=
+"Ready";
+
+}
+);
+
+</script>
+<script type="module" src="auth-guard.js"></script>
+</body>
+</html>

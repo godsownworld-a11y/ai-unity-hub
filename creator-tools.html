@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Creator Tools — AI Unity Hub</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#050505;
+    color:white;
+}
+
+header{
+    padding:18px 7%;
+    border-bottom:1px solid #222;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#aaa;
+}
+
+nav{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+nav a{
+    color:#ddd;
+    text-decoration:none;
+    border:1px solid #333;
+    padding:9px 14px;
+    border-radius:8px;
+}
+
+nav a:hover{
+    background:#181818;
+}
+
+.container{
+    width:90%;
+    max-width:1000px;
+    margin:40px auto;
+}
+
+h1{
+    font-size:38px;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    color:#aaa;
+    margin-bottom:20px;
+}
+
+.usage{
+    background:#0d0d0d;
+    border:1px solid #292929;
+    border-radius:12px;
+    padding:15px 18px;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.usage-title{
+    color:#aaa;
+}
+
+.usage-count{
+    font-weight:bold;
+}
+
+.tabs{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.tab{
+    background:#111;
+    color:#aaa;
+    border:1px solid #333;
+    padding:13px;
+    border-radius:9px;
+    cursor:pointer;
+    text-align:left;
+    font-weight:bold;
+}
+
+.tab:hover{
+    border-color:#8b5cf6;
+    color:white;
+}
+
+.tab.active{
+    background:#8b5cf6;
+    color:white;
+    border-color:#8b5cf6;
+}
+
+.tool{
+    background:#0d0d0d;
+    border:1px solid #242424;
+    border-radius:14px;
+    padding:25px;
+}
+
+label{
+    display:block;
+    margin:18px 0 8px;
+    color:#ddd;
+    font-weight:bold;
+}
+
+textarea,
+input,
+select{
+    width:100%;
+    padding:13px;
+    border-radius:8px;
+    border:1px solid #333;
+    background:#080808;
+    color:white;
+    font-size:15px;
+    outline:none;
+}
+
+textarea{
+    min-height:160px;
+    resize:vertical;
+}
+
+textarea:focus,
+input:focus,
+select:focus{
+    border-color:#8b5cf6;
+}
+
+.generate{
+    width:100%;
+    margin-top:20px;
+    padding:14px;
+    border:none;
+    border-radius:8px;
+    background:#8b5cf6;
+    color:white;
+    font-weight:bold;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.generate:hover{
+    background:#7c3aed;
+}
+
+.generate:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.output{
+    margin-top:25px;
+    padding:18px;
+    min-height:180px;
+    background:#050505;
+    border:1px solid #292929;
+    border-radius:10px;
+    white-space:pre-wrap;
+    line-height:1.6;
+}
+
+.status{
+    color:#888;
+    margin-top:10px;
+    font-size:14px;
+}
+
+.output-actions{
+    margin-top:10px;
+    display:flex;
+    gap:10px;
+}
+
+.small-btn{
+    padding:9px 14px;
+    background:#171717;
+    color:white;
+    border:1px solid #333;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+footer{
+    text-align:center;
+    color:#777;
+    padding:35px 10px;
+    border-top:1px solid #222;
+    margin-top:60px;
+}
+
+@media(max-width:600px){
+
+    header{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .container{
+        width:94%;
+        margin-top:25px;
+    }
+
+    h1{
+        font-size:30px;
+    }
+
+    .tabs{
+        grid-template-columns:1fr;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+AI <span>Unity Hub</span>
+</div>
+
+<nav>
+<a href="dashboard.html">Dashboard</a>
+<a href="history.html">History</a>
+<a href="profile.html">Profile</a>
+<a href="premium.html">Premium</a>
+</nav>
+
+</header>
+
+
+<div class="container">
+
+<h1 id="pageTitle">🎬 Creator Tools</h1>
+
+<p class="subtitle" id="pageSubtitle">
+Create ideas, hooks, scripts, captions and more with AI.
+</p>
+
+
+<div class="usage">
+
+<div class="usage-title">
+AI Uses Today
+</div>
+
+<div class="usage-count" id="usageCount">
+0 / 5
+</div>
+
+</div>
+
+
+<div class="tabs">
+
+<button class="tab active" data-tool="Reel Ideas">
+💡 Reel Ideas
+</button>
+
+<button class="tab" data-tool="Hook Generator">
+🪝 Hook Generator
+</button>
+
+<button class="tab" data-tool="Script Writer">
+📝 Script Writer
+</button>
+
+<button class="tab" data-tool="Caption Generator">
+📱 Caption Generator
+</button>
+
+<button class="tab" data-tool="Hashtag Generator">
+#️⃣ Hashtags
+</button>
+
+<button class="tab" data-tool="YouTube Title">
+▶️ YouTube Title
+</button>
+
+<button class="tab" data-tool="YouTube Description">
+📝 YouTube Description
+</button>
+
+<button class="tab" data-tool="Content Planner">
+📅 Content Planner
+</button>
+
+</div>
+
+
+<div class="tool">
+
+<label id="inputLabel">
+What is your topic?
+</label>
+
+<textarea
+id="userText"
+placeholder="Example: Kerala travel"
+></textarea>
+
+
+<label id="optionLabel">
+Platform
+</label>
+
+<select id="option">
+
+<option>Instagram Reels</option>
+<option>YouTube Shorts</option>
+<option>YouTube</option>
+<option>Instagram</option>
+
+</select>
+
+
+<button
+class="generate"
+id="generateBtn">
+
+Generate
+
+</button>
+
+
+<div
+class="output"
+id="output">
+
+Your AI result will appear here...
+
+</div>
+
+
+<div
+class="status"
+id="status">
+
+Ready
+
+</div>
+
+
+<div class="output-actions">
+
+<button
+class="small-btn"
+id="copyBtn">
+
+Copy
+
+</button>
+
+<button
+class="small-btn"
+id="clearBtn">
+
+Clear
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<footer>
+AI Unity Hub — by CK Izyaan
+</footer>
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+import {
+getAuth,
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+
+const firebaseConfig = {
+
+apiKey:"AIzaSyA4aQj8bxLOmIdxJai3LEt6I1jV8BF0zJc",
+
+authDomain:"ai-unity-hub.firebaseapp.com",
+
+projectId:"ai-unity-hub",
+
+storageBucket:"ai-unity-hub.firebasestorage.app",
+
+messagingSenderId:"499702999885",
+
+appId:"1:499702999885:web:8f599c540741c39c4aa504",
+
+measurementId:"G-W3GGBB7VYX"
+
+};
+
+
+const app =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(app);
+
+
+let currentUser=null;
+
+let currentTool="Reel Ideas";
+
+
+const usageCount =
+document.getElementById("usageCount");
+
+const userText =
+document.getElementById("userText");
+
+const option =
+document.getElementById("option");
+
+const optionLabel =
+document.getElementById("optionLabel");
+
+const inputLabel =
+document.getElementById("inputLabel");
+
+const generateBtn =
+document.getElementById("generateBtn");
+
+const output =
+document.getElementById("output");
+
+const status =
+document.getElementById("status");
+
+
+onAuthStateChanged(auth,(user)=>{
+
+if(user){
+
+currentUser=user;
+
+}else{
+
+currentUser=null;
+
+}
+
+});
+
+
+const savedUsage =
+localStorage.getItem(
+"aiUnityAiUsesToday"
+);
+
+if(savedUsage){
+
+usageCount.innerText=
+savedUsage+" / 5";
+
+}
+
+
+/* Tool settings */
+
+const tools={
+
+"Reel Ideas":{
+label:"What is your topic?",
+placeholder:"Example: Kerala travel",
+optionLabel:"Platform",
+options:[
+"Instagram Reels",
+"YouTube Shorts",
+"TikTok"
+]
+},
+
+"Hook Generator":{
+label:"What is your video about?",
+placeholder:"Example: Cinematic Kerala travel video",
+optionLabel:"Hook Style",
+options:[
+"Short",
+"Curious",
+"Emotional",
+"Bold",
+"Viral"
+]
+},
+
+"Script Writer":{
+label:"What is your video topic?",
+placeholder:"Example: 30 second Kozhikode beach reel",
+optionLabel:"Duration",
+options:[
+"15 seconds",
+"30 seconds",
+"60 seconds"
+]
+},
+
+"Caption Generator":{
+label:"Describe your post",
+placeholder:"Example: Sunset at Kozhikode beach",
+optionLabel:"Style",
+options:[
+"Clean",
+"Cinematic",
+"Emotional",
+"Mass",
+"Funny"
+]
+},
+
+"Hashtag Generator":{
+label:"What is your content about?",
+placeholder:"Example: Kerala photography",
+optionLabel:"Platform",
+options:[
+"Instagram",
+"YouTube",
+"Reels",
+"Shorts"
+]
+},
+
+"YouTube Title":{
+label:"What is your video about?",
+placeholder:"Example: Best places to visit in Kerala",
+optionLabel:"Title Style",
+options:[
+"Professional",
+"Creative",
+"Short",
+"Viral",
+"Click-worthy"
+]
+},
+
+"YouTube Description":{
+label:"Describe your video",
+placeholder:"Example: Kerala travel vlog covering Wayanad",
+optionLabel:"Style",
+options:[
+"Professional",
+"Friendly",
+"SEO",
+"Short",
+"Detailed"
+]
+},
+
+"Content Planner":{
+label:"What content do you create?",
+placeholder:"Example: Photography and travel",
+optionLabel:"Plan",
+options:[
+"7 Days",
+"14 Days",
+"30 Days",
+"Reels Only",
+"YouTube Only"
+]
+}
+
+};
+
+
+/* Switch tool */
+
+document
+.querySelectorAll(".tab")
+.forEach(tab=>{
+
+tab.addEventListener("click",()=>{
+
+document
+.querySelectorAll(".tab")
+.forEach(t=>
+t.classList.remove("active")
+);
+
+tab.classList.add("active");
+
+currentTool=
+tab.dataset.tool;
+
+const info=
+tools[currentTool];
+
+inputLabel.innerText=
+info.label;
+
+userText.placeholder=
+info.placeholder;
+
+optionLabel.innerText=
+info.optionLabel;
+
+option.innerHTML="";
+
+info.options.forEach(item=>{
+
+const opt=
+document.createElement("option");
+
+opt.value=item;
+
+opt.textContent=item;
+
+option.appendChild(opt);
+
+});
+
+userText.value="";
+
+output.innerText=
+"Your AI result will appear here...";
+
+status.innerText="Ready";
+
+});
+
+});
+
+
+/* Generate */
+
+generateBtn.addEventListener(
+"click",
+async()=>{
+
+const text=
+userText.value.trim();
+
+const selected=
+option.value;
+
+
+if(!text){
+
+output.innerText=
+"Please enter something first.";
+
+status.innerText=
+"Waiting for your request.";
+
+return;
+
+}
+
+
+let attempts=0;
+
+while(
+!currentUser &&
+attempts<30
+){
+
+await new Promise(
+resolve=>
+setTimeout(resolve,100)
+);
+
+attempts++;
+
+}
+
+
+if(!currentUser){
+
+output.innerText=
+"Please login first.";
+
+status.innerText=
+"Login session not found.";
+
+return;
+
+}
+
+
+generateBtn.disabled=true;
+
+generateBtn.innerText=
+"Generating...";
+
+output.innerText=
+"Connecting to AI Unity Hub...";
+
+status.innerText=
+"Generating...";
+
+
+try{
+
+const idToken=
+await currentUser.getIdToken(true);
+
+
+const response=
+await fetch(
+"http://127.0.0.1:3000/api/generate",
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":
+"application/json",
+
+"Authorization":
+"Bearer "+idToken
+
+},
+
+body:JSON.stringify({
+
+tool:"Creator Tool - "+currentTool,
+
+text:text,
+
+action:currentTool,
+
+tone:selected
+
+})
+
+});
+
+
+const data=
+await response.json();
+
+
+if(!response.ok){
+
+throw new Error(
+data.error ||
+"Request failed"
+);
+
+}
+
+
+output.innerText=
+data.result ||
+"No result received.";
+
+
+status.innerText=
+"Completed ✓";
+
+
+if(
+typeof data.aiUsesToday
+==="number"
+){
+
+usageCount.innerText=
+data.aiUsesToday+" / 5";
+
+localStorage.setItem(
+"aiUnityAiUsesToday",
+data.aiUsesToday
+);
+
+}
+
+}catch(error){
+
+console.error(error);
+
+output.innerText=
+error.message;
+
+status.innerText=
+"Error";
+
+}
+
+
+generateBtn.disabled=false;
+
+generateBtn.innerText=
+"Generate";
+
+});
+
+
+/* Copy */
+
+document
+.getElementById("copyBtn")
+.addEventListener(
+"click",
+async()=>{
+
+const text=
+output.innerText;
+
+if(
+!text ||
+text==="Your AI result will appear here..."
+){
+
+return;
+
+}
+
+await navigator.clipboard
+.writeText(text);
+
+status.innerText=
+"Copied ✓";
+
+});
+
+
+/* Clear */
+
+document
+.getElementById("clearBtn")
+.addEventListener(
+"click",
+()=>{
+
+userText.value="";
+
+output.innerText=
+"Your AI result will appear here...";
+
+status.innerText=
+"Ready";
+
+});
+
+</script>
+<script type="module" src="auth-guard.js"></script>
+</body>
+</html>
