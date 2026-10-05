@@ -40,15 +40,13 @@ nav{
     gap:22px;
 }
 
-nav a,
-.back-btn{
+nav a{
     text-decoration:none;
     color:#aaa;
     font-size:14px;
 }
 
-nav a:hover,
-.back-btn:hover{
+nav a:hover{
     color:#fff;
 }
 
@@ -321,8 +319,13 @@ footer{
 <div class="container">
 
     <div class="title">
+
         <h1>Image Tools</h1>
-        <p>Simple, fast and useful image tools — all in one place.</p>
+
+        <p>
+            Simple, fast and useful image tools — all in one place.
+        </p>
+
     </div>
 
 
@@ -347,7 +350,9 @@ footer{
     </div>
 
 
-    <!-- BACKGROUND REMOVER -->
+    <!-- =========================
+         BACKGROUND REMOVER
+    ========================== -->
 
     <section class="tool-section active" id="remove">
 
@@ -368,13 +373,20 @@ footer{
             <img
                 id="removePreview"
                 class="preview"
+                alt="Background removal preview"
             >
 
-            <div class="loader" id="removeLoader">
+            <div
+                class="loader"
+                id="removeLoader"
+            >
                 Removing background... Please wait.
             </div>
 
-            <div class="status" id="removeStatus"></div>
+            <div
+                class="status"
+                id="removeStatus"
+            ></div>
 
             <button
                 class="action"
@@ -404,7 +416,9 @@ footer{
     </section>
 
 
-    <!-- RESIZE -->
+    <!-- =========================
+         RESIZE
+    ========================== -->
 
     <section class="tool-section" id="resize">
 
@@ -425,6 +439,7 @@ footer{
             <img
                 id="resizePreview"
                 class="preview"
+                alt="Resize preview"
             >
 
             <div class="settings">
@@ -500,6 +515,7 @@ footer{
                 Reset
             </button>
 
+
             <canvas
                 id="resizeCanvas"
                 style="display:none"
@@ -510,7 +526,9 @@ footer{
     </section>
 
 
-    <!-- COMPRESS -->
+    <!-- =========================
+         COMPRESS
+    ========================== -->
 
     <section class="tool-section" id="compress">
 
@@ -531,24 +549,48 @@ footer{
             <img
                 id="compressPreview"
                 class="preview"
+                alt="Compression preview"
             >
 
 
             <div class="info-grid">
 
                 <div class="info-box">
-                    <span>Original Size</span>
-                    <strong id="originalSize">—</strong>
+
+                    <span>
+                        Original Size
+                    </span>
+
+                    <strong id="originalSize">
+                        —
+                    </strong>
+
                 </div>
 
-                <div class="info-box">
-                    <span>Compressed Size</span>
-                    <strong id="compressedSize">—</strong>
-                </div>
 
                 <div class="info-box">
-                    <span>Saved</span>
-                    <strong id="savedSize">—</strong>
+
+                    <span>
+                        Compressed Size
+                    </span>
+
+                    <strong id="compressedSize">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span>
+                        Saved
+                    </span>
+
+                    <strong id="savedSize">
+                        —
+                    </strong>
+
                 </div>
 
             </div>
@@ -557,13 +599,16 @@ footer{
             <div class="setting-box">
 
                 <label>
+
                     Quality:
+
                     <span
                         class="range-value"
                         id="qualityValue"
                     >
                         80%
                     </span>
+
                 </label>
 
                 <input
@@ -606,6 +651,7 @@ footer{
                 Reset
             </button>
 
+
             <canvas
                 id="compressCanvas"
                 style="display:none"
@@ -616,7 +662,9 @@ footer{
     </section>
 
 
-    <!-- CONVERT -->
+    <!-- =========================
+         CONVERT
+    ========================== -->
 
     <section class="tool-section" id="convert">
 
@@ -637,6 +685,7 @@ footer{
             <img
                 id="convertPreview"
                 class="preview"
+                alt="Convert preview"
             >
 
 
@@ -644,7 +693,9 @@ footer{
 
                 <div class="setting-box">
 
-                    <label>Convert To</label>
+                    <label>
+                        Convert To
+                    </label>
 
                     <select id="convertFormat">
 
@@ -668,13 +719,16 @@ footer{
                 <div class="setting-box">
 
                     <label>
+
                         Quality
+
                         <span
                             class="range-value"
                             id="convertQualityValue"
                         >
                             90%
                         </span>
+
                     </label>
 
                     <input
@@ -719,6 +773,7 @@ footer{
                 Reset
             </button>
 
+
             <canvas
                 id="convertCanvas"
                 style="display:none"
@@ -738,9 +793,9 @@ footer{
 
 <script type="module">
 
-/* =========================
+/* =====================================================
    TAB SYSTEM
-========================= */
+===================================================== */
 
 const tabButtons =
     document.querySelectorAll(".tab-btn");
@@ -753,881 +808,1543 @@ tabButtons.forEach(button => {
 
     button.addEventListener("click", () => {
 
-        tabButtons.forEach(btn =>
-            btn.classList.remove("active")
-        );
+        tabButtons.forEach(btn => {
+            btn.classList.remove("active");
+        });
 
-        sections.forEach(section =>
-            section.classList.remove("active")
-        );
+        sections.forEach(section => {
+            section.classList.remove("active");
+        });
 
         button.classList.add("active");
 
-        document
-            .getElementById(button.dataset.tab)
-            .classList.add("active");
+        const target =
+            document.getElementById(
+                button.dataset.tab
+            );
+
+        if (target) {
+            target.classList.add("active");
+        }
 
     });
 
 });
 
 
-/* =========================
-   BACKGROUND REMOVER
-========================= */
+/* =====================================================
+   UNIVERSAL DOWNLOAD
+   Uses FileReader instead of URL.createObjectURL
+===================================================== */
 
-let remover = null;
-let removeBlob = null;
+function downloadBlob(blob, filename, statusElement = null) {
 
-const removeInput =
-    document.getElementById("removeInput");
+    if (!(blob instanceof Blob)) {
 
-const removePreview =
-    document.getElementById("removePreview");
+        console.error(
+            "Invalid download object:",
+            blob
+        );
 
-const removeBtn =
-    document.getElementById("removeBtn");
-
-const downloadRemove =
-    document.getElementById("downloadRemove");
-
-const removeStatus =
-    document.getElementById("removeStatus");
-
-const removeLoader =
-    document.getElementById("removeLoader");
-
-
-removeInput.addEventListener("change", () => {
-
-    const file = removeInput.files[0];
-
-    if (!file) return;
-
-    removePreview.src =
-        URL.createObjectURL(file);
-
-    removePreview.style.display =
-        "block";
-
-    removeBtn.disabled = false;
-
-    downloadRemove.disabled = true;
-
-    removeStatus.textContent =
-        "Image ready.";
-
-});
-
-
-removeBtn.addEventListener("click", async () => {
-
-    try {
-
-        removeBtn.disabled = true;
-
-        removeLoader.style.display =
-            "block";
-
-        removeStatus.textContent =
-            "Loading background remover...";
-
-        if (!remover) {
-
-            const {
-                pipeline,
-                env
-            } = await import(
-                "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1"
-            );
-
-            env.allowLocalModels = false;
-
-            remover = await pipeline(
-                "background-removal",
-                "Xenova/modnet"
-            );
-
+        if (statusElement) {
+            statusElement.textContent =
+                "Download file is not ready.";
         }
 
-        removeStatus.textContent =
-            "Removing background...";
+        return;
+    }
 
-        const result =
-            await remover(removeInput.files[0]);
 
-        removeBlob = result;
+    if (blob.size <= 0) {
 
-        if (result instanceof Blob) {
-
-            removePreview.src =
-                URL.createObjectURL(result);
-
+        if (statusElement) {
+            statusElement.textContent =
+                "Download file is empty.";
         }
 
-        downloadRemove.disabled =
-            false;
-
-        removeStatus.textContent =
-            "Background removed successfully.";
-
+        return;
     }
 
-    catch(error) {
 
-        console.error(error);
+    const reader =
+        new FileReader();
 
-        removeStatus.textContent =
-            "Something went wrong. Please try again.";
 
-    }
+    reader.onload = () => {
 
-    finally {
+        const link =
+            document.createElement("a");
 
-        removeLoader.style.display =
+        link.href =
+            reader.result;
+
+        link.download =
+            filename;
+
+        link.style.display =
             "none";
 
-        removeBtn.disabled =
-            false;
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+
+
+        if (statusElement) {
+
+            statusElement.textContent =
+                "Download completed successfully.";
+
+        }
+
+    };
+
+
+    reader.onerror = () => {
+
+        if (statusElement) {
+
+            statusElement.textContent =
+                "Download failed.";
+
+        }
+
+    };
+
+
+    reader.readAsDataURL(blob);
+
+}
+
+
+/* =====================================================
+   BACKGROUND REMOVER
+===================================================== */
+
+let remover = null;
+
+let removeBlob = null;
+
+
+const removeInput =
+    document.getElementById(
+        "removeInput"
+    );
+
+const removePreview =
+    document.getElementById(
+        "removePreview"
+    );
+
+const removeBtn =
+    document.getElementById(
+        "removeBtn"
+    );
+
+const downloadRemove =
+    document.getElementById(
+        "downloadRemove"
+    );
+
+const resetRemove =
+    document.getElementById(
+        "resetRemove"
+    );
+
+const removeStatus =
+    document.getElementById(
+        "removeStatus"
+    );
+
+const removeLoader =
+    document.getElementById(
+        "removeLoader"
+    );
+
+
+/* SELECT IMAGE */
+
+removeInput.addEventListener(
+    "change",
+    () => {
+
+        const file =
+            removeInput.files?.[0];
+
+
+        if (!file) {
+            return;
+        }
+
+
+        removeBlob = null;
+
+        downloadRemove.disabled = true;
+
+        removeBtn.disabled = false;
+
+
+        removeStatus.textContent =
+            "Image ready.";
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload = () => {
+
+            removePreview.src =
+                reader.result;
+
+            removePreview.style.display =
+                "block";
+
+        };
+
+
+        reader.readAsDataURL(file);
 
     }
+);
 
-});
 
+/* REMOVE BACKGROUND */
 
-downloadRemove.addEventListener("click", () => {
+removeBtn.addEventListener(
+    "click",
+    async () => {
 
-    if (!removeBlob) return;
+        const file =
+            removeInput.files?.[0];
 
-    const url =
-        URL.createObjectURL(removeBlob);
 
-    const a =
-        document.createElement("a");
+        if (!file) {
 
-    a.href = url;
-
-    a.download =
-        "ai-unity-hub-background-removed.png";
-
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-});
-
-
-document
-.getElementById("resetRemove")
-.addEventListener("click", () => {
-
-    removeInput.value = "";
-
-    removePreview.src = "";
-
-    removePreview.style.display =
-        "none";
-
-    removeBtn.disabled = true;
-
-    downloadRemove.disabled = true;
-
-    removeStatus.textContent = "";
-
-    removeBlob = null;
-
-});
-
-
-/* =========================
-   RESIZE
-========================= */
-
-let resizeFile = null;
-let resizeBlob = null;
-
-const resizeInput =
-    document.getElementById("resizeInput");
-
-const resizePreview =
-    document.getElementById("resizePreview");
-
-const resizeWidth =
-    document.getElementById("resizeWidth");
-
-const resizeHeight =
-    document.getElementById("resizeHeight");
-
-const resizeBtn =
-    document.getElementById("resizeBtn");
-
-const downloadResize =
-    document.getElementById("downloadResize");
-
-const resizeStatus =
-    document.getElementById("resizeStatus");
-
-const resizeCanvas =
-    document.getElementById("resizeCanvas");
-
-const keepRatio =
-    document.getElementById("keepRatio");
-
-
-resizeInput.addEventListener("change", () => {
-
-    const file = resizeInput.files[0];
-
-    if (!file) return;
-
-    resizeFile = file;
-
-    const url =
-        URL.createObjectURL(file);
-
-    resizePreview.src = url;
-
-    resizePreview.style.display =
-        "block";
-
-    const img = new Image();
-
-    img.onload = () => {
-
-        resizeWidth.value =
-            img.naturalWidth;
-
-        resizeHeight.value =
-            img.naturalHeight;
-
-    };
-
-    img.src = url;
-
-    resizeBtn.disabled = false;
-
-    downloadResize.disabled = true;
-
-    resizeStatus.textContent =
-        "Image ready.";
-
-});
-
-
-resizeWidth.addEventListener("input", () => {
-
-    if (!keepRatio.checked || !resizeFile)
-        return;
-
-    const img = new Image();
-
-    img.onload = () => {
-
-        const ratio =
-            img.naturalHeight /
-            img.naturalWidth;
-
-        resizeHeight.value =
-            Math.round(
-                Number(resizeWidth.value) *
-                ratio
-            );
-
-    };
-
-    img.src =
-        resizePreview.src;
-
-});
-
-
-resizeHeight.addEventListener("input", () => {
-
-    if (!keepRatio.checked || !resizeFile)
-        return;
-
-    const img = new Image();
-
-    img.onload = () => {
-
-        const ratio =
-            img.naturalWidth /
-            img.naturalHeight;
-
-        resizeWidth.value =
-            Math.round(
-                Number(resizeHeight.value) *
-                ratio
-            );
-
-    };
-
-    img.src =
-        resizePreview.src;
-
-});
-
-
-resizeBtn.addEventListener("click", () => {
-
-    if (!resizeFile) return;
-
-    const img = new Image();
-
-    img.onload = () => {
-
-        const width =
-            Number(resizeWidth.value);
-
-        const height =
-            Number(resizeHeight.value);
-
-        if (!width || !height ||
-            width < 1 || height < 1) {
-
-            resizeStatus.textContent =
-                "Enter a valid width and height.";
+            removeStatus.textContent =
+                "Please select an image first.";
 
             return;
 
         }
 
-        resizeCanvas.width =
-            width;
 
-        resizeCanvas.height =
-            height;
+        try {
 
-        const ctx =
-            resizeCanvas.getContext("2d");
+            removeBtn.disabled = true;
 
-        ctx.drawImage(
-            img,
-            0,
-            0,
-            width,
-            height
-        );
+            downloadRemove.disabled = true;
 
-        const type =
-            resizeFile.type === "image/png"
-                ? "image/png"
-                : resizeFile.type === "image/webp"
-                    ? "image/webp"
-                    : "image/jpeg";
+            removeLoader.style.display =
+                "block";
 
-        resizeCanvas.toBlob(
-            blob => {
 
-                resizeBlob = blob;
+            removeStatus.textContent =
+                "Loading background remover...";
 
-                downloadResize.disabled =
+
+            /* LOAD MODEL */
+
+            if (!remover) {
+
+                const {
+                    pipeline,
+                    env
+                } = await import(
+                    "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1"
+                );
+
+
+                env.allowLocalModels =
                     false;
 
-                resizeStatus.textContent =
-                    "Image resized successfully.";
 
-            },
-            type,
-            0.95
-        );
+                remover =
+                    await pipeline(
+                        "background-removal",
+                        "Xenova/modnet",
+                        {
+                            dtype: "fp32"
+                        }
+                    );
 
-    };
+            }
 
-    img.src =
-        resizePreview.src;
 
-});
+            removeStatus.textContent =
+                "Removing background...";
 
 
-downloadResize.addEventListener("click", () => {
+            /* RUN MODEL */
 
-    if (!resizeBlob) return;
+            const result =
+                await remover(file);
 
-    const ext =
-        resizeFile.type === "image/png"
-            ? "png"
-            : resizeFile.type === "image/webp"
-                ? "webp"
-                : "jpg";
 
-    const url =
-        URL.createObjectURL(resizeBlob);
+            console.log(
+                "Background remover result:",
+                result
+            );
 
-    const a =
-        document.createElement("a");
 
-    a.href = url;
+            const imageResult =
+                Array.isArray(result)
+                    ? result[0]
+                    : result;
 
-    a.download =
-        "ai-unity-hub-resized." + ext;
 
-    a.click();
+            if (!imageResult) {
 
-    URL.revokeObjectURL(url);
+                throw new Error(
+                    "No image returned."
+                );
 
-});
+            }
 
 
-document
-.getElementById("resetResize")
-.addEventListener("click", () => {
+            if (
+                typeof imageResult.toBlob !==
+                "function"
+            ) {
 
-    resizeInput.value = "";
+                throw new Error(
+                    "RawImage.toBlob() is unavailable."
+                );
 
-    resizePreview.src = "";
+            }
 
-    resizePreview.style.display =
-        "none";
 
-    resizeWidth.value = "";
+            /* CREATE PNG */
 
-    resizeHeight.value = "";
+            const generatedBlob =
+                await imageResult.toBlob();
 
-    resizeBtn.disabled = true;
 
-    downloadResize.disabled = true;
+            if (!(generatedBlob instanceof Blob)) {
 
-    resizeStatus.textContent = "";
+                throw new Error(
+                    "PNG conversion failed."
+                );
 
-    resizeFile = null;
+            }
 
-    resizeBlob = null;
 
-});
+            if (generatedBlob.size <= 0) {
 
+                throw new Error(
+                    "Generated PNG is empty."
+                );
 
-/* =========================
-   COMPRESS
-========================= */
+            }
 
-let compressFile = null;
-let compressBlob = null;
 
-const compressInput =
-    document.getElementById("compressInput");
+            removeBlob =
+                new Blob(
+                    [generatedBlob],
+                    {
+                        type:"image/png"
+                    }
+                );
 
-const compressPreview =
-    document.getElementById("compressPreview");
 
-const originalSize =
-    document.getElementById("originalSize");
+            if (removeBlob.size <= 0) {
 
-const compressedSize =
-    document.getElementById("compressedSize");
+                throw new Error(
+                    "Final PNG is empty."
+                );
 
-const savedSize =
-    document.getElementById("savedSize");
+            }
 
-const quality =
-    document.getElementById("quality");
 
-const qualityValue =
-    document.getElementById("qualityValue");
+            /* PREVIEW RESULT */
 
-const compressBtn =
-    document.getElementById("compressBtn");
+            const previewReader =
+                new FileReader();
 
-const downloadCompress =
-    document.getElementById("downloadCompress");
 
-const compressStatus =
-    document.getElementById("compressStatus");
+            previewReader.onload = () => {
 
-const compressCanvas =
-    document.getElementById("compressCanvas");
+                removePreview.src =
+                    previewReader.result;
 
+                removePreview.style.display =
+                    "block";
 
-quality.addEventListener("input", () => {
+            };
 
-    qualityValue.textContent =
-        quality.value + "%";
 
-});
+            previewReader.readAsDataURL(
+                removeBlob
+            );
 
 
-compressInput.addEventListener("change", () => {
+            downloadRemove.disabled =
+                false;
 
-    const file = compressInput.files[0];
 
-    if (!file) return;
-
-    compressFile = file;
-
-    compressPreview.src =
-        URL.createObjectURL(file);
-
-    compressPreview.style.display =
-        "block";
-
-    originalSize.textContent =
-        formatBytes(file.size);
-
-    compressedSize.textContent =
-        "—";
-
-    savedSize.textContent =
-        "—";
-
-    compressBtn.disabled = false;
-
-    downloadCompress.disabled = true;
-
-    compressStatus.textContent =
-        "Image ready.";
-
-});
-
-
-compressBtn.addEventListener("click", () => {
-
-    if (!compressFile) return;
-
-    const img = new Image();
-
-    img.onload = () => {
-
-        compressCanvas.width =
-            img.naturalWidth;
-
-        compressCanvas.height =
-            img.naturalHeight;
-
-        const ctx =
-            compressCanvas.getContext("2d");
-
-        ctx.drawImage(img,0,0);
-
-        let type =
-            compressFile.type;
-
-        if (
-            type !== "image/jpeg" &&
-            type !== "image/webp"
-        ) {
-
-            type = "image/jpeg";
+            removeStatus.textContent =
+                "Background removed successfully.";
 
         }
 
-        const q =
-            Number(quality.value) / 100;
+        catch(error) {
 
-        compressCanvas.toBlob(
-            blob => {
+            console.error(
+                "Background remover error:",
+                error
+            );
 
-                compressBlob = blob;
 
-                compressedSize.textContent =
-                    formatBytes(blob.size);
+            removeBlob = null;
 
-                if (blob.size < compressFile.size) {
+            downloadRemove.disabled =
+                true;
 
-                    const saved =
-                        (
-                            (1 - blob.size /
-                            compressFile.size) *
-                            100
-                        ).toFixed(1);
 
-                    savedSize.textContent =
-                        saved + "%";
+            removeStatus.textContent =
+                "Background removal failed. Please try again.";
+
+        }
+
+        finally {
+
+            removeLoader.style.display =
+                "none";
+
+            removeBtn.disabled =
+                false;
+
+        }
+
+    }
+);
+
+
+/* DOWNLOAD PNG */
+
+downloadRemove.addEventListener(
+    "click",
+    () => {
+
+        if (!(removeBlob instanceof Blob)) {
+
+            removeStatus.textContent =
+                "PNG file is not ready.";
+
+            return;
+
+        }
+
+
+        downloadBlob(
+            removeBlob,
+            "ai-unity-hub-background-removed.png",
+            removeStatus
+        );
+
+    }
+);
+
+
+/* RESET */
+
+resetRemove.addEventListener(
+    "click",
+    () => {
+
+        removeInput.value = "";
+
+        removePreview.src = "";
+
+        removePreview.style.display =
+            "none";
+
+        removeBtn.disabled =
+            true;
+
+        downloadRemove.disabled =
+            true;
+
+        removeStatus.textContent =
+            "";
+
+        removeBlob =
+            null;
+
+    }
+);
+
+
+/* =====================================================
+   RESIZE IMAGE
+===================================================== */
+
+let resizeFile = null;
+
+let resizeBlob = null;
+
+
+const resizeInput =
+    document.getElementById(
+        "resizeInput"
+    );
+
+const resizePreview =
+    document.getElementById(
+        "resizePreview"
+    );
+
+const resizeWidth =
+    document.getElementById(
+        "resizeWidth"
+    );
+
+const resizeHeight =
+    document.getElementById(
+        "resizeHeight"
+    );
+
+const resizeBtn =
+    document.getElementById(
+        "resizeBtn"
+    );
+
+const downloadResize =
+    document.getElementById(
+        "downloadResize"
+    );
+
+const resetResize =
+    document.getElementById(
+        "resetResize"
+    );
+
+const resizeStatus =
+    document.getElementById(
+        "resizeStatus"
+    );
+
+const resizeCanvas =
+    document.getElementById(
+        "resizeCanvas"
+    );
+
+const keepRatio =
+    document.getElementById(
+        "keepRatio"
+    );
+
+
+resizeInput.addEventListener(
+    "change",
+    () => {
+
+        const file =
+            resizeInput.files?.[0];
+
+
+        if (!file) return;
+
+
+        resizeFile =
+            file;
+
+        resizeBlob =
+            null;
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload = () => {
+
+            resizePreview.src =
+                reader.result;
+
+            resizePreview.style.display =
+                "block";
+
+
+            const img =
+                new Image();
+
+
+            img.onload = () => {
+
+                resizeWidth.value =
+                    img.naturalWidth;
+
+                resizeHeight.value =
+                    img.naturalHeight;
+
+            };
+
+
+            img.src =
+                reader.result;
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+
+        resizeBtn.disabled =
+            false;
+
+        downloadResize.disabled =
+            true;
+
+
+        resizeStatus.textContent =
+            "Image ready.";
+
+    }
+);
+
+
+/* KEEP RATIO */
+
+resizeWidth.addEventListener(
+    "input",
+    () => {
+
+        if (
+            !keepRatio.checked ||
+            !resizeFile
+        ) return;
+
+
+        const img =
+            new Image();
+
+
+        img.onload = () => {
+
+            const ratio =
+                img.naturalHeight /
+                img.naturalWidth;
+
+
+            resizeHeight.value =
+                Math.round(
+                    Number(
+                        resizeWidth.value
+                    ) * ratio
+                );
+
+        };
+
+
+        img.src =
+            resizePreview.src;
+
+    }
+);
+
+
+resizeHeight.addEventListener(
+    "input",
+    () => {
+
+        if (
+            !keepRatio.checked ||
+            !resizeFile
+        ) return;
+
+
+        const img =
+            new Image();
+
+
+        img.onload = () => {
+
+            const ratio =
+                img.naturalWidth /
+                img.naturalHeight;
+
+
+            resizeWidth.value =
+                Math.round(
+                    Number(
+                        resizeHeight.value
+                    ) * ratio
+                );
+
+        };
+
+
+        img.src =
+            resizePreview.src;
+
+    }
+);
+
+
+/* RESIZE */
+
+resizeBtn.addEventListener(
+    "click",
+    () => {
+
+        if (!resizeFile) return;
+
+
+        const img =
+            new Image();
+
+
+        img.onload = () => {
+
+            const width =
+                Number(
+                    resizeWidth.value
+                );
+
+            const height =
+                Number(
+                    resizeHeight.value
+                );
+
+
+            if (
+                !width ||
+                !height ||
+                width < 1 ||
+                height < 1
+            ) {
+
+                resizeStatus.textContent =
+                    "Enter a valid width and height.";
+
+                return;
+
+            }
+
+
+            resizeCanvas.width =
+                width;
+
+            resizeCanvas.height =
+                height;
+
+
+            const ctx =
+                resizeCanvas.getContext(
+                    "2d"
+                );
+
+
+            ctx.clearRect(
+                0,
+                0,
+                width,
+                height
+            );
+
+
+            ctx.drawImage(
+                img,
+                0,
+                0,
+                width,
+                height
+            );
+
+
+            const type =
+                resizeFile.type === "image/png"
+                    ? "image/png"
+                    : resizeFile.type === "image/webp"
+                        ? "image/webp"
+                        : "image/jpeg";
+
+
+            resizeCanvas.toBlob(
+                blob => {
+
+                    if (!blob) {
+
+                        resizeStatus.textContent =
+                            "Resize failed.";
+
+                        return;
+
+                    }
+
+
+                    resizeBlob =
+                        blob;
+
+
+                    downloadResize.disabled =
+                        false;
+
+
+                    resizeStatus.textContent =
+                        "Image resized successfully.";
+
+                },
+                type,
+                0.95
+            );
+
+        };
+
+
+        img.src =
+            resizePreview.src;
+
+    }
+);
+
+
+/* DOWNLOAD RESIZE */
+
+downloadResize.addEventListener(
+    "click",
+    () => {
+
+        if (!resizeBlob) return;
+
+
+        const ext =
+            resizeFile.type === "image/png"
+                ? "png"
+                : resizeFile.type === "image/webp"
+                    ? "webp"
+                    : "jpg";
+
+
+        downloadBlob(
+            resizeBlob,
+            "ai-unity-hub-resized." + ext,
+            resizeStatus
+        );
+
+    }
+);
+
+
+/* RESET RESIZE */
+
+resetResize.addEventListener(
+    "click",
+    () => {
+
+        resizeInput.value = "";
+
+        resizePreview.src = "";
+
+        resizePreview.style.display =
+            "none";
+
+        resizeWidth.value =
+            "";
+
+        resizeHeight.value =
+            "";
+
+        resizeBtn.disabled =
+            true;
+
+        downloadResize.disabled =
+            true;
+
+        resizeStatus.textContent =
+            "";
+
+        resizeFile =
+            null;
+
+        resizeBlob =
+            null;
+
+    }
+);
+
+
+/* =====================================================
+   COMPRESS IMAGE
+===================================================== */
+
+let compressFile = null;
+
+let compressBlob = null;
+
+
+const compressInput =
+    document.getElementById(
+        "compressInput"
+    );
+
+const compressPreview =
+    document.getElementById(
+        "compressPreview"
+    );
+
+const originalSize =
+    document.getElementById(
+        "originalSize"
+    );
+
+const compressedSize =
+    document.getElementById(
+        "compressedSize"
+    );
+
+const savedSize =
+    document.getElementById(
+        "savedSize"
+    );
+
+const quality =
+    document.getElementById(
+        "quality"
+    );
+
+const qualityValue =
+    document.getElementById(
+        "qualityValue"
+    );
+
+const compressBtn =
+    document.getElementById(
+        "compressBtn"
+    );
+
+const downloadCompress =
+    document.getElementById(
+        "downloadCompress"
+    );
+
+const resetCompress =
+    document.getElementById(
+        "resetCompress"
+    );
+
+const compressStatus =
+    document.getElementById(
+        "compressStatus"
+    );
+
+const compressCanvas =
+    document.getElementById(
+        "compressCanvas"
+    );
+
+
+/* QUALITY */
+
+quality.addEventListener(
+    "input",
+    () => {
+
+        qualityValue.textContent =
+            quality.value + "%";
+
+    }
+);
+
+
+/* SELECT IMAGE */
+
+compressInput.addEventListener(
+    "change",
+    () => {
+
+        const file =
+            compressInput.files?.[0];
+
+
+        if (!file) return;
+
+
+        compressFile =
+            file;
+
+        compressBlob =
+            null;
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload = () => {
+
+            compressPreview.src =
+                reader.result;
+
+            compressPreview.style.display =
+                "block";
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+
+        originalSize.textContent =
+            formatBytes(file.size);
+
+        compressedSize.textContent =
+            "—";
+
+        savedSize.textContent =
+            "—";
+
+
+        compressBtn.disabled =
+            false;
+
+        downloadCompress.disabled =
+            true;
+
+
+        compressStatus.textContent =
+            "Image ready.";
+
+    }
+);
+
+
+/* COMPRESS */
+
+compressBtn.addEventListener(
+    "click",
+    () => {
+
+        if (!compressFile) return;
+
+
+        const img =
+            new Image();
+
+
+        img.onload = () => {
+
+            compressCanvas.width =
+                img.naturalWidth;
+
+            compressCanvas.height =
+                img.naturalHeight;
+
+
+            const ctx =
+                compressCanvas.getContext(
+                    "2d"
+                );
+
+
+            ctx.clearRect(
+                0,
+                0,
+                compressCanvas.width,
+                compressCanvas.height
+            );
+
+
+            ctx.drawImage(
+                img,
+                0,
+                0
+            );
+
+
+            let type =
+                compressFile.type;
+
+
+            if (
+                type !== "image/jpeg" &&
+                type !== "image/webp"
+            ) {
+
+                type =
+                    "image/jpeg";
+
+            }
+
+
+            const q =
+                Number(
+                    quality.value
+                ) / 100;
+
+
+            compressCanvas.toBlob(
+                blob => {
+
+                    if (!blob) {
+
+                        compressStatus.textContent =
+                            "Compression failed.";
+
+                        return;
+
+                    }
+
+
+                    compressBlob =
+                        blob;
+
+
+                    compressedSize.textContent =
+                        formatBytes(
+                            blob.size
+                        );
+
+
+                    if (
+                        blob.size <
+                        compressFile.size
+                    ) {
+
+                        const saved =
+                            (
+                                (
+                                    1 -
+                                    blob.size /
+                                    compressFile.size
+                                ) * 100
+                            ).toFixed(1);
+
+
+                        savedSize.textContent =
+                            saved + "%";
+
+                    }
+
+                    else {
+
+                        savedSize.textContent =
+                            "0%";
+
+                    }
+
 
                     compressStatus.textContent =
                         "Compression completed.";
 
-                } else {
 
-                    savedSize.textContent =
-                        "0%";
+                    downloadCompress.disabled =
+                        false;
 
-                    compressStatus.textContent =
-                        "The compressed file is not smaller than the original.";
+                },
+                type,
+                q
+            );
 
-                }
+        };
 
-                downloadCompress.disabled =
-                    false;
 
-            },
-            type,
-            q
+        img.src =
+            compressPreview.src;
+
+    }
+);
+
+
+/* DOWNLOAD COMPRESSED */
+
+downloadCompress.addEventListener(
+    "click",
+    () => {
+
+        if (!compressBlob) return;
+
+
+        const ext =
+            compressBlob.type === "image/webp"
+                ? "webp"
+                : "jpg";
+
+
+        downloadBlob(
+            compressBlob,
+            "ai-unity-hub-compressed." + ext,
+            compressStatus
         );
 
-    };
-
-    img.src =
-        compressPreview.src;
-
-});
+    }
+);
 
 
-downloadCompress.addEventListener("click", () => {
+/* RESET COMPRESS */
 
-    if (!compressBlob) return;
+resetCompress.addEventListener(
+    "click",
+    () => {
 
-    const ext =
-        compressBlob.type === "image/webp"
-            ? "webp"
-            : "jpg";
+        compressInput.value = "";
 
-    const url =
-        URL.createObjectURL(compressBlob);
+        compressPreview.src = "";
 
-    const a =
-        document.createElement("a");
-
-    a.href = url;
-
-    a.download =
-        "ai-unity-hub-compressed." + ext;
-
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-});
+        compressPreview.style.display =
+            "none";
 
 
-document
-.getElementById("resetCompress")
-.addEventListener("click", () => {
+        originalSize.textContent =
+            "—";
 
-    compressInput.value = "";
+        compressedSize.textContent =
+            "—";
 
-    compressPreview.src = "";
-
-    compressPreview.style.display =
-        "none";
-
-    originalSize.textContent =
-        "—";
-
-    compressedSize.textContent =
-        "—";
-
-    savedSize.textContent =
-        "—";
-
-    compressBtn.disabled = true;
-
-    downloadCompress.disabled = true;
-
-    compressStatus.textContent = "";
-
-    compressFile = null;
-
-    compressBlob = null;
-
-});
+        savedSize.textContent =
+            "—";
 
 
-/* =========================
-   CONVERTER
-========================= */
+        compressBtn.disabled =
+            true;
+
+        downloadCompress.disabled =
+            true;
+
+
+        compressStatus.textContent =
+            "";
+
+
+        compressFile =
+            null;
+
+        compressBlob =
+            null;
+
+    }
+);
+
+
+/* =====================================================
+   CONVERT IMAGE
+===================================================== */
 
 let convertFile = null;
+
 let convertBlob = null;
 
+
 const convertInput =
-    document.getElementById("convertInput");
+    document.getElementById(
+        "convertInput"
+    );
 
 const convertPreview =
-    document.getElementById("convertPreview");
+    document.getElementById(
+        "convertPreview"
+    );
 
 const convertFormat =
-    document.getElementById("convertFormat");
+    document.getElementById(
+        "convertFormat"
+    );
 
 const convertQuality =
-    document.getElementById("convertQuality");
+    document.getElementById(
+        "convertQuality"
+    );
 
 const convertQualityValue =
-    document.getElementById("convertQualityValue");
+    document.getElementById(
+        "convertQualityValue"
+    );
 
 const convertBtn =
-    document.getElementById("convertBtn");
+    document.getElementById(
+        "convertBtn"
+    );
 
 const downloadConvert =
-    document.getElementById("downloadConvert");
+    document.getElementById(
+        "downloadConvert"
+    );
+
+const resetConvert =
+    document.getElementById(
+        "resetConvert"
+    );
 
 const convertStatus =
-    document.getElementById("convertStatus");
+    document.getElementById(
+        "convertStatus"
+    );
 
 const convertCanvas =
-    document.getElementById("convertCanvas");
+    document.getElementById(
+        "convertCanvas"
+    );
 
 
-convertQuality.addEventListener("input", () => {
+/* QUALITY */
 
-    convertQualityValue.textContent =
-        convertQuality.value + "%";
+convertQuality.addEventListener(
+    "input",
+    () => {
 
-});
+        convertQualityValue.textContent =
+            convertQuality.value + "%";
 
-
-convertInput.addEventListener("change", () => {
-
-    const file = convertInput.files[0];
-
-    if (!file) return;
-
-    convertFile = file;
-
-    convertPreview.src =
-        URL.createObjectURL(file);
-
-    convertPreview.style.display =
-        "block";
-
-    convertBtn.disabled = false;
-
-    downloadConvert.disabled = true;
-
-    convertStatus.textContent =
-        "Image ready.";
-
-});
+    }
+);
 
 
-convertBtn.addEventListener("click", () => {
+/* SELECT IMAGE */
 
-    if (!convertFile) return;
+convertInput.addEventListener(
+    "change",
+    () => {
 
-    const img = new Image();
+        const file =
+            convertInput.files?.[0];
 
-    img.onload = () => {
 
-        convertCanvas.width =
-            img.naturalWidth;
+        if (!file) return;
 
-        convertCanvas.height =
-            img.naturalHeight;
 
-        const ctx =
-            convertCanvas.getContext("2d");
+        convertFile =
+            file;
 
-        const target =
-            convertFormat.value;
+        convertBlob =
+            null;
 
-        if (target === "image/jpeg") {
 
-            ctx.fillStyle = "#ffffff";
+        const reader =
+            new FileReader();
 
-            ctx.fillRect(
+
+        reader.onload = () => {
+
+            convertPreview.src =
+                reader.result;
+
+            convertPreview.style.display =
+                "block";
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+
+        convertBtn.disabled =
+            false;
+
+        downloadConvert.disabled =
+            true;
+
+
+        convertStatus.textContent =
+            "Image ready.";
+
+    }
+);
+
+
+/* CONVERT */
+
+convertBtn.addEventListener(
+    "click",
+    () => {
+
+        if (!convertFile) return;
+
+
+        const img =
+            new Image();
+
+
+        img.onload = () => {
+
+            convertCanvas.width =
+                img.naturalWidth;
+
+            convertCanvas.height =
+                img.naturalHeight;
+
+
+            const ctx =
+                convertCanvas.getContext(
+                    "2d"
+                );
+
+
+            const target =
+                convertFormat.value;
+
+
+            ctx.clearRect(
                 0,
                 0,
                 convertCanvas.width,
                 convertCanvas.height
             );
 
-        }
 
-        ctx.drawImage(img,0,0);
+            /* WHITE BACKGROUND FOR JPG */
 
-        const q =
-            Number(convertQuality.value) / 100;
+            if (
+                target === "image/jpeg"
+            ) {
 
-        convertCanvas.toBlob(
-            blob => {
+                ctx.fillStyle =
+                    "#ffffff";
 
-                if (!blob) {
+
+                ctx.fillRect(
+                    0,
+                    0,
+                    convertCanvas.width,
+                    convertCanvas.height
+                );
+
+            }
+
+
+            ctx.drawImage(
+                img,
+                0,
+                0
+            );
+
+
+            const q =
+                Number(
+                    convertQuality.value
+                ) / 100;
+
+
+            convertCanvas.toBlob(
+                blob => {
+
+                    if (!blob) {
+
+                        convertStatus.textContent =
+                            "Conversion failed.";
+
+                        return;
+
+                    }
+
+
+                    convertBlob =
+                        blob;
+
+
+                    downloadConvert.disabled =
+                        false;
+
 
                     convertStatus.textContent =
-                        "Conversion failed.";
+                        "Image converted successfully.";
 
-                    return;
+                },
+                target,
+                q
+            );
 
-                }
-
-                convertBlob = blob;
-
-                downloadConvert.disabled =
-                    false;
-
-                convertStatus.textContent =
-                    "Image converted successfully.";
-
-            },
-            target,
-            q
-        );
-
-    };
-
-    img.src =
-        convertPreview.src;
-
-});
+        };
 
 
-downloadConvert.addEventListener("click", () => {
-
-    if (!convertBlob) return;
-
-    let ext = "jpg";
-
-    if (convertBlob.type === "image/png") {
-
-        ext = "png";
-
-    } else if (
-        convertBlob.type === "image/webp"
-    ) {
-
-        ext = "webp";
+        img.src =
+            convertPreview.src;
 
     }
-
-    const url =
-        URL.createObjectURL(convertBlob);
-
-    const a =
-        document.createElement("a");
-
-    a.href = url;
-
-    a.download =
-        "ai-unity-hub-converted." + ext;
-
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-});
+);
 
 
-document
-.getElementById("resetConvert")
-.addEventListener("click", () => {
+/* DOWNLOAD CONVERTED */
 
-    convertInput.value = "";
+downloadConvert.addEventListener(
+    "click",
+    () => {
 
-    convertPreview.src = "";
-
-    convertPreview.style.display =
-        "none";
-
-    convertBtn.disabled = true;
-
-    downloadConvert.disabled = true;
-
-    convertStatus.textContent = "";
-
-    convertFile = null;
-
-    convertBlob = null;
-
-});
+        if (!convertBlob) return;
 
 
-/* =========================
-   FORMAT SIZE
-========================= */
+        let ext =
+            "jpg";
+
+
+        if (
+            convertBlob.type ===
+            "image/png"
+        ) {
+
+            ext =
+                "png";
+
+        }
+
+
+        if (
+            convertBlob.type ===
+            "image/webp"
+        ) {
+
+            ext =
+                "webp";
+
+        }
+
+
+        downloadBlob(
+            convertBlob,
+            "ai-unity-hub-converted." + ext,
+            convertStatus
+        );
+
+    }
+);
+
+
+/* RESET CONVERT */
+
+resetConvert.addEventListener(
+    "click",
+    () => {
+
+        convertInput.value = "";
+
+        convertPreview.src = "";
+
+        convertPreview.style.display =
+            "none";
+
+
+        convertBtn.disabled =
+            true;
+
+        downloadConvert.disabled =
+            true;
+
+
+        convertStatus.textContent =
+            "";
+
+
+        convertFile =
+            null;
+
+        convertBlob =
+            null;
+
+    }
+);
+
+
+/* =====================================================
+   FORMAT BYTES
+===================================================== */
 
 function formatBytes(bytes) {
 
-    if (bytes === 0)
+    if (bytes === 0) {
         return "0 Bytes";
+    }
+
 
     const units = [
         "Bytes",
@@ -1636,17 +2353,22 @@ function formatBytes(bytes) {
         "GB"
     ];
 
+
     const i =
         Math.floor(
             Math.log(bytes) /
             Math.log(1024)
         );
 
+
     return (
         parseFloat(
             (
                 bytes /
-                Math.pow(1024,i)
+                Math.pow(
+                    1024,
+                    i
+                )
             ).toFixed(2)
         )
         + " "
@@ -1656,6 +2378,14 @@ function formatBytes(bytes) {
 }
 
 </script>
-<script type="module" src="auth-guard.js"></script>
+
+
+<!-- AUTH GUARD -->
+
+<script
+    type="module"
+    src="auth-guard.js"
+></script>
+
 </body>
 </html>
