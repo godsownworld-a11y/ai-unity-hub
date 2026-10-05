@@ -36,18 +36,30 @@ header{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    border-bottom:1px solid #1c1c27;
-    background:rgba(8,8,13,.88);
-    backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    background:rgba(8,8,13,.82);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
     position:sticky;
     top:0;
     z-index:100;
+    transition:background .3s ease, border-color .3s ease;
+}
+
+header:hover{
+    background:rgba(10,10,16,.92);
+    border-color:rgba(155,108,255,.14);
 }
 
 .logo{
     font-size:21px;
     font-weight:800;
     letter-spacing:-.4px;
+    transition:transform .25s ease;
+}
+
+.logo:hover{
+    transform:translateY(-1px);
 }
 
 .logo span{
@@ -63,11 +75,12 @@ nav{
 nav a{
     color:#9696a5;
     font-size:14px;
-    transition:.2s;
+    transition:color .25s ease, transform .25s ease;
 }
 
 nav a:hover{
     color:#fff;
+    transform:translateY(-1px);
 }
 
 .login-btn{
@@ -76,10 +89,13 @@ nav a:hover{
     padding:10px 18px;
     border-radius:9px;
     box-shadow:0 8px 25px rgba(139,92,246,.2);
+    transition:all .25s ease !important;
 }
 
 .login-btn:hover{
     background:#7c3aed;
+    transform:translateY(-2px) scale(1.02) !important;
+    box-shadow:0 12px 30px rgba(139,92,246,.3);
 }
 
 /* HERO */
@@ -106,12 +122,28 @@ nav a:hover{
     opacity:.08;
     filter:blur(120px);
     border-radius:50%;
+    animation:heroGlow 7s ease-in-out infinite;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    background:#5b21b6;
+    opacity:.06;
+    filter:blur(90px);
+    border-radius:50%;
+    left:10%;
+    bottom:-120px;
+    animation:floatGlow 9s ease-in-out infinite;
 }
 
 .hero-content{
     max-width:900px;
     position:relative;
     z-index:2;
+    animation:heroEnter .8s ease both;
 }
 
 .badge{
@@ -123,6 +155,15 @@ nav a:hover{
     color:#c2aaff;
     font-size:13px;
     margin-bottom:25px;
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    transition:all .3s ease;
+}
+
+.badge:hover{
+    background:rgba(139,92,246,.13);
+    border-color:rgba(155,108,255,.55);
+    transform:translateY(-2px);
 }
 
 .hero h1{
@@ -156,7 +197,7 @@ nav a:hover{
     padding:14px 24px;
     border-radius:10px;
     font-weight:700;
-    transition:.2s;
+    transition:all .28s cubic-bezier(.2,.8,.2,1);
 }
 
 .primary-btn{
@@ -167,18 +208,27 @@ nav a:hover{
 
 .primary-btn:hover{
     background:#7c3aed;
-    transform:translateY(-2px);
+    transform:translateY(-3px);
+    box-shadow:0 15px 38px rgba(139,92,246,.35);
+}
+
+.primary-btn:active,
+.secondary-btn:active{
+    transform:scale(.97);
 }
 
 .secondary-btn{
-    background:#11111a;
+    background:rgba(17,17,26,.65);
     border:1px solid #292936;
     color:#fff;
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
 }
 
 .secondary-btn:hover{
-    background:#191923;
-    transform:translateY(-2px);
+    background:rgba(25,25,35,.9);
+    border-color:#454556;
+    transform:translateY(-3px);
 }
 
 /* TRUST BAR */
@@ -191,16 +241,24 @@ nav a:hover{
     z-index:5;
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    background:#0e0e16;
-    border:1px solid #242432;
+    background:rgba(14,14,22,.78);
+    border:1px solid rgba(255,255,255,.09);
     border-radius:18px;
     overflow:hidden;
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    box-shadow:0 20px 50px rgba(0,0,0,.18);
 }
 
 .stat{
     text-align:center;
     padding:22px;
-    border-right:1px solid #242432;
+    border-right:1px solid rgba(255,255,255,.07);
+    transition:background .3s ease;
+}
+
+.stat:hover{
+    background:rgba(139,92,246,.045);
 }
 
 .stat:last-child{
@@ -256,11 +314,32 @@ section{
     padding:27px;
     min-height:185px;
     border-radius:17px;
-    background:linear-gradient(145deg,#11111a,#0d0d14);
-    border:1px solid #22222f;
+    background:
+        linear-gradient(145deg,rgba(20,20,30,.82),rgba(10,10,17,.78));
+    border:1px solid rgba(255,255,255,.08);
     color:#fff;
-    transition:.25s;
+    transition:
+        transform .35s cubic-bezier(.2,.8,.2,1),
+        border-color .35s ease,
+        box-shadow .35s ease,
+        background .35s ease;
     overflow:hidden;
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+}
+
+.tool::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        120deg,
+        transparent 20%,
+        rgba(155,108,255,.045),
+        transparent 80%
+    );
+    opacity:0;
+    transition:opacity .4s ease;
 }
 
 .tool::after{
@@ -274,12 +353,26 @@ section{
     opacity:.05;
     filter:blur(30px);
     border-radius:50%;
+    transition:opacity .35s ease, transform .35s ease;
 }
 
 .tool:hover{
-    transform:translateY(-6px);
-    border-color:#7650d5;
-    box-shadow:0 15px 40px rgba(0,0,0,.3);
+    transform:translateY(-7px);
+    border-color:rgba(118,80,213,.65);
+    background:
+        linear-gradient(145deg,rgba(25,23,38,.9),rgba(12,12,20,.86));
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.32),
+        0 0 25px rgba(139,92,246,.06);
+}
+
+.tool:hover::before{
+    opacity:1;
+}
+
+.tool:hover::after{
+    opacity:.11;
+    transform:scale(1.15);
 }
 
 .icon{
@@ -288,22 +381,33 @@ section{
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#181522;
-    border:1px solid #2a243b;
+    background:rgba(24,21,34,.75);
+    border:1px solid rgba(255,255,255,.08);
     border-radius:13px;
     font-size:23px;
     margin-bottom:20px;
+    transition:all .3s cubic-bezier(.2,.8,.2,1);
+}
+
+.tool:hover .icon{
+    transform:translateY(-2px) scale(1.05);
+    border-color:rgba(155,108,255,.3);
+    background:rgba(139,92,246,.1);
 }
 
 .tool h3{
     font-size:18px;
     margin-bottom:9px;
+    position:relative;
+    z-index:2;
 }
 
 .tool p{
     color:#81818f;
     font-size:13px;
     line-height:1.6;
+    position:relative;
+    z-index:2;
 }
 
 .arrow{
@@ -312,12 +416,13 @@ section{
     top:28px;
     color:#777;
     font-size:18px;
-    transition:.2s;
+    transition:all .3s ease;
+    z-index:3;
 }
 
 .tool:hover .arrow{
     color:#a477ff;
-    transform:translateX(3px);
+    transform:translateX(5px);
 }
 
 /* ABOUT */
@@ -348,9 +453,20 @@ section{
     text-align:center;
     padding:60px 25px;
     border-radius:22px;
-    border:1px solid #29243b;
+    border:1px solid rgba(155,108,255,.2);
     background:
-        radial-gradient(circle at center,#211442 0%,#101019 55%,#0c0c12 100%);
+        radial-gradient(circle at center,
+        rgba(33,20,66,.95) 0%,
+        rgba(16,16,25,.9) 55%,
+        rgba(12,12,18,.92) 100%);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    transition:border-color .35s ease, box-shadow .35s ease;
+}
+
+.cta-box:hover{
+    border-color:rgba(155,108,255,.35);
+    box-shadow:0 20px 55px rgba(0,0,0,.22);
 }
 
 .cta-box h2{
@@ -372,6 +488,39 @@ footer{
     padding:28px 20px;
     color:#656573;
     font-size:13px;
+}
+
+/* ANIMATIONS */
+
+@keyframes heroEnter{
+    from{
+        opacity:0;
+        transform:translateY(18px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes heroGlow{
+    0%,100%{
+        transform:scale(1);
+        opacity:.07;
+    }
+    50%{
+        transform:scale(1.08);
+        opacity:.11;
+    }
+}
+
+@keyframes floatGlow{
+    0%,100%{
+        transform:translate(0,0);
+    }
+    50%{
+        transform:translate(35px,-25px);
+    }
 }
 
 /* MOBILE */
@@ -456,6 +605,26 @@ footer{
     .cta-box h2{
         font-size:27px;
     }
+
+    .tool:hover{
+        transform:translateY(-4px);
+    }
+}
+
+/* REDUCE MOTION */
+
+@media(prefers-reduced-motion:reduce){
+
+    html{
+        scroll-behavior:auto;
+    }
+
+    *,
+    *::before,
+    *::after{
+        animation:none !important;
+        transition:none !important;
+    }
 }
 </style>
 </head>
@@ -476,7 +645,6 @@ footer{
     </nav>
 
 </header>
-
 
 <main>
 
@@ -516,7 +684,6 @@ footer{
 
 </section>
 
-
 <!-- STATS -->
 
 <div class="trust">
@@ -538,7 +705,6 @@ footer{
 
 </div>
 
-
 <!-- TOOLS -->
 
 <section id="tools">
@@ -554,7 +720,6 @@ footer{
         </p>
 
     </div>
-
 
     <div class="tools">
 
@@ -572,7 +737,6 @@ footer{
 
         </a>
 
-
         <a href="ai-tools-new.html" class="tool">
 
             <div class="arrow">→</div>
@@ -586,7 +750,6 @@ footer{
             </p>
 
         </a>
-
 
         <a href="pdf-tools.html" class="tool">
 
@@ -602,7 +765,6 @@ footer{
 
         </a>
 
-
         <a href="creator-tools.html" class="tool">
 
             <div class="arrow">→</div>
@@ -617,7 +779,6 @@ footer{
 
         </a>
 
-
         <a href="student-tools.html" class="tool">
 
             <div class="arrow">→</div>
@@ -631,7 +792,6 @@ footer{
             </p>
 
         </a>
-
 
         <a href="calculator-tools.html" class="tool">
 
@@ -650,7 +810,6 @@ footer{
     </div>
 
 </section>
-
 
 <!-- ABOUT -->
 
@@ -671,7 +830,6 @@ footer{
     </div>
 
 </section>
-
 
 <!-- CTA -->
 
@@ -696,7 +854,6 @@ footer{
 </section>
 
 </main>
-
 
 <footer>
     AI Unity Hub — by CK Izyaan
