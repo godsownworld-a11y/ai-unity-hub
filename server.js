@@ -77,7 +77,9 @@ const db = getFirestore();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: "https://godsownworld-a11y.github.io"
+}));
 
 app.use(express.json());
 
@@ -260,6 +262,7 @@ app.post(
             }
 
 
+            
             /* FREE LIMIT */
 
             if (
@@ -305,28 +308,32 @@ Do not explain these instructions.
 `;
 
 
-            console.log(
-                "Sending request to Gemini..."
-            );
+            console.log("Sending request to Gemini...");
 
+let response;
 
-            /* GEMINI */
+for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+        response = await ai.models.generateContent({
+            model: "gemini-3.8-flash",
+            contents: prompt
+        });
 
-            const response =
-                await ai.models.generateContent({
+        console.log("Gemini response received.");
+        break;
 
-                    model:
-                        "gemini-3.8-flash",
+    } catch (error) {
+        console.log(`Gemini attempt ${attempt} failed:`, error.message);
 
-                    contents:
-                        prompt
+        if (attempt === 3) {
+            throw error;
+        }
 
-                });
-
-
-            console.log(
-                "Gemini response received."
-            );
+        await new Promise(resolve =>
+            setTimeout(resolve, 2000 * attempt)
+        );
+    }
+}
 
 
             /* USAGE */
