@@ -1,9 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>AI Tools — AI Unity Hub</title>
 
 <style>
@@ -25,15 +25,9 @@ header{
     gap:20px;
 }
 
-.logo{
-    font-size:22px;
-    font-weight:bold;
-}
+.logo{font-size:22px;font-weight:bold}
 
-nav{
-    display:flex;
-    gap:18px;
-}
+nav{display:flex;gap:18px}
 
 nav a{
     color:#aaa;
@@ -41,9 +35,7 @@ nav a{
     font-size:14px;
 }
 
-nav a:hover{
-    color:white;
-}
+nav a:hover{color:white}
 
 .container{
     max-width:950px;
@@ -51,9 +43,7 @@ nav a:hover{
     padding:20px;
 }
 
-h1{
-    margin-bottom:8px;
-}
+h1{margin-bottom:8px}
 
 .subtitle{
     color:#aaa;
@@ -71,14 +61,8 @@ h1{
     align-items:center;
 }
 
-.usage-title{
-    color:#aaa;
-    font-size:14px;
-}
-
-.usage-count{
-    font-weight:bold;
-}
+.usage-title{color:#aaa;font-size:14px}
+.usage-count{font-weight:bold}
 
 .tools-grid{
     display:grid;
@@ -135,9 +119,7 @@ textarea{
     outline:none;
 }
 
-textarea:focus{
-    border-color:#8b5cf6;
-}
+textarea:focus{border-color:#8b5cf6}
 
 select{
     width:100%;
@@ -155,15 +137,14 @@ select{
     padding:14px;
     background:#8b5cf6;
     color:white;
+    border:0;
     border-radius:10px;
     font-size:16px;
     font-weight:bold;
     cursor:pointer;
 }
 
-.generate:hover{
-    background:#7c3aed;
-}
+.generate:hover{background:#7c3aed}
 
 .generate:disabled{
     opacity:.6;
@@ -209,20 +190,16 @@ footer{
 }
 
 @media(max-width:650px){
-
     header{
         flex-direction:column;
         align-items:flex-start;
     }
 
-    nav{
-        flex-wrap:wrap;
-    }
+    nav{flex-wrap:wrap}
 
-    .tools-grid{
-        grid-template-columns:1fr;
-    }
+    .tools-grid{grid-template-columns:1fr}
 
+    .tool-box{padding:18px}
 }
 </style>
 </head>
@@ -230,835 +207,484 @@ footer{
 <body>
 
 <header>
+    <div class="logo">AI Unity Hub</div>
 
-<div class="logo">
-AI Unity Hub
-</div>
-
-<nav>
-<a href="dashboard.html">Dashboard</a>
-<a href="history.html">History</a>
-<a href="profile.html">Profile</a>
-<a href="premium.html">Premium</a>
-</nav>
-
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="history.html">History</a>
+        <a href="profile.html">Profile</a>
+        <a href="premium.html">Premium</a>
+    </nav>
 </header>
-
 
 <div class="container">
 
-<h1 id="pageTitle">AI Writer</h1>
+    <h1 id="pageTitle">AI Writer</h1>
 
-<div class="subtitle" id="pageSubtitle">
-Write, rewrite or improve your content.
-</div>
+    <div class="subtitle" id="pageSubtitle">
+        Write, rewrite or improve your content.
+    </div>
 
+    <div class="usage">
+        <div class="usage-title">AI Uses Today</div>
+        <div class="usage-count" id="usageCount">0 / 5</div>
+    </div>
 
-<div class="usage">
+    <div class="tools-grid">
 
-<div class="usage-title">
-AI Uses Today
-</div>
+        <button class="tool-tab active" data-tool="AI Writer">✍️ AI Writer</button>
+        <button class="tool-tab" data-tool="Summarizer">📝 Summarizer</button>
+        <button class="tool-tab" data-tool="Caption Generator">📸 Caption Generator</button>
+        <button class="tool-tab" data-tool="Idea Generator">💡 Idea Generator</button>
+        <button class="tool-tab" data-tool="Translator">🌍 Translator</button>
+        <button class="tool-tab" data-tool="Email Writer">📧 Email Writer</button>
+        <button class="tool-tab" data-tool="Text Improver">✨ Text Improver</button>
+        <button class="tool-tab" data-tool="Rewriter">🔄 Rewriter</button>
+        <button class="tool-tab" data-tool="Grammar Helper">📝 Grammar Helper</button>
+        <button class="tool-tab" data-tool="Title Generator">🎯 Title Generator</button>
 
-<div class="usage-count" id="usageCount">
-0 / 5
-</div>
+    </div>
 
-</div>
+    <div class="tool-box">
 
+        <label id="inputLabel">What do you want to write?</label>
 
-<div class="tools-grid">
+        <textarea
+            id="userText"
+            placeholder="Write your request here..."
+        ></textarea>
 
-<button class="tool-tab active" data-tool="AI Writer">
-✍️ AI Writer
-</button>
+        <div id="optionsArea">
 
-<button class="tool-tab" data-tool="Summarizer">
-📝 Summarizer
-</button>
+            <label id="optionLabel">Style</label>
 
-<button class="tool-tab" data-tool="Caption Generator">
-📸 Caption Generator
-</button>
+            <select id="option">
+                <option>Professional</option>
+                <option>Casual</option>
+                <option>Creative</option>
+                <option>Friendly</option>
+                <option>Short & Clean</option>
+            </select>
 
-<button class="tool-tab" data-tool="Idea Generator">
-💡 Idea Generator
-</button>
+        </div>
 
-<button class="tool-tab" data-tool="Translator">
-🌍 Translator
-</button>
+        <div id="languageArea">
 
-<button class="tool-tab" data-tool="Email Writer">
-📧 Email Writer
-</button>
+            <label for="outputLanguage">Output Language</label>
 
-<button class="tool-tab" data-tool="Text Improver">
-✨ Text Improver
-</button>
+            <select id="outputLanguage">
+                <option value="Auto Detect">Auto Detect</option>
+                <option value="English">English</option>
+                <option value="Malayalam">Malayalam</option>
+                <option value="Manglish">Manglish</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Tamil">Tamil</option>
+                <option value="Arabic">Arabic</option>
+                <option value="Spanish">Spanish</option>
+                <option value="French">French</option>
+                <option value="German">German</option>
+                <option value="Japanese">Japanese</option>
+                <option value="Korean">Korean</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Portuguese">Portuguese</option>
+                <option value="Italian">Italian</option>
+                <option value="Russian">Russian</option>
+                <option value="Bengali">Bengali</option>
+                <option value="Urdu">Urdu</option>
+                <option value="Kannada">Kannada</option>
+                <option value="Telugu">Telugu</option>
+            </select>
 
-<button class="tool-tab" data-tool="Rewriter">
-🔄 Rewriter
-</button>
+        </div>
 
-<button class="tool-tab" data-tool="Grammar Helper">
-📝 Grammar Helper
-</button>
+        <button class="generate" id="generateBtn">
+            Generate
+        </button>
 
-<button class="tool-tab" data-tool="Title Generator">
-🎯 Title Generator
-</button>
+        <div class="output-box" id="output">AI OUTPUT</div>
 
-</div>
+        <div class="status" id="status">Ready</div>
 
+        <div class="actions">
 
-<div class="tool-box">
+            <button class="small-btn" id="copyBtn">Copy</button>
+            <button class="small-btn" id="clearBtn">Clear</button>
 
+        </div>
 
-<label id="inputLabel">
-What do you want to write?
-</label>
-
-<textarea
-id="userText"
-placeholder="Write your request here..."
-></textarea>
-
-
-<div id="optionsArea">
-
-<label id="optionLabel">
-Style
-</label>
-
-<select id="option">
-
-<option>Professional</option>
-<option>Casual</option>
-<option>Creative</option>
-<option>Friendly</option>
-<option>Short & Clean</option>
-
-</select>
-
-</div>
-
-
-<button
-class="generate"
-id="generateBtn">
-
-Generate
-
-</button>
-
-
-<div
-class="output-box"
-id="output">
-
-AI OUTPUT
+    </div>
 
 </div>
-
-
-<div
-class="status"
-id="status">
-
-Ready
-
-</div>
-
-
-<div class="actions">
-
-<button
-class="small-btn"
-id="copyBtn">
-
-Copy
-
-</button>
-
-<button
-class="small-btn"
-id="clearBtn">
-
-Clear
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
 
 <footer>
-AI Unity Hub — by CK Izyaan
+    AI Unity Hub — by CK Izyaan
 </footer>
-
 
 <script type="module">
 
-import { initializeApp }
+import { initializeApp, getApps, getApp }
 from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 
 import {
-getAuth,
-onAuthStateChanged
+    getAuth,
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 
+/* FIREBASE */
+
 const firebaseConfig = {
-
-apiKey: "AIzaSyA4aQj8bxLOmIdxJai3LEt6I1jV8BF0zJc",
-
-authDomain: "ai-unity-hub.firebaseapp.com",
-
-projectId: "ai-unity-hub",
-
-storageBucket: "ai-unity-hub.firebasestorage.app",
-
-messagingSenderId: "499702999885",
-
-appId: "1:499702999885:web:8f599c540741c39c4aa504",
-
-measurementId: "G-W3GGBB7VYX"
-
+    apiKey: "AIzaSyA4aQj8bxLOmIdxJai3LEt6I1jV8BF0zJc",
+    authDomain: "ai-unity-hub.firebaseapp.com",
+    projectId: "ai-unity-hub",
+    storageBucket: "ai-unity-hub.firebasestorage.app",
+    messagingSenderId: "499702999885",
+    appId: "1:499702999885:web:8f599c540741c39c4aa504",
+    measurementId: "G-W3GGBB7VYX"
 };
 
+const app = getApps().length
+    ? getApp()
+    : initializeApp(firebaseConfig);
 
-const app =
-initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-const auth =
-getAuth(app);
 
+/* ELEMENTS */
 
 let currentUser = null;
-
 let currentTool = "AI Writer";
 
-
-const usageCount =
-document.getElementById("usageCount");
-
-const generateBtn =
-document.getElementById("generateBtn");
-
-const output =
-document.getElementById("output");
-
-const status =
-document.getElementById("status");
-
-const userText =
-document.getElementById("userText");
-
-const pageTitle =
-document.getElementById("pageTitle");
-
-const pageSubtitle =
-document.getElementById("pageSubtitle");
-
-const inputLabel =
-document.getElementById("inputLabel");
-
-const option =
-document.getElementById("option");
-
-const optionLabel =
-document.getElementById("optionLabel");
+const usageCount = document.getElementById("usageCount");
+const generateBtn = document.getElementById("generateBtn");
+const output = document.getElementById("output");
+const status = document.getElementById("status");
+const userText = document.getElementById("userText");
+const pageTitle = document.getElementById("pageTitle");
+const pageSubtitle = document.getElementById("pageSubtitle");
+const inputLabel = document.getElementById("inputLabel");
+const option = document.getElementById("option");
+const optionLabel = document.getElementById("optionLabel");
+const outputLanguage = document.getElementById("outputLanguage");
+const languageArea = document.getElementById("languageArea");
 
 
-onAuthStateChanged(auth,(user)=>{
+/* LOGIN */
 
-if(user){
+onAuthStateChanged(auth, (user) => {
 
-currentUser=user;
-
-console.log(
-"LOGIN FOUND:",
-user.email
-);
-
-}else{
-
-currentUser=null;
-
-console.log("NO LOGIN");
-
-}
+    if (user) {
+        currentUser = user;
+        console.log("LOGIN FOUND:", user.email);
+    } else {
+        currentUser = null;
+        console.log("NO LOGIN");
+    }
 
 });
 
 
-const savedUsage =
-localStorage.getItem(
-"aiUnityAiUsesToday"
-);
+/* SAVED USAGE DISPLAY */
 
-if(savedUsage){
+const savedUsage = localStorage.getItem("aiUnityAiUsesToday");
 
-usageCount.innerText =
-savedUsage+" / 5";
-
+if (savedUsage !== null) {
+    usageCount.innerText = savedUsage + " / 5";
 }
 
 
-/* Tool information */
+/* TOOL INFORMATION */
 
 const toolInfo = {
 
-"AI Writer":{
-
-title:"AI Writer",
-
-subtitle:
-"Write, rewrite or improve your content.",
-
-label:
-"What do you want to write?",
-
-placeholder:
-"Write your request here...",
-
-optionLabel:"Tone",
-
-options:[
-"Professional",
-"Casual",
-"Creative",
-"Friendly",
-"Short & Clean"
-]
-
-},
-
-"Summarizer":{
-
-title:"AI Summarizer",
-
-subtitle:
-"Summarize long text quickly and clearly.",
-
-label:
-"Paste the text you want to summarize",
-
-placeholder:
-"Paste your text here...",
-
-optionLabel:"Summary Style",
-
-options:[
-"Short",
-"Detailed",
-"Bullet Points",
-"Simple"
-]
-
-},
-
-"Caption Generator":{
-
-title:"Caption Generator",
-
-subtitle:
-"Create captions for Instagram, reels and social media.",
-
-label:
-"What should the caption be about?",
-
-placeholder:
-"Example: sunset beach photo",
-
-optionLabel:"Caption Style",
-
-options:[
-"Clean",
-"Creative",
-"Emotional",
-"Mass",
-"Short"
-]
-
-},
-
-"Idea Generator":{
-
-title:"Idea Generator",
-
-subtitle:
-"Generate fresh creative ideas.",
-
-label:
-"What do you need ideas for?",
-
-placeholder:
-"Example: Instagram reel ideas",
-
-optionLabel:"Idea Style",
-
-options:[
-"Creative",
-"Viral",
-"Professional",
-"Simple",
-"Unique"
-]
-
-},
-
-"Translator":{
-
-title:"Translator",
-
-subtitle:
-"Translate your text into another language.",
-
-label:
-"What text do you want to translate?",
-
-placeholder:
-"Enter your text here...",
-
-optionLabel:"Target Language",
-
-options:[
-"English",
-"Malayalam",
-"Hindi",
-"Arabic",
-"Spanish"
-]
-
-},
-
-"Email Writer":{
-
-title:"Email Writer",
-
-subtitle:
-"Create clear and professional emails.",
-
-label:
-"What should the email say?",
-
-placeholder:
-"Describe what the email is about...",
-
-optionLabel:"Email Tone",
-
-options:[
-"Professional",
-"Friendly",
-"Formal",
-"Short",
-"Apology"
-]
-
-},
-
-"Text Improver":{
-
-title:"Text Improver",
-
-subtitle:
-"Make your text clearer and better.",
-
-label:
-"Paste your text",
-
-placeholder:
-"Paste your text here...",
-
-optionLabel:"Improvement Style",
-
-options:[
-"Professional",
-"Clear",
-"Natural",
-"Short",
-"Creative"
-]
-
-},
-
-"Rewriter":{
-
-title:"Rewriter",
-
-subtitle:
-"Rewrite your text in a better way.",
-
-label:
-"Paste the text you want to rewrite",
-
-placeholder:
-"Paste your text here...",
-
-optionLabel:"Rewrite Style",
-
-options:[
-"Professional",
-"Simple",
-"Creative",
-"Natural",
-"Short"
-]
-
-},
-
-"Grammar Helper":{
-
-title:"Grammar Helper",
-
-subtitle:
-"Fix grammar, spelling and sentence problems.",
-
-label:
-"Paste your text",
-
-placeholder:
-"Paste your text here...",
-
-optionLabel:"Correction Style",
-
-options:[
-"Fix Grammar",
-"Simple English",
-"Professional",
-"Natural",
-"Keep Original"
-]
-
-},
-
-"Title Generator":{
-
-title:"Title Generator",
-
-subtitle:
-"Generate strong titles for your content.",
-
-label:
-"What is your content about?",
-
-placeholder:
-"Example: YouTube video about Kerala",
-
-optionLabel:"Title Style",
-
-options:[
-"Professional",
-"Creative",
-"Short",
-"Viral",
-"Click-worthy"
-]
-
-}
+    "AI Writer": {
+        title: "AI Writer",
+        subtitle: "Write, rewrite or improve your content.",
+        label: "What do you want to write?",
+        placeholder: "Write your request here...",
+        optionLabel: "Tone",
+        options: ["Professional", "Casual", "Creative", "Friendly", "Short & Clean"]
+    },
+
+    "Summarizer": {
+        title: "AI Summarizer",
+        subtitle: "Summarize long text quickly and clearly.",
+        label: "Paste the text you want to summarize",
+        placeholder: "Paste your text here...",
+        optionLabel: "Summary Style",
+        options: ["Short", "Detailed", "Bullet Points", "Simple"]
+    },
+
+    "Caption Generator": {
+        title: "Caption Generator",
+        subtitle: "Create captions for Instagram, reels and social media.",
+        label: "What should the caption be about?",
+        placeholder: "Example: Beachinte aduthulla sunset ulla pic aanu...",
+        optionLabel: "Caption Style",
+        options: ["Clean", "Creative", "Emotional", "Mass", "Short"]
+    },
+
+    "Idea Generator": {
+        title: "Idea Generator",
+        subtitle: "Generate fresh creative ideas.",
+        label: "What do you need ideas for?",
+        placeholder: "Example: Instagram reel ideas",
+        optionLabel: "Idea Style",
+        options: ["Creative", "Viral", "Professional", "Simple", "Unique"]
+    },
+
+    "Translator": {
+        title: "Translator",
+        subtitle: "Translate your text into another language.",
+        label: "What text do you want to translate?",
+        placeholder: "Enter your text here...",
+        optionLabel: "Target Language",
+        options: ["English", "Malayalam", "Hindi", "Arabic", "Spanish", "Tamil", "French", "German"]
+    },
+
+    "Email Writer": {
+        title: "Email Writer",
+        subtitle: "Create clear and professional emails.",
+        label: "What should the email say?",
+        placeholder: "Describe what the email is about...",
+        optionLabel: "Email Tone",
+        options: ["Professional", "Friendly", "Formal", "Short", "Apology"]
+    },
+
+    "Text Improver": {
+        title: "Text Improver",
+        subtitle: "Make your text clearer and better.",
+        label: "Paste your text",
+        placeholder: "Paste your text here...",
+        optionLabel: "Improvement Style",
+        options: ["Professional", "Clear", "Natural", "Short", "Creative"]
+    },
+
+    "Rewriter": {
+        title: "Rewriter",
+        subtitle: "Rewrite your text in a better way.",
+        label: "Paste the text you want to rewrite",
+        placeholder: "Paste your text here...",
+        optionLabel: "Rewrite Style",
+        options: ["Professional", "Simple", "Creative", "Natural", "Short"]
+    },
+
+    "Grammar Helper": {
+        title: "Grammar Helper",
+        subtitle: "Fix grammar, spelling and sentence problems.",
+        label: "Paste your text",
+        placeholder: "Paste your text here...",
+        optionLabel: "Correction Style",
+        options: ["Fix Grammar", "Simple English", "Professional", "Natural", "Keep Original"]
+    },
+
+    "Title Generator": {
+        title: "Title Generator",
+        subtitle: "Generate strong titles for your content.",
+        label: "What is your content about?",
+        placeholder: "Example: YouTube video about Kerala",
+        optionLabel: "Title Style",
+        options: ["Professional", "Creative", "Short", "Viral", "Click-worthy"]
+    }
 
 };
 
 
-/* Change tool */
+/* CHANGE TOOL */
 
-document
-.querySelectorAll(".tool-tab")
-.forEach(button=>{
+document.querySelectorAll(".tool-tab").forEach(button => {
 
-button.addEventListener(
-"click",
-()=>{
+    button.addEventListener("click", () => {
 
-document
-.querySelectorAll(".tool-tab")
-.forEach(btn=>{
-btn.classList.remove("active");
-});
+        document.querySelectorAll(".tool-tab").forEach(btn => {
+            btn.classList.remove("active");
+        });
 
-button.classList.add("active");
+        button.classList.add("active");
 
-currentTool =
-button.dataset.tool;
+        currentTool = button.dataset.tool;
 
-const info =
-toolInfo[currentTool];
+        const info = toolInfo[currentTool];
 
+        pageTitle.innerText = info.title;
+        pageSubtitle.innerText = info.subtitle;
+        inputLabel.innerText = info.label;
+        userText.placeholder = info.placeholder;
+        optionLabel.innerText = info.optionLabel;
 
-pageTitle.innerText =
-info.title;
+        option.innerHTML = "";
 
-pageSubtitle.innerText =
-info.subtitle;
+        info.options.forEach(item => {
 
-inputLabel.innerText =
-info.label;
+            const opt = document.createElement("option");
+            opt.value = item;
+            opt.textContent = item;
+            option.appendChild(opt);
 
-userText.placeholder =
-info.placeholder;
+        });
 
-optionLabel.innerText =
-info.optionLabel;
+        // Translator already has its own target language dropdown.
+        languageArea.style.display =
+            currentTool === "Translator" ? "none" : "block";
 
+        userText.value = "";
+        output.innerText = "AI OUTPUT";
+        status.innerText = "Ready";
 
-option.innerHTML="";
+        // Reset output language when changing tools.
+        outputLanguage.value = "Auto Detect";
 
-
-info.options.forEach(item=>{
-
-const opt =
-document.createElement("option");
-
-opt.value=item;
-
-opt.textContent=item;
-
-option.appendChild(opt);
+    });
 
 });
 
 
-userText.value="";
+/* GENERATE */
 
-output.innerText =
-"AI OUTPUT";
+generateBtn.addEventListener("click", async () => {
 
-status.innerText =
-"Ready";
+    const text = userText.value.trim();
+    const selectedOption = option.value;
 
-}
+    const selectedLanguage =
+        currentTool === "Translator"
+            ? selectedOption
+            : outputLanguage.value;
 
-);
+
+    if (!text) {
+        output.innerText = "Please enter something first.";
+        status.innerText = "Waiting for your request.";
+        return;
+    }
+
+
+    let attempts = 0;
+
+    while (!currentUser && attempts < 30) {
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+
+    }
+
+
+    if (!currentUser) {
+        output.innerText = "Please login first.";
+        status.innerText = "Login session not found.";
+        return;
+    }
+
+
+    generateBtn.disabled = true;
+    generateBtn.innerText = "Generating...";
+    output.innerText = "Connecting to AI Unity Hub...";
+    status.innerText = "Generating...";
+
+
+    try {
+
+        const idToken = await currentUser.getIdToken();
+
+        const response = await fetch(
+            "https://ai-unity-hub-backend.onrender.com/api/generate",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + idToken
+                },
+
+                body: JSON.stringify({
+                    tool: currentTool,
+                    text: text,
+                    action: selectedOption,
+                    tone: selectedOption,
+                    outputLanguage: selectedLanguage
+                })
+            }
+        );
+
+
+        const result = await response.json();
+
+
+        if (!response.ok) {
+            throw new Error(result.error || "Server error");
+        }
+
+
+        output.innerText = result.result || "No result received.";
+        status.innerText = "Completed ✓";
+
+
+        if (typeof result.aiUsesToday === "number") {
+
+            usageCount.innerText = result.aiUsesToday + " / 5";
+
+            localStorage.setItem(
+                "aiUnityAiUsesToday",
+                result.aiUsesToday
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        output.innerText = error.message;
+        status.innerText = "Error";
+
+    } finally {
+
+        generateBtn.disabled = false;
+        generateBtn.innerText = "Generate";
+
+    }
 
 });
 
 
-/* Generate */
+/* COPY */
 
-generateBtn.addEventListener(
-"click",
-async()=>{
+document.getElementById("copyBtn").addEventListener("click", async () => {
 
-const text =
-userText.value.trim();
+    const text = output.innerText;
 
-const selectedOption =
-option.value;
+    if (!text || text === "AI OUTPUT") {
+        return;
+    }
 
+    try {
 
-if(!text){
+        await navigator.clipboard.writeText(text);
+        status.innerText = "Copied ✓";
 
-output.innerText =
-"Please enter something first.";
+    } catch (error) {
 
-status.innerText =
-"Waiting for your request.";
+        status.innerText = "Copy failed. Please select and copy manually.";
 
-return;
+    }
 
-}
+});
 
 
-let attempts=0;
+/* CLEAR */
 
+document.getElementById("clearBtn").addEventListener("click", () => {
 
-while(
-!currentUser &&
-attempts<30
-){
+    userText.value = "";
+    output.innerText = "AI OUTPUT";
+    status.innerText = "Ready";
 
-await new Promise(
-resolve=>
-setTimeout(resolve,100)
-);
-
-attempts++;
-
-}
-
-
-if(!currentUser){
-
-output.innerText =
-"Please login first.";
-
-status.innerText =
-"Login session not found.";
-
-return;
-
-}
-
-
-generateBtn.disabled=true;
-
-generateBtn.innerText=
-"Generating...";
-
-output.innerText=
-"Connecting to AI Unity Hub...";
-
-status.innerText=
-"Generating...";
-
-
-try{
-
-const idToken =
-await currentUser.getIdToken(true);
-
-
-const response =
-await fetch(
-"https://ai-unity-hub-backend.onrender.com/api/generate",
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":
-"application/json",
-
-"Authorization":
-"Bearer "+idToken
-
-},
-
-body:JSON.stringify({
-
-tool:currentTool,
-
-text:text,
-
-action:selectedOption,
-
-tone:selectedOption
-
-})
-
-}
-);
-
-
-const result =
-await response.json();
-
-
-if(!response.ok){
-
-throw new Error(
-result.error ||
-"Server error"
-);
-
-}
-
-
-output.innerText =
-result.result ||
-"No result received.";
-
-
-status.innerText =
-"Completed ✓";
-
-
-if(
-typeof result.aiUsesToday
-==="number"
-){
-
-usageCount.innerText =
-result.aiUsesToday+" / 5";
-
-localStorage.setItem(
-"aiUnityAiUsesToday",
-result.aiUsesToday
-);
-
-}
-
-
-}catch(error){
-
-console.error(error);
-
-output.innerText =
-error.message;
-
-status.innerText =
-"Error";
-
-}
-
-
-generateBtn.disabled=false;
-
-generateBtn.innerText=
-"Generate";
-
-}
-);
-
-
-/* Copy */
-
-document
-.getElementById("copyBtn")
-.addEventListener(
-"click",
-async()=>{
-
-const text =
-output.innerText;
-
-
-if(
-!text ||
-text==="AI OUTPUT"
-){
-
-return;
-
-}
-
-
-await navigator.clipboard
-.writeText(text);
-
-status.innerText =
-"Copied ✓";
-
-}
-);
-
-
-/* Clear */
-
-document
-.getElementById("clearBtn")
-.addEventListener(
-"click",
-()=>{
-
-userText.value="";
-
-output.innerText=
-"AI OUTPUT";
-
-status.innerText=
-"Ready";
-
-}
-);
+});
 
 </script>
+
 <script type="module" src="auth-guard.js"></script>
+
 </body>
 </html>
