@@ -605,138 +605,193 @@ footer {
   </div>
 </div>
 
-<script>
+
+<script type="module">
+import { initializeApp, getApps, getApp } from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged,
+    updateProfile,
+    signOut
+} from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    doc,
+    getDoc
+} from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+// SAME FIREBASE CONFIG AS LOGIN PAGE
+const firebaseConfig = {
+    apiKey: "AIzaSyA4aQj8bxLOmIdxJai3LEt6I1jV8BF0zJc",
+    authDomain: "ai-unity-hub.firebaseapp.com",
+    projectId: "ai-unity-hub",
+    storageBucket: "ai-unity-hub.firebasestorage.app",
+    messagingSenderId: "499702999885",
+    appId: "1:499702999885:web:8f599c540741c39c4aa504",
+    measurementId: "G-W3GGBB7VYX"
+};
+
+// Initialize Firebase
+const app = getApps().length
+    ? getApp()
+    : initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+
 const $ = id => document.getElementById(id);
 
 function initials(name) {
-  return (name || "U").trim().split(/\s+/)
-    .slice(0,2).map(word => word[0]).join("").toUpperCase() || "U";
+    return (name || "U")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(word => word[0])
+        .join("")
+        .toUpperCase() || "U";
 }
 
 function showUser(name, email, photo) {
-  const safeName = name || "AI Unity User";
+    const safeName = name || "AI Unity User";
 
-  $("userName").textContent = safeName;
-  $("userEmail").textContent = email || "Login connection pending";
-  $("emailValue").textContent = email || "Not connected";
+    $("userName").textContent = safeName;
+    $("userEmail").textContent = email || "Email unavailable";
+    $("emailValue").textContent = email || "Not available";
 
-  if (photo) {
-    const img = document.createElement("img");
-    img.src = photo;
-    img.alt = "Profile photo";
-    img.referrerPolicy = "no-referrer";
-    img.onerror = () => {
-      $("avatar").textContent = initials(safeName);
-    };
-    $("avatar").replaceChildren(img);
-  } else {
-    $("avatar").textContent = initials(safeName);
-  }
+    if (photo) {
+        const img = document.createElement("img");
+        img.src = photo;
+        img.alt = "Profile photo";
+
+        img.onerror = () => {
+            $("avatar").textContent = initials(safeName);
+        };
+
+        $("avatar").replaceChildren(img);
+    } else {
+        $("avatar").textContent = initials(safeName);
+    }
 }
 
-// Firebase compatibility: uses an existing initialized auth instance.
-// Your Firebase setup must load before this profile script.
-function getAuthInstance() {
-  if (window.auth && typeof window.auth.onAuthStateChanged === "function") {
-    return window.auth;
-  }
-  if (window.firebase && typeof window.firebase.auth === "function") {
-    return window.firebase.auth();
-  }
-  return null;
+function showUsage(uses, plan) {
+    const premium = String(plan || "free").toLowerCase() === "premium";
+    const limit = premium ? 100 : 5;
+    const count = Math.max(0, Number(uses) || 0);
+
+    $("usageText").textContent = `${count} / ${limit}`;
+
+    const percentage = Math.min(100, (count / limit) * 100);
+    $("usageBar").style.width = percentage + "%";
 }
 
-function loadProfile() {
-  const auth = getAuthInstance();
+async function loadAccountData(user) {
+    try {
+        const userRef = doc(db, "users", user.uid);
+        const snapshot = await getDoc(userRef);
 
-  if (!auth) {
-    showUser("AI Unity User", "", "");
-    $("accountStatus").textContent = "Login not connected";
-    $("statusBadge").textContent = "PREVIEW MODE";
-    return;
-  }
+        if (snapshot.exists()) {
+            const data = snapshot.data();
 
-  auth.onAuthStateChanged(user => {
+            const plan = data.plan || "free";
+            const uses = data.aiUsesToday || 0;
+
+            $("planBadge").textContent =
+                plan.toUpperCase() + " PLAN";
+
+            $("planValue").textContent =
+                plan.toLowerCase() === "premium"
+                    ? "✦ Premium"
+                    : "🆓 Free";
+
+            showUsage(uses, plan);
+        } else {
+            showUsage(0, "free");
+        }
+    } catch (error) {
+        console.error("PROFILE DATA ERROR:", error);
+        showUsage(0, "free");
+        $("usage-note");
+    }
+}
+
+// Authentication listener
+onAuthStateChanged(auth, async user => {
     if (!user) {
-      showUser("AI Unity User", "", "");
-      $("accountStatus").textContent = "Not logged in";
-      $("statusBadge").textContent = "SIGNED OUT";
-      return;
+        $("accountStatus").textContent = "Not logged in";
+        $("statusBadge").textContent = "SIGNED OUT";
+        showUser("AI Unity User", "", "");
+
+        window.location.replace("index.html");
+        return;
     }
 
     showUser(
-      user.displayName || "AI Unity User",
-      user.email || "",
-      user.photoURL || ""
+        user.displayName || "AI Unity User",
+        user.email || "",
+        user.photoURL || ""
     );
 
     $("accountStatus").textContent = "Active";
     $("statusBadge").textContent = "ACCOUNT ACTIVE";
-  });
-}
 
-function openEdit() {
-  $("editName").value = $("userName").textContent;
-  $("editModal").classList.add("show");
-}
+    await loadAccountData(user);
+});
 
-function closeEdit() {
-  $("editModal").classList.remove("show");
-}
+// EDIT PROFILE
+window.openEdit = function () {
+    $("editName").value = $("userName").textContent;
+    $("editModal").classList.add("show");
+};
 
-function saveEdit() {
-  const name = $("editName").value.trim();
+window.closeEdit = function () {
+    $("editModal").classList.remove("show");
+};
 
-  if (!name) {
-    alert("Please enter a name.");
-    return;
-  }
+window.saveEdit = async function () {
+    const name = $("editName").value.trim();
 
-  const auth = getAuthInstance();
-  const user = auth && auth.currentUser;
+    if (!name) {
+        alert("Please enter a name.");
+        return;
+    }
 
-  // Update Firebase account name if an authenticated user exists.
-  if (user && typeof user.updateProfile === "function") {
-    user.updateProfile({ displayName: name })
-      .then(() => {
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Please login first.");
+        return;
+    }
+
+    try {
+        await updateProfile(user, {
+            displayName: name
+        });
+
         showUser(name, user.email, user.photoURL);
-        localStorage.setItem("aiUnityDisplayName", name);
-        closeEdit();
-      })
-      .catch(error => {
-        alert("Could not update Firebase profile: " + error.message);
-      });
-    return;
-  }
+        window.closeEdit();
 
-  // Preview fallback: saves only on this browser/device.
-  localStorage.setItem("aiUnityDisplayName", name);
-  showUser(name, $("userEmail").textContent, "");
-  closeEdit();
-}
+        alert("Profile updated successfully!");
+    } catch (error) {
+        alert("Profile update failed: " + error.message);
+    }
+};
 
-function logoutUser() {
-  const auth = getAuthInstance();
-
-  if (auth && auth.currentUser) {
-    auth.signOut()
-      .then(() => {
-        window.location.href = "index.html";
-      })
-      .catch(error => alert("Logout failed: " + error.message));
-  } else {
-    alert("Firebase login is not connected yet. Logout is unavailable.");
-  }
-}
-
-loadProfile();
-
-// Restore a locally edited display name only when Firebase is not available.
-if (!getAuthInstance()) {
-  const savedName = localStorage.getItem("aiUnityDisplayName");
-  if (savedName) showUser(savedName, "", "");
-}
+// LOGOUT
+window.logoutUser = async function () {
+    try {
+        await signOut(auth);
+        window.location.replace("index.html");
+    } catch (error) {
+        alert("Logout failed: " + error.message);
+    }
+};
 </script>
+
 
 </body>
 </html>
