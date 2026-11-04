@@ -1,43 +1,70 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Dashboard — AI Unity Hub</title>
 
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+:root{
+    --bg:#030407;
+    --card:#0B0D12;
+    --blue:#1558C9;
+    --light-blue:#2878F5;
+    --lime:#D4FF24;
+    --white:#F5F7FF;
+    --muted:#9299AA;
+    --border:rgba(255,255,255,.09);
 }
+
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
     font-family:Arial,Helvetica,sans-serif;
-    background:#08080d;
-    color:white;
+    background:var(--bg);
+    color:var(--white);
     min-height:100vh;
+    overflow-x:hidden;
 }
 
+body::before{
+    content:"";
+    position:fixed;
+    width:450px;
+    height:450px;
+    top:-220px;
+    left:-170px;
+    background:var(--blue);
+    filter:blur(190px);
+    opacity:.14;
+    z-index:-1;
+    pointer-events:none;
+}
+
+/* HEADER */
+
 header{
-    height:72px;
+    min-height:72px;
     padding:0 6%;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    border-bottom:1px solid #1d1d28;
-    background:#0b0b11;
+    border-bottom:1px solid var(--border);
+    background:rgba(3,4,7,.92);
+    backdrop-filter:blur(18px);
+    position:sticky;
+    top:0;
+    z-index:10;
 }
 
 .logo{
     font-size:22px;
     font-weight:800;
+    letter-spacing:-.7px;
 }
 
-.logo span{
-    color:#8b5cf6;
-}
+.logo span{color:var(--light-blue)}
 
 .header-right{
     display:flex;
@@ -45,74 +72,78 @@ header{
     gap:9px;
 }
 
-.header-btn{
+.header-btn,.logout{
     text-decoration:none;
-    color:white;
-    background:#171722;
-    border:1px solid #29293a;
+    color:#DCE2F1;
+    background:#10141D;
+    border:1px solid var(--border);
     padding:10px 14px;
     border-radius:9px;
-    font-weight:600;
     font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
 }
 
-.header-btn:hover{
-    background:#222232;
+.header-btn:hover,.logout:hover{
+    border-color:var(--light-blue);
+    transform:translateY(-2px);
 }
 
 .profile-btn{
-    background:#8b5cf6;
-    border-color:#8b5cf6;
+    background:var(--blue);
+    border-color:var(--blue);
+    color:white;
 }
 
 .logout{
     background:transparent;
-    color:#aaa;
-    border:1px solid #29293a;
-    padding:10px 14px;
-    border-radius:9px;
-    cursor:pointer;
+    color:#AAB1C1;
 }
 
-.logout:hover{
-    color:white;
-}
+/* MAIN */
 
 .container{
     width:88%;
     max-width:1250px;
     margin:auto;
-    padding:45px 0 70px;
+    padding:48px 0 75px;
 }
 
-.hero{
-    margin-bottom:28px;
-}
+.hero{margin-bottom:30px}
 
 .hero small{
-    color:#8b5cf6;
+    color:var(--lime);
+    font-size:11px;
     font-weight:bold;
-    letter-spacing:1px;
+    letter-spacing:2px;
 }
 
 .hero h1{
-    font-size:38px;
-    margin:10px 0;
+    font-size:clamp(28px,4vw,43px);
+    letter-spacing:-1.4px;
+    margin:13px 0;
+    line-height:1.2;
 }
+
+.hero h1 span{color:var(--light-blue)}
 
 .hero p{
-    color:#9999a8;
-    font-size:16px;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.6;
 }
 
-/* PLAN CARD */
+/* PLAN */
 
 .plan-card{
-    background:linear-gradient(135deg,#151025,#101018);
-    border:1px solid #302650;
-    border-radius:17px;
-    padding:20px 22px;
-    margin-bottom:30px;
+    background:
+    radial-gradient(ellipse at right,rgba(21,88,201,.2),transparent 65%),
+    var(--card);
+    border:1px solid rgba(40,120,245,.28);
+    border-radius:18px;
+    padding:23px 25px;
+    margin-bottom:35px;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -122,14 +153,14 @@ header{
 .plan-left{
     display:flex;
     align-items:center;
-    gap:15px;
+    gap:16px;
 }
 
 .plan-icon{
-    width:48px;
-    height:48px;
-    border-radius:13px;
-    background:#241b45;
+    width:51px;
+    height:51px;
+    border-radius:14px;
+    background:rgba(21,88,201,.18);
     display:flex;
     align-items:center;
     justify-content:center;
@@ -138,11 +169,11 @@ header{
 
 .plan-info h3{
     font-size:16px;
-    margin-bottom:5px;
+    margin-bottom:7px;
 }
 
 .plan-info p{
-    color:#858595;
+    color:var(--muted);
     font-size:13px;
 }
 
@@ -150,214 +181,334 @@ header{
     display:inline-block;
     margin-left:7px;
     padding:4px 8px;
-    border-radius:6px;
-    background:#20183b;
-    color:#bda7ff;
-    font-size:10px;
-    font-weight:bold;
+    border-radius:5px;
+    background:rgba(212,255,36,.1);
+    color:var(--lime);
+    font-size:9px;
 }
 
 .usage{
-    color:#aaa;
+    color:#AAB2C3;
     font-size:12px;
-    margin-top:6px;
+    margin-top:8px;
 }
 
 .upgrade-btn{
     text-decoration:none;
     color:white;
-    background:#8b5cf6;
-    padding:11px 17px;
-    border-radius:9px;
+    background:linear-gradient(110deg,var(--blue),var(--light-blue));
+    padding:12px 18px;
+    border-radius:10px;
     font-size:13px;
     font-weight:bold;
     white-space:nowrap;
+    transition:.25s;
 }
 
 .upgrade-btn:hover{
-    background:#7c3aed;
+    transform:translateY(-3px);
+    box-shadow:0 10px 28px rgba(21,88,201,.4);
 }
 
 /* SEARCH */
 
-.search-box{
-    margin:25px 0 35px;
-}
+.search-box{margin:28px 0 38px}
 
 .search-box input{
     width:100%;
-    max-width:650px;
-    background:#111119;
-    border:1px solid #29293a;
+    max-width:680px;
+    background:var(--card);
+    border:1px solid var(--border);
     color:white;
-    padding:16px 18px;
+    padding:17px 19px;
     border-radius:12px;
-    font-size:15px;
+    font-size:14px;
     outline:none;
+    transition:.25s;
 }
 
 .search-box input:focus{
-    border-color:#8b5cf6;
+    border-color:var(--light-blue);
+    box-shadow:0 0 0 3px rgba(21,88,201,.13);
 }
+
+.search-box input::placeholder{color:#727B8D}
 
 /* SECTIONS */
 
 .section-title{
-    font-size:22px;
-    margin-bottom:18px;
+    font-size:21px;
+    margin-bottom:19px;
 }
 
-.tools-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:18px;
-}
+.section-title span{color:var(--light-blue)}
 
-.tool-card{
-    display:block;
-    text-decoration:none;
-    color:white;
-    background:#101018;
-    border:1px solid #20202d;
-    border-radius:16px;
-    padding:25px;
-    transition:.2s;
-}
-
-.tool-card:hover{
-    transform:translateY(-3px);
-    border-color:#8b5cf6;
-    background:#13131e;
-}
-
-.icon{
-    width:48px;
-    height:48px;
-    border-radius:12px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#1b1730;
-    font-size:24px;
-    margin-bottom:18px;
-}
-
-.tool-card h3{
-    margin-bottom:8px;
-    font-size:19px;
-}
-
-.tool-card p{
-    color:#9292a2;
-    line-height:1.5;
-    font-size:14px;
-}
+/* POPULAR */
 
 .quick-grid{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:15px;
-    margin:35px 0 45px;
+    gap:16px;
+    margin-bottom:48px;
 }
 
 .quick-card{
-    background:#101018;
-    border:1px solid #20202d;
-    border-radius:14px;
-    padding:20px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:15px;
+    padding:21px;
     text-decoration:none;
     color:white;
+    transition:.3s;
 }
 
 .quick-card:hover{
-    border-color:#8b5cf6;
+    transform:translateY(-5px);
+    border-color:var(--light-blue);
+    background:#0E131D;
 }
 
-.quick-card span{
-    font-size:22px;
-}
+.quick-card span{font-size:24px}
 
 .quick-card h4{
-    margin-top:12px;
+    margin-top:14px;
+    font-size:14px;
 }
 
 .quick-card p{
-    color:#888896;
-    font-size:13px;
-    margin-top:5px;
+    color:var(--muted);
+    font-size:12px;
+    margin-top:7px;
+    line-height:1.5;
 }
+
+/* TOOL CARDS */
+
+.tools-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:19px;
+}
+
+.tool-card{
+    position:relative;
+    isolation:isolate;
+    display:block;
+    min-height:205px;
+    overflow:hidden;
+    padding:25px;
+    border-radius:17px;
+    border:1px solid var(--border);
+    background:var(--card);
+    text-decoration:none;
+    color:white;
+    transition:transform .4s ease,border-color .4s ease,box-shadow .4s ease;
+}
+
+/* IMAGE BACKGROUND */
+
+.tool-card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:0;
+    background-size:cover;
+    background-position:center;
+    opacity:0;
+    transform:scale(1.12);
+    transition:opacity .55s ease,transform .8s ease;
+    pointer-events:none;
+}
+
+.tool-card .image-overlay{
+    position:absolute;
+    inset:0;
+    z-index:1;
+    background:linear-gradient(
+        110deg,
+        rgba(3,4,7,.96),
+        rgba(3,4,7,.76),
+        rgba(3,4,7,.45)
+    );
+    opacity:0;
+    transition:opacity .5s ease;
+    pointer-events:none;
+}
+
+.tool-card > *{
+    position:relative;
+    z-index:2;
+}
+
+/* HOVER ANIMATION */
+
+.tool-card:hover{
+    transform:translateY(-9px);
+    border-color:var(--light-blue);
+    box-shadow:0 18px 45px rgba(21,88,201,.22);
+}
+
+.tool-card:hover::after{
+    opacity:.48;
+    transform:scale(1);
+}
+
+.tool-card:hover .image-overlay{opacity:1}
+
+.tool-card::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:0;
+    height:2px;
+    background:var(--light-blue);
+    z-index:3;
+    transition:width .4s ease;
+}
+
+.tool-card:hover::before{width:100%}
+
+/* TOOL IMAGES */
+
+.image-card::after{
+    background-image:url("https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=900");
+}
+
+.ai-card::after{
+    background-image:url("https://images.unsplash.com/photo-1677442136019-21780ecad995?w=900");
+}
+
+.pdf-card::after{
+    background-image:url("https://images.unsplash.com/photo-1455390582262-044cdead277a?w=900");
+}
+
+.creator-card::after{
+    background-image:url("https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=900");
+}
+
+.student-card::after{
+    background-image:url("https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=900");
+}
+
+.calculator-card::after{
+    background-image:url("https://images.unsplash.com/photo-1509228468518-180dd4864904?w=900");
+}
+
+/* CARD CONTENT */
+
+.icon{
+    width:49px;
+    height:49px;
+    border-radius:13px;
+    background:rgba(21,88,201,.15);
+    border:1px solid rgba(40,120,245,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:23px;
+    margin-bottom:20px;
+    transition:.3s;
+}
+
+.tool-card:hover .icon{transform:scale(1.07)}
+
+.tool-card h3{
+    font-size:18px;
+    margin-bottom:9px;
+}
+
+.tool-card p{
+    color:#B4BDCF;
+    font-size:13px;
+    line-height:1.7;
+    max-width:320px;
+}
+
+.arrow{
+    position:absolute;
+    right:23px;
+    bottom:23px;
+    color:var(--lime);
+    font-size:19px;
+    opacity:0;
+    transform:translateX(-5px);
+    transition:.25s;
+}
+
+.tool-card:hover .arrow{
+    opacity:1;
+    transform:translateX(0);
+}
+
+.no-results{
+    display:none;
+    color:var(--muted);
+    padding:25px;
+    border:1px dashed var(--border);
+    border-radius:12px;
+    margin-top:10px;
+}
+
+/* FOOTER */
 
 footer{
-    border-top:1px solid #1d1d28;
+    border-top:1px solid var(--border);
     text-align:center;
-    padding:25px;
-    color:#666675;
-    font-size:13px;
+    padding:27px;
+    color:#687184;
+    font-size:12px;
 }
 
-/* MOBILE */
+footer span{color:#AAB4C9}
 
-@media(max-width:850px){
+/* RESPONSIVE */
 
-    .tools-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .quick-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .hero h1{
-        font-size:30px;
-    }
-
-    .plan-card{
-        align-items:flex-start;
-        flex-direction:column;
-    }
+@media(max-width:900px){
+    .tools-grid{grid-template-columns:repeat(2,1fr)}
+    .quick-grid{grid-template-columns:repeat(2,1fr)}
 }
 
 @media(max-width:550px){
-
     header{
-        padding:0 4%;
+        padding:13px 4%;
+        flex-wrap:wrap;
+        gap:12px;
     }
 
-    .logo{
-        font-size:18px;
-    }
+    .logo{font-size:18px}
+    .header-right{gap:5px}
 
-    .header-right{
-        gap:5px;
-    }
-
-    .header-btn,
-    .logout{
+    .header-btn,.logout{
         padding:8px 9px;
         font-size:11px;
     }
 
     .container{
         width:92%;
-        padding-top:30px;
+        padding-top:32px;
     }
 
-    .tools-grid,
-    .quick-grid{
-        grid-template-columns:1fr;
-    }
+    .hero h1{font-size:29px}
 
-    .hero h1{
-        font-size:27px;
-    }
+    .tools-grid,.quick-grid{grid-template-columns:1fr}
 
     .plan-card{
-        padding:18px;
+        flex-direction:column;
+        align-items:flex-start;
+        padding:19px;
     }
 
     .upgrade-btn{
         width:100%;
         text-align:center;
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+        animation:none!important;
+        transition:none!important;
     }
 }
 </style>
@@ -366,102 +517,42 @@ footer{
 <body>
 
 <header>
-
-    <div class="logo">
-        AI <span>Unity Hub</span>
-    </div>
+    <div class="logo">AI <span>Unity Hub</span></div>
 
     <div class="header-right">
-
-        <a href="history.html" class="header-btn">
-            History
-        </a>
-
-        <a href="profile.html" class="header-btn profile-btn">
-            👤 Profile
-        </a>
-
-        <button class="logout" onclick="goLogin()">
-            Logout
-        </button>
-
+        <a href="history.html" class="header-btn">History</a>
+        <a href="profile.html" class="header-btn profile-btn">👤 Profile</a>
+        <button class="logout" id="logoutBtn">Logout</button>
     </div>
-
 </header>
-
 
 <main class="container">
 
     <section class="hero">
-
-        <small>AI UNITY HUB</small>
-
-        <h1>
-            All Your AI & Digital Tools. One Place.
-        </h1>
-
-        <p>
-            Choose a tool and get things done faster.
-        </p>
-
+        <small>AI UNITY HUB / DASHBOARD</small>
+        <h1>All Your AI & Digital Tools. <span>One Place.</span></h1>
+        <p>Choose a tool and get things done faster.</p>
     </section>
 
-
-    <!-- FREE PLAN -->
-
     <div class="plan-card">
-
         <div class="plan-left">
-
-            <div class="plan-icon">
-                🆓
-            </div>
-
+            <div class="plan-icon">✦</div>
             <div class="plan-info">
-
-                <h3>
-                    Free Plan
-
-                    <span class="plan-badge">
-                        CURRENT PLAN
-                    </span>
-                </h3>
-
-                <p>
-                    Enjoy the core AI Unity Hub tools for free.
-                </p>
-
-                <div class="usage">
-                    AI usage today: <strong>0 / 5</strong>
-                </div>
-
+                <h3>Free Plan <span class="plan-badge">CURRENT PLAN</span></h3>
+                <p>Enjoy the core AI Unity Hub tools for free.</p>
+                <div class="usage">AI usage today: <strong>0 / 5</strong></div>
             </div>
-
         </div>
 
-
-        <a href="premium.html" class="upgrade-btn">
-            ✨ Upgrade to Premium
-        </a>
-
+        <a href="premium.html" class="upgrade-btn">✦ Upgrade to Premium</a>
     </div>
-
 
     <div class="search-box">
-
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="Search tools..."
-        >
-
+        <input type="text" id="searchInput"
+        placeholder="⌕  Search your tools..." autocomplete="off">
     </div>
 
-
-    <h2 class="section-title">
-        Popular Tools
-    </h2>
-
+    <h2 class="section-title">Popular <span>Tools</span></h2>
 
     <div class="quick-grid">
 
@@ -491,103 +582,134 @@ footer{
 
     </div>
 
+    <h2 class="section-title">Explore <span>Tools</span></h2>
 
-    <h2 class="section-title">
-        Explore Tools
-    </h2>
+    <div class="tools-grid">
 
-
-    <div class="tools-grid" id="toolsGrid">
-
-        <a href="image-tools.html" class="tool-card">
+        <a href="image-tools.html" class="tool-card image-card">
+            <div class="image-overlay"></div>
             <div class="icon">🖼️</div>
             <h3>Image Tools</h3>
-            <p>
-                Remove backgrounds, resize, compress and convert images.
-            </p>
+            <p>Remove backgrounds, resize, compress and convert images.</p>
+            <span class="arrow">↗</span>
         </a>
 
-        <a href="ai-tools-new.html" class="tool-card">
+        <a href="ai-tools-new.html" class="tool-card ai-card">
+            <div class="image-overlay"></div>
             <div class="icon">🤖</div>
             <h3>AI Tools</h3>
-            <p>
-                Write, rewrite, improve, caption and create useful content.
-            </p>
+            <p>Write, rewrite, improve, caption and create useful content.</p>
+            <span class="arrow">↗</span>
         </a>
 
-        <a href="pdf-tools.html" class="tool-card">
+        <a href="pdf-tools.html" class="tool-card pdf-card">
+            <div class="image-overlay"></div>
             <div class="icon">📄</div>
             <h3>PDF Tools</h3>
-            <p>
-                Merge, split, convert and optimize your PDF files.
-            </p>
+            <p>Merge, split, convert and optimize your PDF files.</p>
+            <span class="arrow">↗</span>
         </a>
 
-        <a href="creator-tools.html" class="tool-card">
+        <a href="creator-tools.html" class="tool-card creator-card">
+            <div class="image-overlay"></div>
             <div class="icon">🎬</div>
             <h3>Creator Tools</h3>
-            <p>
-                Generate reel ideas, hooks, scripts, captions and hashtags.
-            </p>
+            <p>Generate reel ideas, hooks, scripts, captions and hashtags.</p>
+            <span class="arrow">↗</span>
         </a>
 
-        <a href="student-tools.html" class="tool-card">
+        <a href="student-tools.html" class="tool-card student-card">
+            <div class="image-overlay"></div>
             <div class="icon">📚</div>
             <h3>Student Tools</h3>
-            <p>
-                Create notes, study plans, questions and essays.
-            </p>
+            <p>Create notes, study plans, questions and essays.</p>
+            <span class="arrow">↗</span>
         </a>
 
-        <a href="calculator-tools.html" class="tool-card">
+        <a href="calculator-tools.html" class="tool-card calculator-card">
+            <div class="image-overlay"></div>
             <div class="icon">🧮</div>
             <h3>Calculators</h3>
-            <p>
-                Percentage, age, GST, EMI, discount and unit calculations.
-            </p>
+            <p>Percentage, age, GST, EMI, discount and unit calculations.</p>
+            <span class="arrow">↗</span>
         </a>
 
     </div>
 
+    <div class="no-results" id="noResults">
+        No tools found. Try another search.
+    </div>
+
 </main>
 
-
 <footer>
-    AI Unity Hub — by CK Izyaan
+    AI Unity Hub — by <span>CK Izyaan</span>
 </footer>
 
+<script type="module">
 
-<script>
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 
-function goLogin(){
-    window.location.href = "login.html";
-}
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+} from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
+const firebaseConfig = {
+    apiKey:"AIzaSyA4aQj8bxLOmIdxJai3LEt6I1jV8BF0zJc",
+    authDomain:"ai-unity-hub.firebaseapp.com",
+    projectId:"ai-unity-hub",
+    storageBucket:"ai-unity-hub.firebasestorage.app",
+    messagingSenderId:"499702999885",
+    appId:"1:499702999885:web:8f599c540741c39c4aa504",
+    measurementId:"G-W3GGBB7VYX"
+};
 
-const searchInput =
-    document.getElementById("searchInput");
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-const cards =
-    document.querySelectorAll(".tool-card");
+onAuthStateChanged(auth,(user)=>{
+    if(!user){
+        window.location.replace("login.html");
+    }
+});
 
+document.getElementById("logoutBtn").addEventListener("click",async()=>{
+    const button = document.getElementById("logoutBtn");
+    button.disabled = true;
+    button.textContent = "Logging out...";
 
-searchInput.addEventListener("input", () => {
+    try{
+        await signOut(auth);
+        window.location.replace("login.html");
+    }catch(error){
+        console.error("LOGOUT ERROR:",error);
+        button.disabled = false;
+        button.textContent = "Logout";
+        alert("Logout failed. Please try again.");
+    }
+});
 
-    const search =
-        searchInput.value.toLowerCase().trim();
+/* TOOL SEARCH */
 
-    cards.forEach(card => {
+const searchInput = document.getElementById("searchInput");
+const cards = document.querySelectorAll(".tool-card");
+const noResults = document.getElementById("noResults");
 
-        const text =
-            card.innerText.toLowerCase();
+searchInput.addEventListener("input",()=>{
+    const search = searchInput.value.toLowerCase().trim();
+    let visibleCount = 0;
 
-        card.style.display =
-            text.includes(search)
-                ? "block"
-                : "none";
-
+    cards.forEach(card=>{
+        const match = card.innerText.toLowerCase().includes(search);
+        card.style.display = match ? "block" : "none";
+        if(match) visibleCount++;
     });
 
+    noResults.style.display = visibleCount === 0 ? "block" : "none";
 });
 
 </script>
