@@ -8,239 +8,38 @@
 <title>History — AI Unity Hub</title>
 
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:#08080d;
-    color:white;
-    min-height:100vh;
-}
-
-header{
-    height:72px;
-    padding:0 6%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid #1d1d28;
-    background:#0b0b11;
-}
-
-.logo{
-    font-size:21px;
-    font-weight:800;
-}
-
-.logo span{
-    color:#9b6cff;
-}
-
-.nav{
-    display:flex;
-    gap:10px;
-}
-
-.nav a{
-    text-decoration:none;
-    color:#aaa;
-    background:#15151f;
-    border:1px solid #29293a;
-    padding:10px 14px;
-    border-radius:9px;
-    font-size:13px;
-}
-
-.nav a:hover{
-    color:white;
-}
-
-.container{
-    width:90%;
-    max-width:1000px;
-    margin:auto;
-    padding:55px 0 75px;
-}
-
-.top{
-    display:flex;
-    align-items:flex-end;
-    justify-content:space-between;
-    gap:20px;
-    margin-bottom:30px;
-}
-
-.title small{
-    color:#9b6cff;
-    font-size:11px;
-    font-weight:bold;
-    letter-spacing:2px;
-}
-
-.title h1{
-    font-size:38px;
-    margin-top:8px;
-}
-
-.title p{
-    color:#888896;
-    font-size:14px;
-    margin-top:8px;
-}
-
-.clear-btn{
-    background:#171720;
-    color:#ff8d8d;
-    border:1px solid #3a2525;
-    padding:11px 16px;
-    border-radius:9px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.clear-btn:hover{
-    background:#241719;
-}
-
-.history-list{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-}
-
-.history-item{
-    background:#101018;
-    border:1px solid #20202d;
-    border-radius:15px;
-    padding:18px;
-    display:flex;
-    align-items:center;
-    gap:15px;
-    transition:.2s;
-}
-
-.history-item:hover{
-    border-color:#3a3155;
-    transform:translateY(-1px);
-}
-
-.history-icon{
-    width:46px;
-    height:46px;
-    border-radius:12px;
-    background:#1b1730;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:21px;
-    flex-shrink:0;
-}
-
-.history-info{
-    flex:1;
-}
-
-.history-info h3{
-    font-size:15px;
-    margin-bottom:5px;
-}
-
-.history-info p{
-    color:#777787;
-    font-size:12px;
-}
-
-.empty{
-    text-align:center;
-    padding:85px 20px;
-    background:#101018;
-    border:1px solid #20202d;
-    border-radius:19px;
-}
-
-.empty-icon{
-    font-size:45px;
-    margin-bottom:15px;
-}
-
-.empty h2{
-    font-size:22px;
-    margin-bottom:9px;
-}
-
-.empty p{
-    color:#777787;
-    font-size:14px;
-    margin-bottom:25px;
-}
-
-.explore{
-    display:inline-block;
-    text-decoration:none;
-    background:#8b5cf6;
-    color:white;
-    padding:12px 19px;
-    border-radius:9px;
-    font-weight:bold;
-    font-size:14px;
-}
-
-.explore:hover{
-    background:#7c3aed;
-}
-
-footer{
-    border-top:1px solid #1d1d28;
-    text-align:center;
-    padding:25px;
-    color:#666675;
-    font-size:12px;
-}
-
-@media(max-width:600px){
-
-    header{
-        padding:0 4%;
-    }
-
-    .logo{
-        font-size:18px;
-    }
-
-    .nav{
-        gap:5px;
-    }
-
-    .nav a{
-        padding:9px 10px;
-        font-size:11px;
-    }
-
-    .container{
-        width:92%;
-        padding-top:40px;
-    }
-
-    .top{
-        align-items:flex-start;
-        flex-direction:column;
-    }
-
-    .title h1{
-        font-size:30px;
-    }
-
-    .clear-btn{
-        width:100%;
-    }
-
-}
-
+*{margin:0;padding:0;box-sizing:border-box}
+:root{color-scheme:dark;--bg:#030407;--panel:#0B0D12;--line:#202633;--muted:#929BAA;--text:#F5F7FA;--blue:#2878F5;--blue2:#1558C9;--lime:#D4FF24}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
+header{min-height:72px;padding:14px 6%;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);background:#07090E}
+.logo{font-size:21px;font-weight:800}.logo span{color:var(--lime)}
+.nav{display:flex;gap:10px;flex-wrap:wrap}
+.nav a{text-decoration:none;color:#B8C1CE;background:#10141D;border:1px solid #303B4D;padding:10px 14px;border-radius:9px;font-size:13px;transition:.2s}
+.nav a:hover{color:#fff;border-color:var(--blue)}
+.container{width:90%;max-width:1000px;margin:auto;padding:55px 0 75px}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:30px}
+.title small{color:var(--lime);font-size:11px;font-weight:bold;letter-spacing:2px}
+.title h1{font-size:clamp(30px,4vw,38px);margin-top:8px}
+.title p{color:var(--muted);font-size:14px;margin-top:8px}
+.clear-btn{background:#171722;color:#FF9999;border:1px solid #493038;padding:11px 16px;border-radius:9px;cursor:pointer;font-weight:bold}
+.clear-btn:hover{background:#241719;border-color:#75404A}
+.history-list{display:flex;flex-direction:column;gap:12px}
+.history-item{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:18px;display:flex;align-items:center;gap:15px;transition:border-color .2s}
+.history-item:hover{border-color:var(--blue)}
+.history-icon{width:46px;height:46px;border-radius:12px;background:#101D33;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.history-info{flex:1;min-width:0}
+.history-info h3{font-size:15px;margin-bottom:5px;overflow-wrap:anywhere}
+.history-info p{color:#8994A5;font-size:12px;overflow-wrap:anywhere}
+.empty{text-align:center;padding:85px 20px;background:var(--panel);border:1px solid var(--line);border-radius:19px}
+.empty-icon{font-size:45px;margin-bottom:15px}
+.empty h2{font-size:22px;margin-bottom:9px}
+.empty p{color:var(--muted);font-size:14px;margin-bottom:25px}
+.explore{display:inline-block;text-decoration:none;background:var(--blue2);border:1px solid var(--blue);color:white;padding:12px 19px;border-radius:9px;font-weight:bold;font-size:14px;transition:.2s}
+.explore:hover{background:var(--blue)}
+footer{border-top:1px solid var(--line);text-align:center;padding:25px;color:#778193;font-size:12px}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+@media(max-width:600px){header{padding:14px 4%;align-items:flex-start;flex-direction:column}.logo{font-size:18px}.nav{gap:7px}.nav a{padding:9px 10px;font-size:12px}.container{width:92%;padding-top:35px}.top{align-items:stretch;flex-direction:column}.title h1{font-size:30px}.clear-btn{width:100%}.empty{padding:60px 16px}.history-item{padding:14px}}
+@media(max-width:360px){.nav a{padding:8px}.history-icon{width:40px;height:40px}}
 </style>
 
 </head>
