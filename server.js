@@ -53,6 +53,22 @@ app.get("/", (req, res) => {
     res.send("AI Unity Hub Backend is running.");
 });
 
+// Reports only whether required secrets exist; never exposes secret values.
+app.get("/health", (req, res) => {
+    const firebaseConfigured = Boolean(
+        process.env.FIREBASE_PROJECT_ID &&
+        process.env.FIREBASE_CLIENT_EMAIL &&
+        process.env.FIREBASE_PRIVATE_KEY
+    );
+    const geminiConfigured = Boolean(process.env.GEMINI_API_KEY);
+
+    res.status(firebaseConfigured && geminiConfigured ? 200 : 503).json({
+        status: firebaseConfigured && geminiConfigured ? "ready" : "configuration_missing",
+        firebaseConfigured,
+        geminiConfigured
+    });
+});
+
 /* AI GENERATE */
 
 app.post("/api/generate", async (req, res) => {
@@ -244,22 +260,55 @@ Give only the final answer.
         });
 
     } catch (error) {
-        console.error("SERVER ERROR:", error);
+        const status = Number(error.status || error.statusCode || 0);
+        const code = String(error.code || error.error?.status || "UNKNOWN");
+        const message = String(error.message || "Unknown server error");
+
+        // Keep details in Render logs; never return credentials to the browser.
+        console.error("SERVER ERROR:", {
+            status,
+            code,
+            message,
+            stack: error.stack
+        });
 
         const isQuotaError =
-            error.status === 429 ||
-            error.code === 429 ||
-            error.code === "RESOURCE_EXHAUSTED" ||
-            error.message?.includes("RESOURCE_EXHAUSTED");
+            status === 429 ||
+            code === "429" ||
+            code === "RESOURCE_EXHAUSTED" ||
+            message.includes("RESOURCE_EXHAUSTED");
 
         if (isQuotaError) {
             return res.status(429).json({
-                error: "Gemini API quota exceeded. Please try again after the quota resets."
+                error: "AI service quota reached. Please try again later.",
+                errorCode: code
+            });
+        }
+
+        if (status === 401 || status === 403) {
+            return res.status(502).json({
+                error: "AI service authentication or permission issue. Check the backend API configuration.",
+                errorCode: code
+            });
+        }
+
+        if (status === 404) {
+            return res.status(502).json({
+                error: "The configured AI model was not found or is unavailable.",
+                errorCode: code
+            });
+        }
+
+        if (status === 400) {
+            return res.status(400).json({
+                error: "The AI service rejected this request. Try a shorter or simpler prompt.",
+                errorCode: code
             });
         }
 
         res.status(500).json({
-            error: "Something went wrong. Please try again later."
+            error: "AI backend error. Check the backend service logs.",
+            errorCode: code
         });
     }
 });
