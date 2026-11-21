@@ -4,19 +4,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#090711">
+<meta name="theme-color" content="#030407">
 <title>My Profile — AI Unity Hub</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  --bg:#090711;
-  --panel:#12101d;
-  --panel2:#191526;
-  --purple:#9565ff;
-  --light:#c4aaff;
-  --muted:#928ba5;
+  --bg:#030407;
+  --panel:#0B0D12;
+  --panel2:#10141D;
+  --purple:#1558C9;
+  --light:#2878F5;
+  --muted:#9299AA;
   --border:rgba(255,255,255,.08);
 }
 
@@ -34,7 +34,7 @@ body:before {
   content:"";
   position:fixed;
   width:450px;height:450px;
-  background:#702dff;
+  background:#1558C9;
   filter:blur(180px);
   opacity:.12;
   top:-200px;left:35%;
@@ -75,8 +75,8 @@ header {
 }
 .nav a:hover,.nav a.active {
   color:white;
-  background:#211932;
-  border-color:#49316c;
+  background:#10141D;
+  border-color:rgba(40,120,245,.4);
 }
 
 .container {
@@ -107,8 +107,8 @@ header {
 }
 
 .profile-card {
-  background:linear-gradient(135deg,#1b1429,#100e19 65%);
-  border:1px solid rgba(167,121,255,.22);
+  background:radial-gradient(ellipse at right,rgba(21,88,201,.18),transparent 65%),#0B0D12;
+  border:1px solid rgba(40,120,245,.28);
   border-radius:22px;
   padding:30px;
   position:relative;
@@ -120,7 +120,7 @@ header {
   content:"";
   position:absolute;
   width:220px;height:220px;
-  background:#854cff;
+  background:#1558C9;
   filter:blur(120px);
   opacity:.15;
   right:-60px;top:-100px;
@@ -138,13 +138,13 @@ header {
 .avatar {
   width:85px;height:85px;
   border-radius:24px;
-  background:linear-gradient(135deg,#a879ff,#6335c9);
+  background:linear-gradient(135deg,#2878F5,#1558C9);
   display:flex;
   align-items:center;
   justify-content:center;
   font-size:32px;
   font-weight:900;
-  box-shadow:0 8px 30px #713ee655;
+  box-shadow:0 8px 30px rgba(21,88,201,.28);
   flex-shrink:0;
   overflow:hidden;
 }
@@ -185,8 +185,8 @@ header {
 
 .free-badge {
   color:#cbb4ff;
-  background:#38245b;
-  border:1px solid #65419b;
+  background:rgba(21,88,201,.16);
+  border:1px solid rgba(40,120,245,.4);
 }
 
 .active-badge {
@@ -199,9 +199,9 @@ header {
   margin-left:auto;
   padding:11px 16px;
   border-radius:10px;
-  background:#251a37;
-  border:1px solid #49346c;
-  color:#d7c6ff;
+  background:#10141D;
+  border:1px solid rgba(40,120,245,.4);
+  color:#DCE2F1;
   cursor:pointer;
   font-weight:700;
   font-size:12px;
@@ -252,7 +252,7 @@ header {
 
 .usage {
   margin-top:14px;
-  background:#0d0b14;
+  background:#080A0F;
   border:1px solid var(--border);
   padding:21px;
   border-radius:15px;
@@ -279,7 +279,7 @@ header {
 
 .progress {
   height:8px;
-  background:#292234;
+  background:#202632;
   border-radius:20px;
   overflow:hidden;
 }
@@ -287,7 +287,7 @@ header {
 .progress-fill {
   width:0%;
   height:100%;
-  background:linear-gradient(90deg,#7040d8,#b58cff);
+  background:linear-gradient(90deg,#1558C9,#2878F5);
   border-radius:20px;
   transition:width .5s;
 }
@@ -300,8 +300,8 @@ header {
 
 .premium-banner {
   margin-top:22px;
-  border:1px solid #6841a5;
-  background:linear-gradient(110deg,#26183f,#171125);
+  border:1px solid rgba(40,120,245,.4);
+  background:radial-gradient(ellipse at right,rgba(21,88,201,.2),transparent 70%),#0B0D12;
   border-radius:16px;
   padding:23px;
   display:flex;
@@ -322,14 +322,14 @@ header {
 
 .upgrade-btn {
   text-decoration:none;
-  background:linear-gradient(135deg,#a276ff,#7541d5);
+  background:linear-gradient(110deg,#1558C9,#2878F5);
   color:white;
   padding:12px 18px;
   border-radius:10px;
   font-size:12px;
   font-weight:800;
   white-space:nowrap;
-  box-shadow:0 5px 20px #874aff33;
+  box-shadow:0 5px 20px rgba(21,88,201,.25);
 }
 
 .menu-grid {
@@ -351,8 +351,8 @@ header {
 
 .menu-item:hover {
   transform:translateY(-3px);
-  border-color:#7048a8;
-  background:#191326;
+  border-color:#2878F5;
+  background:#10141D;
 }
 
 .menu-icon {
@@ -410,8 +410,8 @@ footer {
 .modal-box {
   width:100%;
   max-width:390px;
-  background:#171321;
-  border:1px solid #513878;
+  background:#0B0D12;
+  border:1px solid rgba(40,120,245,.4);
   border-radius:18px;
   padding:25px;
 }
@@ -427,8 +427,8 @@ footer {
   width:100%;
   padding:13px;
   border-radius:9px;
-  border:1px solid #393047;
-  background:#0c0a12;
+  border:1px solid #303746;
+  background:#030407;
   color:white;
   outline:none;
 }
@@ -448,7 +448,15 @@ footer {
 .save {background:#8755e7;color:white}
 .cancel {background:#292331;color:white}
 
+a:focus-visible,button:focus-visible,input:focus-visible {
+  outline:2px solid var(--light);
+  outline-offset:3px;
+}
+
 @media(max-width:650px) {
+  header {height:auto;min-height:66px;flex-wrap:wrap;gap:8px;padding:12px 4%}
+  .nav {width:100%;justify-content:flex-start;flex-wrap:wrap}
+
   header {padding:0 4%;height:66px}
   .logo {font-size:17px}
   .nav {gap:2px}
@@ -482,7 +490,8 @@ footer {
   <nav class="nav">
     <a href="dashboard.html">Dashboard</a>
     <a href="history.html">History</a>
-    <a href="premium.html" class="active">Premium</a>
+    <a href="premium.html">Premium</a>
+    <a href="profile.html" class="active" aria-current="page">Profile</a>
   </nav>
 </header>
 
@@ -501,7 +510,7 @@ footer {
 
       <div class="user-details">
         <h2 id="userName">AI Unity User</h2>
-        <div class="email" id="userEmail">Login connection pending</div>
+        <div class="email" id="userEmail">Loading account...</div>
 
         <div class="badges">
           <span class="badge free-badge" id="planBadge">FREE PLAN</span>
@@ -546,7 +555,7 @@ footer {
       <div class="progress">
         <div class="progress-fill" id="usageBar"></div>
       </div>
-      <p class="usage-note">Daily free usage limit. Usage data will be connected to your account.</p>
+      <p class="usage-note">Daily free usage limit. Your daily AI usage is shown here when account data is available.</p>
     </div>
 
     <div class="premium-banner">
@@ -715,7 +724,7 @@ async function loadAccountData(user) {
     } catch (error) {
         console.error("PROFILE DATA ERROR:", error);
         showUsage(0, "free");
-        $("usage-note");
+        // Usage information remains visible even if Firestore data cannot be loaded.
     }
 }
 
