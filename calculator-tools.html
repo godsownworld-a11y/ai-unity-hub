@@ -8,186 +8,33 @@
 <title>Calculators — AI Unity Hub</title>
 
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:#080808;
-    color:white;
-    min-height:100vh;
-}
-
-header{
-    height:70px;
-    padding:0 7%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid #222;
-    background:#0b0b0b;
-}
-
-.logo{
-    font-size:21px;
-    font-weight:bold;
-}
-
-.logo span{
-    color:#aaa;
-}
-
-nav{
-    display:flex;
-    gap:22px;
-}
-
-nav a{
-    color:#aaa;
-    text-decoration:none;
-    font-size:14px;
-}
-
-nav a:hover{
-    color:#fff;
-}
-
-.hero{
-    padding:55px 6% 25px;
-}
-
-.small{
-    color:#777;
-    font-size:12px;
-    letter-spacing:3px;
-    margin-bottom:12px;
-}
-
-h1{
-    font-size:clamp(35px,6vw,58px);
-    margin-bottom:12px;
-}
-
-.subtitle{
-    color:#888;
-    font-size:16px;
-}
-
-.calculators{
-    width:88%;
-    max-width:1250px;
-    margin:35px auto 80px;
-
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:18px;
-}
-
-.card{
-    background:#101010;
-    border:1px solid #242424;
-    border-radius:17px;
-    padding:25px;
-    min-height:300px;
-}
-
-.icon{
-    font-size:30px;
-    margin-bottom:15px;
-}
-
-.card h2{
-    font-size:19px;
-    margin-bottom:18px;
-}
-
-label{
-    display:block;
-    color:#888;
-    font-size:12px;
-    margin-top:12px;
-    margin-bottom:6px;
-}
-
-input,
-select{
-    width:100%;
-    padding:11px;
-    border-radius:8px;
-    border:1px solid #333;
-    background:#080808;
-    color:white;
-    outline:none;
-}
-
-button{
-    width:100%;
-    margin-top:15px;
-    padding:11px;
-    border:none;
-    border-radius:8px;
-    background:white;
-    color:black;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-button:hover{
-    opacity:.85;
-}
-
-.result{
-    margin-top:15px;
-    padding:12px;
-    border-radius:8px;
-    background:#181818;
-    color:#ddd;
-    font-size:13px;
-    line-height:1.5;
-    min-height:20px;
-}
-
-footer{
-    border-top:1px solid #222;
-    text-align:center;
-    padding:25px;
-    color:#555;
-    font-size:12px;
-}
-
-@media(max-width:900px){
-
-    .calculators{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-}
-
-@media(max-width:600px){
-
-    header{
-        padding:0 5%;
-    }
-
-    nav{
-        gap:10px;
-    }
-
-    .hero{
-        padding:45px 20px 25px;
-    }
-
-    .calculators{
-        width:90%;
-        grid-template-columns:1fr;
-    }
-
-}
-
+*{margin:0;padding:0;box-sizing:border-box}
+:root{color-scheme:dark;--bg:#030407;--panel:#0B0D12;--line:#202633;--muted:#929BAA;--text:#F5F7FA;--blue:#2878F5;--blue2:#1558C9;--lime:#D4FF24}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
+header{min-height:70px;padding:14px 7%;display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--line);background:#07090E}
+.logo{font-size:21px;font-weight:800}.logo span{color:var(--lime)}
+nav{display:flex;gap:22px;flex-wrap:wrap}
+nav a{color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s}
+nav a:hover{color:var(--lime)}
+.hero{padding:55px 6% 25px}
+.small{color:var(--lime);font-size:12px;letter-spacing:3px;margin-bottom:12px;font-weight:bold}
+h1{font-size:clamp(32px,6vw,58px);margin-bottom:12px;letter-spacing:-1px}
+.subtitle{color:var(--muted);font-size:16px}
+.calculators{width:88%;max-width:1250px;margin:35px auto 80px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:25px;min-height:300px;min-width:0;box-shadow:0 16px 40px rgba(0,0,0,.14)}
+.icon{font-size:30px;margin-bottom:15px}
+.card h2{font-size:19px;margin-bottom:18px}
+label{display:block;color:#AAB4C2;font-size:12px;margin-top:12px;margin-bottom:6px}
+input,select{width:100%;min-width:0;padding:11px;border-radius:8px;border:1px solid #303B4D;background:#080B11;color:white;outline:none}
+input:focus,select:focus{border-color:var(--blue);outline:2px solid rgba(40,120,245,.18)}
+button{width:100%;margin-top:15px;padding:11px;border:1px solid var(--blue);border-radius:8px;background:var(--blue2);color:white;font-weight:bold;cursor:pointer;transition:.2s}
+button:hover{background:var(--blue)}
+.result{margin-top:15px;padding:12px;border-radius:8px;background:#080B11;border:1px solid var(--line);color:#D5DCE6;font-size:13px;line-height:1.6;min-height:42px;overflow-wrap:anywhere}
+footer{border-top:1px solid var(--line);text-align:center;padding:25px;color:#778193;font-size:12px}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+@media(max-width:900px){.calculators{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){header{padding:14px 5%;height:auto;align-items:flex-start;flex-direction:column;gap:12px}nav{gap:10px 18px}.hero{padding:40px 5% 20px}.calculators{width:90%;grid-template-columns:1fr;margin:25px auto 55px}.card{padding:21px;min-height:0}}
+@media(max-width:360px){.card{padding:16px}.calculators{width:92%}}
 </style>
 
 </head>
