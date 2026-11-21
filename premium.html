@@ -17,19 +17,22 @@
 
 body{
     font-family:Arial,Helvetica,sans-serif;
-    background:#07070b;
+    background:#030407;
     color:white;
     min-height:100vh;
 }
 
 header{
-    height:72px;
-    padding:0 6%;
+    min-height:72px;
+    height:auto;
+    padding:14px 6%;
+    flex-wrap:wrap;
+    gap:12px;
     display:flex;
     align-items:center;
     justify-content:space-between;
     border-bottom:1px solid #20202b;
-    background:#0b0b10;
+    background:#0B0D12;
 }
 
 .logo{
@@ -38,18 +41,19 @@ header{
 }
 
 .logo span{
-    color:#a970ff;
+    color:#2878F5;
 }
 
 .nav{
     display:flex;
     gap:9px;
+    flex-wrap:wrap;
 }
 
 .nav a{
     text-decoration:none;
     color:#aaa;
-    background:#12121a;
+    background:#0B111B;
     border:1px solid #292936;
     padding:10px 14px;
     border-radius:9px;
@@ -58,7 +62,12 @@ header{
 
 .nav a:hover{
     color:white;
-    border-color:#555;
+    border-color:#2878F5;
+}
+
+.nav a:focus-visible,.button:focus-visible{
+    outline:2px solid #D4FF24;
+    outline-offset:3px;
 }
 
 .container{
@@ -77,9 +86,9 @@ header{
     display:inline-block;
     padding:8px 16px;
     border-radius:30px;
-    background:#171022;
-    border:1px solid #3d2865;
-    color:#c7a9ff;
+    background:#101B2B;
+    border:1px solid #1558C9;
+    color:#8DBBFF;
     font-size:11px;
     font-weight:bold;
     letter-spacing:.7px;
@@ -93,7 +102,7 @@ header{
 }
 
 .hero h1 span{
-    color:#a970ff;
+    color:#2878F5;
 }
 
 .hero p{
@@ -110,17 +119,17 @@ header{
 
 .plan{
     position:relative;
-    background:#101016;
-    border:1px solid #252530;
+    background:#0B0D12;
+    border:1px solid #202A38;
     border-radius:20px;
     padding:32px;
     overflow:hidden;
 }
 
 .plan.premium{
-    border-color:#8b5cf6;
+    border-color:#1558C9;
     box-shadow:
-        0 0 50px rgba(139,92,246,.12),
+        0 0 50px rgba(40,120,245,.12),
         inset 0 1px 0 rgba(255,255,255,.04);
 }
 
@@ -128,7 +137,7 @@ header{
     position:absolute;
     top:18px;
     right:18px;
-    background:#8b5cf6;
+    background:#1558C9;
     color:white;
     padding:6px 10px;
     border-radius:20px;
@@ -168,7 +177,7 @@ header{
 .features li{
     padding:11px 0;
     color:#c9c9d2;
-    border-bottom:1px solid #1d1d27;
+    border-bottom:1px solid #1A2533;
     font-size:14px;
 }
 
@@ -177,7 +186,7 @@ header{
 }
 
 .check{
-    color:#a970ff;
+    color:#2878F5;
     font-weight:bold;
     margin-right:7px;
 }
@@ -192,19 +201,19 @@ header{
 }
 
 .free-button{
-    background:#18181f;
+    background:#111722;
     color:#aaa;
-    border:1px solid #292933;
+    border:1px solid #263244;
 }
 
 .premium-button{
-    background:#8b5cf6;
+    background:#1558C9;
     color:white;
     border:none;
 }
 
 .premium-button:hover{
-    background:#7c3aed;
+    background:#2878F5;
 }
 
 .status{
@@ -212,8 +221,8 @@ header{
     margin-top:20px;
     padding:12px;
     border-radius:10px;
-    background:#12121a;
-    border:1px solid #252530;
+    background:#0B111B;
+    border:1px solid #202A38;
     color:#777783;
     font-size:12px;
 }
@@ -237,7 +246,7 @@ footer{
 @media(max-width:750px){
 
     header{
-        padding:0 4%;
+        padding:14px 4%;
     }
 
     .logo{
