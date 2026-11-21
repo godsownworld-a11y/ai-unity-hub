@@ -12,13 +12,14 @@
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:#0b0b0f;
+    background:#030407;
     color:white;
 }
 
 header{
     padding:18px 7%;
-    border-bottom:1px solid #222;
+    flex-wrap:wrap;
+    border-bottom:1px solid #111722;
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -27,7 +28,7 @@ header{
 
 .logo{font-size:22px;font-weight:bold}
 
-nav{display:flex;gap:18px}
+nav{display:flex;gap:18px;flex-wrap:wrap}
 
 nav a{
     color:#aaa;
@@ -35,7 +36,7 @@ nav a{
     font-size:14px;
 }
 
-nav a:hover{color:white}
+nav a:hover{color:white}\r\n\r\nnav a:focus-visible,.tool-tab:focus-visible,.generate:focus-visible,.small-btn:focus-visible{outline:2px solid #D4FF24;outline-offset:3px}
 
 .container{
     max-width:950px;
@@ -51,8 +52,8 @@ h1{margin-bottom:8px}
 }
 
 .usage{
-    background:#15151c;
-    border:1px solid #292934;
+    background:#0B0D12;
+    border:1px solid #202A38;
     border-radius:12px;
     padding:15px 18px;
     margin-bottom:18px;
@@ -73,8 +74,8 @@ h1{margin-bottom:8px}
 
 .tool-tab{
     padding:13px;
-    border:1px solid #333;
-    background:#15151c;
+    border:1px solid #263244;
+    background:#0B0D12;
     color:#aaa;
     border-radius:9px;
     cursor:pointer;
@@ -83,19 +84,19 @@ h1{margin-bottom:8px}
 }
 
 .tool-tab:hover{
-    border-color:#8b5cf6;
+    border-color:#1558C9;
     color:white;
 }
 
 .tool-tab.active{
-    background:#8b5cf6;
+    background:#1558C9;
     color:white;
-    border-color:#8b5cf6;
+    border-color:#1558C9;
 }
 
 .tool-box{
-    background:#15151c;
-    border:1px solid #292934;
+    background:#0B0D12;
+    border:1px solid #202A38;
     border-radius:14px;
     padding:25px;
 }
@@ -110,23 +111,23 @@ textarea{
     width:100%;
     min-height:200px;
     resize:vertical;
-    background:#0d0d12;
+    background:#070B12;
     color:white;
-    border:1px solid #333;
+    border:1px solid #263244;
     border-radius:10px;
     padding:14px;
     font-size:15px;
     outline:none;
 }
 
-textarea:focus{border-color:#8b5cf6}
+textarea:focus{border-color:#1558C9}
 
 select{
     width:100%;
     padding:13px;
-    background:#0d0d12;
+    background:#070B12;
     color:white;
-    border:1px solid #333;
+    border:1px solid #263244;
     border-radius:10px;
     font-size:15px;
 }
@@ -135,7 +136,7 @@ select{
     width:100%;
     margin-top:22px;
     padding:14px;
-    background:#8b5cf6;
+    background:#1558C9;
     color:white;
     border:0;
     border-radius:10px;
@@ -144,7 +145,7 @@ select{
     cursor:pointer;
 }
 
-.generate:hover{background:#7c3aed}
+.generate:hover{background:#2878F5}
 
 .generate:disabled{
     opacity:.6;
@@ -153,8 +154,8 @@ select{
 
 .output-box{
     margin-top:25px;
-    background:#0d0d12;
-    border:1px solid #292934;
+    background:#070B12;
+    border:1px solid #202A38;
     border-radius:10px;
     padding:18px;
     min-height:180px;
@@ -177,7 +178,7 @@ select{
 .small-btn{
     padding:9px 15px;
     border-radius:7px;
-    background:#222;
+    background:#111722;
     color:white;
     border:none;
     cursor:pointer;
@@ -197,7 +198,7 @@ footer{
 
     nav{flex-wrap:wrap}
 
-    .tools-grid{grid-template-columns:1fr}
+    .tools-grid{grid-template-columns:1fr}\r\n\r\n    .container{width:100%;margin:22px auto;padding:16px}\r\n\r\n    .usage{gap:12px;flex-wrap:wrap}
 
     .tool-box{padding:18px}
 }
