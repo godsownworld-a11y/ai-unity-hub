@@ -7,277 +7,49 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-
-body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:#080808;
-    color:#fff;
-    min-height:100vh;
-}
-
-header{
-    height:70px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 7%;
-    border-bottom:1px solid #222;
-    background:#0b0b0b;
-}
-
-.logo{
-    font-size:21px;
-    font-weight:bold;
-}
-
-.logo span{
-    color:#aaa;
-}
-
-nav{
-    display:flex;
-    gap:22px;
-}
-
-nav a{
-    color:#aaa;
-    text-decoration:none;
-    font-size:14px;
-}
-
-nav a:hover{
-    color:#fff;
-}
-
-.container{
-    width:92%;
-    max-width:1100px;
-    margin:45px auto;
-}
-
-.title{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.title h1{
-    font-size:38px;
-    margin-bottom:10px;
-}
-
-.title p{
-    color:#999;
-    font-size:15px;
-}
-
-.tabs{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:25px;
-}
-
-.tab{
-    padding:12px 17px;
-    border:1px solid #292929;
-    background:#111;
-    color:#aaa;
-    border-radius:10px;
-    cursor:pointer;
-}
-
-.tab.active{
-    background:#fff;
-    color:#000;
-}
-
-.tool{
-    display:none;
-}
-
-.tool.active{
-    display:block;
-}
-
-.card{
-    max-width:850px;
-    margin:auto;
-    background:#101010;
-    border:1px solid #242424;
-    border-radius:18px;
-    padding:28px;
-}
-
-.card h2{
-    font-size:25px;
-    margin-bottom:8px;
-}
-
-.desc{
-    color:#888;
-    font-size:14px;
-    margin-bottom:22px;
-}
-
-input[type=file]{
-    width:100%;
-    padding:14px;
-    background:#090909;
-    border:1px dashed #333;
-    border-radius:10px;
-    color:#aaa;
-    margin-bottom:18px;
-}
-
-button.action{
-    padding:13px 20px;
-    border:0;
-    border-radius:9px;
-    background:#fff;
-    color:#000;
-    font-weight:bold;
-    cursor:pointer;
-    margin:5px 5px 5px 0;
-}
-
-button.secondary{
-    background:#1b1b1b;
-    color:#fff;
-    border:1px solid #333;
-}
-
-button:disabled{
-    opacity:.4;
-    cursor:not-allowed;
-}
-
-.status{
-    min-height:22px;
-    color:#aaa;
-    font-size:14px;
-    margin:12px 0;
-}
-
-.file-list{
-    margin:15px 0;
-}
-
-.file-item{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    padding:12px;
-    margin:7px 0;
-    background:#0a0a0a;
-    border:1px solid #222;
-    border-radius:9px;
-    font-size:13px;
-    color:#bbb;
-}
-
-.file-item button{
-    background:#222;
-    color:#fff;
-    border:1px solid #333;
-    padding:6px 10px;
-    border-radius:6px;
-    cursor:pointer;
-}
-
-.settings{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-    margin:18px 0;
-}
-
-.box{
-    background:#0b0b0b;
-    border:1px solid #222;
-    border-radius:10px;
-    padding:15px;
-}
-
-.box label{
-    display:block;
-    color:#999;
-    font-size:13px;
-    margin-bottom:8px;
-}
-
-.box input,
-.box select{
-    width:100%;
-    padding:11px;
-    background:#151515;
-    border:1px solid #333;
-    border-radius:8px;
-    color:#fff;
-}
-
-.preview-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-    gap:15px;
-    margin:20px 0;
-}
-
-.page-preview{
-    background:#0b0b0b;
-    border:1px solid #222;
-    border-radius:10px;
-    padding:10px;
-    text-align:center;
-}
-
-.page-preview img{
-    max-width:100%;
-    border-radius:5px;
-}
-
-.page-preview p{
-    color:#888;
-    font-size:12px;
-    margin:7px 0;
-}
-
-footer{
-    text-align:center;
-    color:#555;
-    font-size:13px;
-    padding:35px 15px;
-    margin-top:45px;
-    border-top:1px solid #181818;
-}
-
-@media(max-width:700px){
-    header{
-        padding:0 5%;
-    }
-
-    nav{
-        gap:10px;
-    }
-
-    .title h1{
-        font-size:30px;
-    }
-
-    .card{
-        padding:20px;
-    }
-
-    .settings{
-        grid-template-columns:1fr;
-    }
-
-    .tab{
-        flex:1;
-        min-width:130px;
-    }
-}
+:root{color-scheme:dark;--bg:#030407;--panel:#0B0D12;--line:#202633;--muted:#929BAA;--text:#F5F7FA;--blue:#2878F5;--blue2:#1558C9;--lime:#D4FF24}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
+header{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 7%;border-bottom:1px solid var(--line);background:#07090E}
+.logo{font-size:21px;font-weight:800}.logo span{color:var(--lime)}
+nav{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+nav a{color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s}
+nav a:hover,nav a:focus-visible{color:var(--lime)}
+.container{width:min(92%,1100px);margin:45px auto}
+.title{text-align:center;margin-bottom:30px}
+.title h1{font-size:clamp(28px,4vw,38px);margin-bottom:10px;letter-spacing:-.7px}
+.title p{color:var(--muted);font-size:15px}
+.tabs{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:25px}
+.tab{padding:12px 17px;border:1px solid var(--line);background:var(--panel);color:#B8C1CE;border-radius:10px;cursor:pointer;transition:.2s}
+.tab:hover{border-color:var(--blue);color:var(--text)}
+.tab.active{background:var(--blue2);color:#fff;border-color:var(--blue)}
+.tool{display:none}.tool.active{display:block}
+.card{max-width:850px;margin:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 18px 50px rgba(0,0,0,.18)}
+.card h2{font-size:25px;margin-bottom:8px}
+.desc{color:var(--muted);font-size:14px;margin-bottom:22px}
+input[type=file]{width:100%;max-width:100%;padding:14px;background:#080B11;border:1px dashed #354154;border-radius:10px;color:#AAB4C2;margin-bottom:18px}
+button.action{padding:13px 20px;border:1px solid var(--blue);border-radius:9px;background:var(--blue2);color:#fff;font-weight:700;cursor:pointer;margin:5px 5px 5px 0;transition:.2s}
+button.action:hover:not(:disabled){background:var(--blue)}
+button.secondary{background:#121722;color:#DCE3EC;border:1px solid #303B4D}
+button.secondary:hover:not(:disabled){background:#1A2433;border-color:#52647E}
+button:disabled{opacity:.4;cursor:not-allowed}
+.status{min-height:22px;color:#AAB4C2;font-size:14px;margin:12px 0}
+.file-list{margin:15px 0;min-width:0}
+.file-item{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;padding:12px;margin:7px 0;background:#080B11;border:1px solid var(--line);border-radius:9px;font-size:13px;color:#C0C9D6}
+.file-item span{min-width:0;overflow-wrap:anywhere}
+.file-item button{flex-shrink:0;background:#121722;color:#fff;border:1px solid #303B4D;padding:6px 10px;border-radius:6px;cursor:pointer}
+.settings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:18px 0}
+.box{background:#080B11;border:1px solid var(--line);border-radius:10px;padding:15px;min-width:0}
+.box label{display:block;color:#B0BAC8;font-size:13px;margin-bottom:8px}
+.box input,.box select{width:100%;min-width:0;padding:11px;background:#111722;border:1px solid #303B4D;border-radius:8px;color:#fff;outline:none}
+.box input:focus,.box select:focus,input[type=file]:focus{border-color:var(--blue);outline:2px solid rgba(40,120,245,.18)}
+.preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(180px,100%),1fr));gap:15px;margin:20px 0}
+.page-preview{background:#080B11;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;min-width:0}
+.page-preview img{max-width:100%;height:auto;border-radius:5px}
+.page-preview p{color:var(--muted);font-size:12px;margin:7px 0}
+footer{text-align:center;color:#778193;font-size:13px;padding:35px 15px;margin-top:45px;border-top:1px solid var(--line)}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+@media(max-width:700px){header{padding:14px 5%;align-items:flex-start;flex-direction:column;gap:12px}nav{gap:12px 18px}.container{margin:30px auto}.title{margin-bottom:26px}.card{padding:20px}.settings{grid-template-columns:1fr}.tab{flex:1;min-width:130px}}
+@media(max-width:420px){.card{padding:16px;border-radius:14px}.tab{min-width:100%}.action{max-width:100%}.file-item{align-items:flex-start}}
 </style>
 </head>
 
