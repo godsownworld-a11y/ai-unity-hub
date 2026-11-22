@@ -212,35 +212,42 @@ Give only the final answer.
         console.log("Sending multilingual request to Gemini...");
 
         let response;
+        let lastGeminiError;
+        const modelsToTry = ["gemini-3.8-flash", "gemini-3.5-flash-lite"];
 
-        for (let attempt = 1; attempt <= 3; attempt++) {
+        for (const model of modelsToTry) {
             try {
+                console.log(`Trying Gemini model: ${model}`);
                 response = await ai.models.generateContent({
-                    model: "gemini-3.8-flash",
+                    model,
                     contents: prompt
                 });
-
-                console.log("Gemini response received.");
+                console.log(`Gemini response received from ${model}.`);
                 break;
-
             } catch (error) {
-                const isQuotaError =
-                    error.status === 429 ||
-                    error.code === 429 ||
-                    error.code === "RESOURCE_EXHAUSTED" ||
-                    error.message?.includes("RESOURCE_EXHAUSTED");
+                lastGeminiError = error;
+                const status = Number(error.status || error.statusCode || error.error?.code || 0);
+                const message = String(error.message || "");
+                const isTemporary =
+                    status === 429 ||
+                    status === 500 ||
+                    status === 502 ||
+                    status === 503 ||
+                    status === 504 ||
+                    message.includes("RESOURCE_EXHAUSTED") ||
+                    message.includes("UNAVAILABLE");
 
-                console.log(`Gemini attempt ${attempt} failed:`, error.message);
+                console.error(`Gemini model ${model} failed:`, message);
 
-                // Do not retry quota errors.
-                if (isQuotaError || attempt === 3) {
+                // Try the fallback only for temporary availability or quota errors.
+                if (!isTemporary || model === modelsToTry[modelsToTry.length - 1]) {
                     throw error;
                 }
-
-                await new Promise(resolve =>
-                    setTimeout(resolve, 2000 * attempt)
-                );
             }
+        }
+
+        if (!response) {
+            throw lastGeminiError || new Error("No Gemini model returned a response.");
         }
 
         /* USAGE UPDATE */
