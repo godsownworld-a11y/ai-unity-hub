@@ -140,9 +140,14 @@ app.post("/api/generate", async (req, res) => {
             });
         }
 
-        /* FREE LIMIT */
+        /* DEVELOPER ACCESS + FREE LIMIT */
 
-        if (userData.plan !== "premium" && aiUsesToday >= 5) {
+        // Set DEVELOPER_UID in the backend environment to exempt only this
+        // verified Firebase account. Never trust a client-side developer flag.
+        const developerUid = process.env.DEVELOPER_UID;
+        const isDeveloper = Boolean(developerUid && userId === developerUid);
+
+        if (!isDeveloper && userData.plan !== "premium" && aiUsesToday >= 5) {
             return res.status(429).json({
                 error: "Free plan limit reached. You can use AI tools 5 times per day.",
                 aiUsesToday
@@ -276,18 +281,22 @@ Give only the final answer.
 
         /* USAGE UPDATE */
 
-        const newUsage = aiUsesToday + 1;
+        const newUsage = isDeveloper ? aiUsesToday : aiUsesToday + 1;
 
-        await userRef.update({
-            aiUsesToday: newUsage,
-            lastUsageDate: today
-        });
+        // Developer test requests do not consume the daily free-plan allowance.
+        if (!isDeveloper) {
+            await userRef.update({
+                aiUsesToday: newUsage,
+                lastUsageDate: today
+            });
+        }
 
         /* RESPONSE */
 
         res.json({
             result: response.text,
-            aiUsesToday: newUsage
+            aiUsesToday: newUsage,
+            isDeveloper
         });
 
     } catch (error) {
