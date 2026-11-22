@@ -620,6 +620,33 @@ generateBtn.addEventListener("click", async () => {
         status.innerText = "Completed ✓";
 
 
+        // Save successful AI generations to this signed-in user's browser history.
+        const historyKey = "aiUnityHistory_" + currentUser.uid;
+        let savedHistory = [];
+        try {
+            savedHistory = JSON.parse(localStorage.getItem(historyKey) || "[]");
+            if (!Array.isArray(savedHistory)) savedHistory = [];
+        } catch {
+            savedHistory = [];
+        }
+
+        const toolIcons = {
+            "AI Writer": "✍️", "Summarizer": "📝", "Caption Generator": "📸",
+            "Idea Generator": "💡", "Translator": "🌍", "Email Writer": "📧",
+            "Text Improver": "✨", "Rewriter": "🔄", "Grammar Helper": "📝",
+            "Title Generator": "🎯"
+        };
+
+        savedHistory.unshift({
+            id: Date.now().toString(),
+            title: currentTool,
+            icon: toolIcons[currentTool] || "⚡",
+            time: new Date().toLocaleString(),
+            input: text,
+            result: result.result || ""
+        });
+        localStorage.setItem(historyKey, JSON.stringify(savedHistory.slice(0, 50)));
+
         if (typeof result.aiUsesToday === "number") {
 
             usageCount.innerText = result.aiUsesToday + " / 5";
