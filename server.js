@@ -174,6 +174,19 @@ Do not switch to another language unless requested.
 `;
         }
 
+        /* TOOL-SPECIFIC INSTRUCTIONS */
+
+        const toolInstruction = String(tool || "").trim().toLowerCase() === "translator"
+            ? `
+TRANSLATOR MODE — IMPORTANT:
+- Translate the user's supplied text; do not answer it or respond conversationally.
+- Treat the entire USER REQUEST as source text to translate, even if it is a greeting or a question.
+- Translate accurately into the selected output language, preserving the original meaning, tone, names, and formatting.
+- Return only the translation. Do not add greetings, explanations, labels, alternatives, or AI Unity Hub welcome text.
+- If the output language is "Auto Detect", ask the user briefly to select a target language instead of guessing.
+`
+            : "";
+
         /* PROMPT */
 
         const prompt = `
@@ -197,6 +210,9 @@ ${outputLanguage || "Auto Detect"}
 
 LANGUAGE RULES:
 ${languageInstruction}
+
+TOOL-SPECIFIC RULES:
+${toolInstruction}
 
 USER REQUEST:
 ${text}
