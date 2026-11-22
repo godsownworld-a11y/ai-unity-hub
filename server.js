@@ -1,8 +1,8 @@
-
 require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const { rateLimit } = require("express-rate-limit");
 const { GoogleGenAI } = require("@google/genai");
 
 const { initializeApp, cert } = require("firebase-admin/app");
@@ -35,11 +35,25 @@ const db = getFirestore();
 
 const app = express();
 
+// Render runs behind a trusted proxy; this lets rate limiting use the client IP.
+app.set("trust proxy", 1);
+
 app.use(cors({
     origin: "https://godsownworld-a11y.github.io"
 }));
 
-app.use(express.json());
+// Limit JSON payload size to reduce accidental or abusive oversized requests.
+app.use(express.json({ limit: "20kb" }));
+
+const generateRateLimit = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 20,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    message: {
+        error: "Too many requests. Please wait a little and try again."
+    }
+});
 
 /* GEMINI */
 
@@ -71,7 +85,7 @@ app.get("/health", (req, res) => {
 
 /* AI GENERATE */
 
-app.post("/api/generate", async (req, res) => {
+app.post("/api/generate", generateRateLimit, async (req, res) => {
     try {
         const {
             tool,
@@ -79,7 +93,7 @@ app.post("/api/generate", async (req, res) => {
             action,
             tone,
             outputLanguage
-        } = req.body;
+        } = req.body || {};
 
         /* LOGIN CHECK */
 
@@ -91,74 +105,95 @@ app.post("/api/generate", async (req, res) => {
             });
         }
 
-        const idToken = authHeader.split("Bearer ")[1];
+        const idToken = authHeader.slice("Bearer ".length).trim();
+
+        if (!idToken) {
+            return res.status(401).json({
+                error: "Please login first."
+            });
+        }
+
         const decodedToken = await adminAuth.verifyIdToken(idToken);
         const userId = decodedToken.uid;
 
-        /* TEXT CHECK */
+        /* INPUT VALIDATION */
 
-        if (!text || !text.trim()) {
+        if (typeof text !== "string" || !text.trim()) {
             return res.status(400).json({
                 error: "Please enter some text."
             });
         }
 
-        /* DATE */
+        if (text.length > 8000) {
+            return res.status(413).json({
+                error: "Please keep your text under 8,000 characters."
+            });
+        }
 
+        const safeTool = typeof tool === "string" ? tool.slice(0, 60) : "";
+        const safeAction = typeof action === "string" ? action.slice(0, 60) : "";
+        const safeTone = typeof tone === "string" ? tone.slice(0, 80) : "";
+        const safeOutputLanguage = typeof outputLanguage === "string"
+            ? outputLanguage.slice(0, 40)
+            : "Auto Detect";
+
+        /* DAILY USAGE RESERVATION */
+
+        // Use UTC consistently so all users share a predictable daily reset.
         const today = new Date().toISOString().split("T")[0];
-
-        /* USER */
-
         const userRef = db.collection("users").doc(userId);
-        let userSnap = await userRef.get();
 
-        if (!userSnap.exists) {
-            await userRef.set({
-                plan: "free",
-                aiUsesToday: 0,
-                imageUsesToday: 0,
-                pdfUsesToday: 0,
-                lastUsageDate: today,
-                createdAt: new Date()
-            });
-
-            userSnap = await userRef.get();
-        }
-
-        const userData = userSnap.data();
-
-        let aiUsesToday = userData.aiUsesToday || 0;
-
-        /* DAILY RESET */
-
-        if (userData.lastUsageDate !== today) {
-            aiUsesToday = 0;
-
-            await userRef.update({
-                aiUsesToday: 0,
-                lastUsageDate: today
-            });
-        }
-
-        /* DEVELOPER ACCESS + FREE LIMIT */
-
-        // Set DEVELOPER_UID in the backend environment to exempt only this
-        // verified Firebase account. Never trust a client-side developer flag.
+        // Never trust a client-side developer flag or plan value.
         const developerUid = process.env.DEVELOPER_UID;
         const isDeveloper = Boolean(developerUid && userId === developerUid);
 
-        if (!isDeveloper && userData.plan !== "premium" && aiUsesToday >= 5) {
-            return res.status(429).json({
-                error: "Free plan limit reached. You can use AI tools 5 times per day.",
-                aiUsesToday
-            });
-        }
+        // Reserve a use atomically before calling Gemini. This prevents concurrent
+        // requests from racing past the five-use free-plan limit.
+        const usage = await db.runTransaction(async (transaction) => {
+            const userSnap = await transaction.get(userRef);
+            const userData = userSnap.exists ? userSnap.data() : {};
+            const plan = userData.plan || "free";
+            const lastUsageDate = userData.lastUsageDate || today;
+            let currentUses = Number.isInteger(userData.aiUsesToday)
+                ? userData.aiUsesToday
+                : 0;
+
+            if (lastUsageDate !== today) {
+                currentUses = 0;
+            }
+
+            if (!isDeveloper && plan !== "premium" && currentUses >= 5) {
+                const limitError = new Error("FREE_LIMIT_REACHED");
+                limitError.code = "FREE_LIMIT_REACHED";
+                throw limitError;
+            }
+
+            const nextUses = isDeveloper || plan === "premium"
+                ? currentUses
+                : currentUses + 1;
+
+            transaction.set(userRef, {
+                plan,
+                aiUsesToday: nextUses,
+                lastUsageDate: today,
+                ...(userSnap.exists ? {} : {
+                    imageUsesToday: 0,
+                    pdfUsesToday: 0,
+                    createdAt: new Date()
+                })
+            }, { merge: true });
+
+            return {
+                aiUsesToday: nextUses,
+                plan
+            };
+        });
 
         /* LANGUAGE INSTRUCTIONS */
 
         let languageInstruction = "";
 
-        if (!outputLanguage || outputLanguage === "Auto Detect") {
+        if (!safeOutputLanguage || safeOutputLanguage === "Auto Detect") {
             languageInstruction = `
 Detect the language and writing style of the user's input.
 Reply in the same language and writing style.
@@ -166,7 +201,7 @@ If the user writes Malayalam using English letters (Manglish),
 reply in Manglish using English letters.
 If the user writes Malayalam script, reply in Malayalam script.
 `;
-        } else if (outputLanguage === "Manglish") {
+        } else if (safeOutputLanguage === "Manglish") {
             languageInstruction = `
 Write the complete answer in Manglish.
 Use Malayalam language written with English letters.
@@ -174,14 +209,14 @@ Do not use Malayalam script.
 `;
         } else {
             languageInstruction = `
-Write the complete answer in ${outputLanguage}.
+Write the complete answer in ${safeOutputLanguage}.
 Do not switch to another language unless requested.
 `;
         }
 
         /* TOOL-SPECIFIC INSTRUCTIONS */
 
-        const toolInstruction = String(tool || "").trim().toLowerCase() === "translator"
+        const toolInstruction = safeTool.trim().toLowerCase() === "translator"
             ? `
 TRANSLATOR MODE — IMPORTANT:
 - Translate the user's supplied text; do not answer it or respond conversationally.
@@ -202,16 +237,16 @@ English, Malayalam, Manglish, Hindi, Tamil, Arabic,
 Spanish, French, or a mixture of languages.
 
 Tool:
-${tool || "AI Tool"}
+${safeTool || "AI Tool"}
 
 Action:
-${action || "Generate"}
+${safeAction || "Generate"}
 
 Style/Tone:
-${tone || "Natural"}
+${safeTone || "Natural"}
 
 Output language:
-${outputLanguage || "Auto Detect"}
+${safeOutputLanguage || "Auto Detect"}
 
 LANGUAGE RULES:
 ${languageInstruction}
@@ -279,27 +314,22 @@ Give only the final answer.
             throw lastGeminiError || new Error("No Gemini model returned a response.");
         }
 
-        /* USAGE UPDATE */
-
-        const newUsage = isDeveloper ? aiUsesToday : aiUsesToday + 1;
-
-        // Developer test requests do not consume the daily free-plan allowance.
-        if (!isDeveloper) {
-            await userRef.update({
-                aiUsesToday: newUsage,
-                lastUsageDate: today
-            });
-        }
-
         /* RESPONSE */
 
         res.json({
             result: response.text,
-            aiUsesToday: newUsage,
+            aiUsesToday: usage.aiUsesToday,
             isDeveloper
         });
 
     } catch (error) {
+        if (error.code === "FREE_LIMIT_REACHED") {
+            return res.status(429).json({
+                error: "Free plan limit reached. You can use AI tools 5 times per day.",
+                aiUsesToday: 5
+            });
+        }
+
         const status = Number(error.status || error.statusCode || 0);
         const code = String(error.code || error.error?.status || "UNKNOWN");
         const message = String(error.message || "Unknown server error");
@@ -358,5 +388,5 @@ Give only the final answer.
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`AI Unity Hub backend running on port ${PORT}`);
+    console.log(`AI Unity Hub Backend running on port ${PORT}`);
 });
