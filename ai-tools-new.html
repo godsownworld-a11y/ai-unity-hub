@@ -255,6 +255,13 @@ footer{
             placeholder="Write your request here..."
         ></textarea>
 
+        <div id="aiCaptionPhotoBox" style="display:none;margin:14px 0">
+            <label for="aiCaptionPhoto">Upload a photo for caption ideas</label>
+            <input id="aiCaptionPhoto" type="file" accept="image/*" capture="environment" style="display:block;width:100%;margin-top:8px;padding:12px;background:#10141D;border:1px dashed #354154;border-radius:10px;color:#fff">
+            <img id="aiCaptionPhotoPreview" alt="Selected photo preview" style="display:none;max-width:100%;max-height:260px;object-fit:contain;margin-top:12px;border-radius:12px">
+            <p id="aiCaptionPhotoStatus" class="status">Choose a photo or type a description.</p>
+        </div>
+
         <div id="optionsArea">
 
             <label id="optionLabel">Style</label>
@@ -549,6 +556,7 @@ document.querySelectorAll(".tool-tab").forEach(button => {
         // Translator already has its own target language dropdown.
         languageArea.style.display =
             currentTool === "Translator" ? "none" : "block";
+        aiCaptionPhotoBox.style.display = currentTool === "Caption Generator" ? "block" : "none";
 
         userText.value = "";
         output.innerText = "AI OUTPUT";
@@ -556,6 +564,10 @@ document.querySelectorAll(".tool-tab").forEach(button => {
 
         // Reset output language when changing tools.
         outputLanguage.value = "Auto Detect";
+        aiCaptionPhoto.value = "";
+        aiCaptionPhotoPreview.removeAttribute("src");
+        aiCaptionPhotoPreview.style.display = "none";
+        aiCaptionPhotoStatus.textContent = "Choose a photo or type a description.";
         aiCaptionPhoto.value = "";
         aiCaptionPhotoPreview.removeAttribute("src");
         aiCaptionPhotoPreview.style.display = "none";
@@ -570,7 +582,37 @@ document.querySelectorAll(".tool-tab").forEach(button => {
 
 generateBtn.addEventListener("click", async () => {
 
-    const text = userText.value.trim();
+    let text = userText.value.trim();
+    const captionPhotoFile = currentTool === "Caption Generator" && aiCaptionPhoto.files[0];
+    if (captionPhotoFile) {
+        try {
+            generateBtn.disabled = true;
+            generateBtn.innerText = "Analyzing photo...";
+            aiCaptionPhotoStatus.textContent = "AI is analyzing the photo. First use may take a little time.";
+            if (!aiCaptionImageToText) {
+                const { pipeline, env } = await import("https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1");
+                env.allowLocalModels = false;
+                aiCaptionImageToText = await pipeline("image-to-text", "Xenova/vit-gpt2-image-captioning");
+            }
+            const imageUrl = URL.createObjectURL(captionPhotoFile);
+            let prediction;
+            try { prediction = await aiCaptionImageToText(imageUrl); }
+            finally { URL.revokeObjectURL(imageUrl); }
+            const description = Array.isArray(prediction)
+                ? prediction.map(item => item.generated_text || "").join(" ")
+                : (prediction.generated_text || "");
+            if (!description.trim()) throw new Error("No description could be generated from this photo.");
+            text = (text ? text + "\\n\\n" : "") + "Photo description: " + description +
+                ". Create several accurate social-media captions and relevant hashtags. Only use details visible in the photo.";
+            aiCaptionPhotoStatus.textContent = "Photo analyzed. Creating captions...";
+        } catch (error) {
+            output.innerText = "Photo analysis failed: " + error.message;
+            status.innerText = "Photo analysis failed";
+            generateBtn.disabled = false;
+            generateBtn.innerText = "Generate";
+            return;
+        }
+    }
     const selectedOption = option.value;
 
     const selectedLanguage =
@@ -580,7 +622,7 @@ generateBtn.addEventListener("click", async () => {
 
 
     if (!text) {
-        output.innerText = "Please enter something first.";
+        output.innerText = "Please enter text or upload a photo first.";
         status.innerText = "Waiting for your request.";
         return;
     }
