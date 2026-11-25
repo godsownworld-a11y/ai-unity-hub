@@ -763,6 +763,10 @@ removeBtn.addEventListener(
                 );
 
                 env.allowLocalModels = false;
+                // Run ONNX inference away from the page's main thread where supported.
+                // A single WASM thread reduces memory/CPU pressure on low-spec laptops.
+                env.backends.onnx.wasm.proxy = true;
+                env.backends.onnx.wasm.numThreads = 1;
                 remover = await pipeline(
                     "background-removal",
                     "onnx-community/BEN2-ONNX"
@@ -774,7 +778,15 @@ removeBtn.addEventListener(
             const sourceBitmap = await createImageBitmap(file);
             const originalWidth = sourceBitmap.width;
             const originalHeight = sourceBitmap.height;
-            const maxModelSide = 1024;
+
+            // Keep memory use predictable on laptops with limited RAM.
+            const maxOutputSide = 2048;
+            const outputScale = Math.min(1, maxOutputSide / Math.max(originalWidth, originalHeight));
+            const width = Math.max(1, Math.round(originalWidth * outputScale));
+            const height = Math.max(1, Math.round(originalHeight * outputScale));
+
+            // The AI model only needs a smaller working copy for segmentation.
+            const maxModelSide = 768;
             const scale = Math.min(1, maxModelSide / Math.max(originalWidth, originalHeight));
             const modelWidth = Math.max(1, Math.round(originalWidth * scale));
             const modelHeight = Math.max(1, Math.round(originalHeight * scale));
@@ -792,10 +804,7 @@ removeBtn.addEventListener(
                 throw new Error("The background mask could not be created.");
             }
 
-            /* APPLY THE MASK TO THE ORIGINAL IMAGE'S ALPHA CHANNEL */
-            const width = originalWidth;
-            const height = originalHeight;
-
+            /* APPLY THE MASK TO A MEMORY-SAFE OUTPUT IMAGE */
             const outputCanvas = document.createElement("canvas");
             outputCanvas.width = width;
             outputCanvas.height = height;
@@ -822,10 +831,18 @@ removeBtn.addEventListener(
             const pixels = originalPixels.data;
             const mask = maskPixels.data;
 
-            for (let i = 0; i < pixels.length; i += 4) {
-                // Keep the model's soft edge values for smoother hair and object edges.
-                const foreground = mask[i] / 255;
-                pixels[i + 3] = Math.round(pixels[i + 3] * foreground);
+            // Process in small batches and yield to the browser between batches.
+            // This prevents long pixel loops from freezing the whole tab.
+            const batchSize = 250000;
+            for (let start = 0; start < pixels.length; start += batchSize * 4) {
+                const end = Math.min(pixels.length, start + batchSize * 4);
+                for (let i = start; i < end; i += 4) {
+                    // Preserve soft mask edges for smoother hair and object outlines.
+                    pixels[i + 3] = Math.round(pixels[i + 3] * (mask[i] / 255));
+                }
+                if (end < pixels.length) {
+                    await new Promise(resolve => requestAnimationFrame(resolve));
+                }
             }
 
             outputContext.putImageData(originalPixels, 0, 0);
