@@ -1157,30 +1157,60 @@ async function convertImageToPng(bytes){
 }
 
 
+function dataURLToBlob(dataUrl) {
+    const parts = dataUrl.split(",");
+    const mime = (parts[0].match(/:(.*?);/) || [])[1] || "image/jpeg";
+    const binary = atob(parts[1]);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
+}
+
 /* DOWNLOAD */
 
 function downloadBlob(blob,filename){
+    if (!(blob instanceof Blob) || blob.size <= 0) {
+        showDownloadMessage("The file is not ready to download.");
+        return;
+    }
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.textContent = "Tap here if the download did not start";
+    link.style.cssText = "display:inline-block;margin:8px 0;padding:9px 12px;border:1px solid #2878F5;border-radius:8px;color:#fff;text-decoration:none";
+    let notice = document.getElementById("downloadFallbackNotice");
+    if (!notice) {
+        notice = document.createElement("div");
+        notice.id = "downloadFallbackNotice";
+        notice.style.cssText = "position:relative;margin:12px auto;padding:12px;background:#101827;border:1px solid #2878F5;border-radius:10px;color:#fff;max-width:850px;overflow-wrap:anywhere";
+        (document.querySelector("main") || document.querySelector(".container") || document.body).prepend(notice);
+    }
+    notice.replaceChildren();
+    const message = document.createElement("p");
+    message.textContent = "Download requested: " + filename + ". Check your browser Downloads list (Android: Files > Downloads; iPhone/iPad: Files > Downloads). If it did not start, use the link below.";
+    notice.append(message, link);
+    showDownloadMessage("Download requested. Check Downloads; use the link shown above if needed.");
+    const file = new File([blob], filename, { type: blob.type || "application/octet-stream" });
+    if (navigator.canShare && navigator.share && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: filename }).catch(error => {
+            if (error.name !== "AbortError") showDownloadMessage("Download link is ready below.");
+        });
+    } else {
+        link.click();
+    }
+    window.setTimeout(() => URL.revokeObjectURL(url), 10 * 60 * 1000);
+}
 
-    const url =
-    URL.createObjectURL(blob);
-
-    const a =
-    document.createElement("a");
-
-    a.href = url;
-
-    a.download = filename;
-
-    document.body.appendChild(a);
-
-    a.click();
-
-    a.remove();
-
-    setTimeout(() => {
-        URL.revokeObjectURL(url);
-    },1000);
-
+function showDownloadMessage(message) {
+    let status = document.getElementById("downloadStatusNotice");
+    if (!status) {
+        status = document.createElement("p");
+        status.id = "downloadStatusNotice";
+        status.style.cssText = "margin:10px auto;padding:10px;color:#D4FF24;text-align:center";
+        (document.querySelector("main") || document.querySelector(".container") || document.body).prepend(status);
+    }
+    status.textContent = message;
 }
 
 </script>
