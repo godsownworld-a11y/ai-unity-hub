@@ -368,6 +368,28 @@ const option = document.getElementById("option");
 const optionLabel = document.getElementById("optionLabel");
 const outputLanguage = document.getElementById("outputLanguage");
 const languageArea = document.getElementById("languageArea");
+const aiCaptionPhotoBox = document.getElementById("aiCaptionPhotoBox");
+const aiCaptionPhoto = document.getElementById("aiCaptionPhoto");
+const aiCaptionPhotoPreview = document.getElementById("aiCaptionPhotoPreview");
+const aiCaptionPhotoStatus = document.getElementById("aiCaptionPhotoStatus");
+let aiCaptionImageToText = null;
+
+aiCaptionPhoto.addEventListener("change", () => {
+    const file = aiCaptionPhoto.files && aiCaptionPhoto.files[0];
+    if (!file) {
+        aiCaptionPhotoPreview.style.display = "none";
+        aiCaptionPhotoStatus.textContent = "Choose a photo or type a description.";
+        return;
+    }
+    if (!file.type.startsWith("image/")) {
+        aiCaptionPhoto.value = "";
+        aiCaptionPhotoStatus.textContent = "Please choose an image file.";
+        return;
+    }
+    aiCaptionPhotoPreview.src = URL.createObjectURL(file);
+    aiCaptionPhotoPreview.style.display = "block";
+    aiCaptionPhotoStatus.textContent = "Photo selected. AI will analyze it when you generate.";
+});
 
 
 /* LOGIN */
@@ -534,6 +556,10 @@ document.querySelectorAll(".tool-tab").forEach(button => {
 
         // Reset output language when changing tools.
         outputLanguage.value = "Auto Detect";
+        aiCaptionPhoto.value = "";
+        aiCaptionPhotoPreview.removeAttribute("src");
+        aiCaptionPhotoPreview.style.display = "none";
+        aiCaptionPhotoStatus.textContent = "Choose a photo or type a description.";
 
     });
 
