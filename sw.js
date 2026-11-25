@@ -1,4 +1,4 @@
-const CACHE_NAME = "ai-unity-hub-shell-v1";
+const CACHE_NAME = "ai-unity-hub-shell-v2";
 const OFFLINE_URL = "./offline.html";
 
 self.addEventListener("install", (event) => {
@@ -21,25 +21,18 @@ self.addEventListener("fetch", (event) => {
   const request = event.request;
   const url = new URL(request.url);
   if (request.method !== "GET" || url.origin !== self.location.origin) return;
-  if (request.mode === "navigate") {
-    event.respondWith((async () => {
-      try {
-        const response = await fetch(request);
-        if (response.ok) (await caches.open(CACHE_NAME)).put(request, response.clone());
-        return response;
-      } catch {
-        return (await caches.match(request)) || (await caches.match(OFFLINE_URL));
-      }
-    })());
-    return;
-  }
+
+  // Network-first for every same-origin file so installed users receive site updates.
   event.respondWith((async () => {
-    const cached = await caches.match(request);
-    if (cached) return cached;
     try {
-      const response = await fetch(request);
-      if (response.ok) (await caches.open(CACHE_NAME)).put(request, response.clone());
+      const response = await fetch(request, { cache: "no-store" });
+      if (response.ok) {
+        const cache = await caches.open(CACHE_NAME);
+        await cache.put(request, response.clone());
+      }
       return response;
-    } catch { return Response.error(); }
+    } catch {
+      return (await caches.match(request)) || (request.mode === "navigate" ? await caches.match(OFFLINE_URL) : Response.error());
+    }
   })());
 });
