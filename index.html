@@ -5,6 +5,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#030407">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/app-icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AI Unity Hub">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>AI Unity Hub — AI & Digital Tools</title>
 
 <style>
@@ -703,5 +708,14 @@ a:focus-visible {
     AI Unity Hub — by CK Izyaan
 </footer>
 
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js")
+        .catch((error) => console.error("PWA service worker registration failed:", error));
+    });
+  }
+</script>
 </body>
 </html>
