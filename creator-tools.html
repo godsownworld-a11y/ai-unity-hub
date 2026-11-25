@@ -131,6 +131,12 @@ What is your topic?
 id="userText"
 placeholder="Example: Kerala travel"
 ></textarea>
+<div id="captionPhotoBox" style="display:none;margin:14px 0">
+<label for="captionPhoto">Upload a photo for AI caption ideas</label>
+<input id="captionPhoto" type="file" accept="image/*" style="display:block;width:100%;margin-top:8px;padding:12px;background:#10141D;border:1px dashed #354154;border-radius:10px;color:#fff">
+<img id="captionPhotoPreview" alt="Selected photo preview" style="display:none;max-width:100%;max-height:260px;object-fit:contain;margin-top:12px;border-radius:12px">
+<p id="captionPhotoStatus" style="font-size:13px;color:#AAB4C2;margin-top:8px"></p>
+</div>
 
 
 <label id="optionLabel">
@@ -269,6 +275,13 @@ document.getElementById("output");
 
 const status =
 document.getElementById("status");
+const captionPhotoBox=document.getElementById("captionPhotoBox");
+const captionPhoto=document.getElementById("captionPhoto");
+const captionPhotoPreview=document.getElementById("captionPhotoPreview");
+const captionPhotoStatus=document.getElementById("captionPhotoStatus");
+let captionImageToText=null;
+captionPhoto.addEventListener("change",()=>{const f=captionPhoto.files[0];if(!f)return;captionPhotoPreview.src=URL.createObjectURL(f);captionPhotoPreview.style.display="block";captionPhotoStatus.textContent="Photo selected.";});
+
 
 
 onAuthStateChanged(auth,(user)=>{
@@ -429,6 +442,8 @@ tools[currentTool];
 
 inputLabel.innerText=
 info.label;
+captionPhotoBox.style.display=currentTool==="Caption Generator"?"block":"none";
+
 
 userText.placeholder=
 info.placeholder;
@@ -469,14 +484,26 @@ generateBtn.addEventListener(
 "click",
 async()=>{
 
-const text=
-userText.value.trim();
+
+let text=userText.value.trim();
+if(currentTool==="Caption Generator" && captionPhoto.files[0]){
+ try{
+  generateBtn.disabled=true;generateBtn.innerText="Analyzing photo...";status.innerText="AI is analyzing your photo...";
+  if(!captionImageToText){const {pipeline,env}=await import("https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1");env.allowLocalModels=false;captionImageToText=await pipeline("image-to-text","Xenova/vit-gpt2-image-captioning");}
+  const imageUrl=URL.createObjectURL(captionPhoto.files[0]);
+  const prediction=await captionImageToText(imageUrl);URL.revokeObjectURL(imageUrl);
+  const description=Array.isArray(prediction)?prediction.map(x=>x.generated_text||"").join(" "):(prediction.generated_text||"");
+  if(!description.trim())throw new Error("Could not describe this photo.");
+  text=(text?text+"\\n\\n":"")+"Photo description: "+description+". Create several engaging, accurate social-media captions and relevant hashtags. Only use details visible in the photo.";
+ }catch(e){output.innerText="Photo analysis failed: "+e.message;status.innerText="Photo analysis failed";generateBtn.disabled=false;generateBtn.innerText="Generate";return;}
+}
+
 
 const selected=
 option.value;
 
 
-if(!text){
+if(!text && !(currentTool==="Caption Generator" && captionPhoto.files[0])){
 
 output.innerText=
 "Please enter something first.";
