@@ -127,11 +127,7 @@ footer{text-align:center;padding:35px 15px;color:#778193;font-size:13px;border-t
                 accept="image/png,image/jpeg,image/webp"
             >
 
-            <img
-                id="removePreview"
-                class="preview"
-                alt="Background removal preview"
-            >
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0"><div><p style="font-size:13px;color:#AAB4C2;margin-bottom:6px">Original image</p><img id="removePreview" class="preview" alt="Original image preview" style="margin:0"></div><div><p style="font-size:13px;color:#AAB4C2;margin-bottom:6px">Background removed preview</p><img id="removeResultPreview" class="preview" alt="Transparent background removal result preview" style="margin:0"></div></div>
 
             <div
                 class="loader"
@@ -650,6 +646,8 @@ const removePreview =
         "removePreview"
     );
 
+const removeResultPreview = document.getElementById("removeResultPreview");
+
 const removeBtn =
     document.getElementById(
         "removeBtn"
@@ -692,7 +690,8 @@ removeInput.addEventListener(
 
 
         removeBlob = null;
-
+        removeResultPreview.removeAttribute("src");
+        removeResultPreview.style.display = "none";
         downloadRemove.disabled = true;
 
         removeBtn.disabled = false;
@@ -770,11 +769,23 @@ removeBtn.addEventListener(
                 );
             }
 
-            removeStatus.textContent =
-                "Analyzing image and creating a clean transparency mask...";
-
-            /* RUN MODEL — the model returns a foreground mask */
-            const result = await remover([file]);
+            removeStatus.textContent = "Preparing a smaller image for faster processing...";
+            /* Resize model input only; keep exported output at original resolution. */
+            const sourceBitmap = await createImageBitmap(file);
+            const originalWidth = sourceBitmap.width;
+            const originalHeight = sourceBitmap.height;
+            const maxModelSide = 1024;
+            const scale = Math.min(1, maxModelSide / Math.max(originalWidth, originalHeight));
+            const modelWidth = Math.max(1, Math.round(originalWidth * scale));
+            const modelHeight = Math.max(1, Math.round(originalHeight * scale));
+            const modelCanvas = document.createElement("canvas");
+            modelCanvas.width = modelWidth;
+            modelCanvas.height = modelHeight;
+            modelCanvas.getContext("2d").drawImage(sourceBitmap, 0, 0, modelWidth, modelHeight);
+            const modelInput = await new Promise((resolve, reject) => modelCanvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Could not prepare image.")), "image/jpeg", 0.88));
+            removeStatus.textContent = "Removing background...";
+            /* Run the model on optimized input. */
+            const result = await remover([modelInput]);
             const maskImage = Array.isArray(result) ? result[0] : result;
 
             if (!maskImage || typeof maskImage.toCanvas !== "function") {
@@ -782,9 +793,8 @@ removeBtn.addEventListener(
             }
 
             /* APPLY THE MASK TO THE ORIGINAL IMAGE'S ALPHA CHANNEL */
-            const sourceBitmap = await createImageBitmap(file);
-            const width = sourceBitmap.width;
-            const height = sourceBitmap.height;
+            const width = originalWidth;
+            const height = originalHeight;
 
             const outputCanvas = document.createElement("canvas");
             outputCanvas.width = width;
@@ -838,13 +848,8 @@ removeBtn.addEventListener(
 
 
             previewReader.onload = () => {
-
-                removePreview.src =
-                    previewReader.result;
-
-                removePreview.style.display =
-                    "block";
-
+                removeResultPreview.src = previewReader.result;
+                removeResultPreview.style.display = "block";
             };
 
 
@@ -930,9 +935,9 @@ resetRemove.addEventListener(
         removeInput.value = "";
 
         removePreview.src = "";
-
-        removePreview.style.display =
-            "none";
+        removePreview.style.display = "none";
+        removeResultPreview.src = "";
+        removeResultPreview.style.display = "none";
 
         removeBtn.disabled =
             true;
