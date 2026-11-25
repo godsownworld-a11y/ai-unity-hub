@@ -595,83 +595,39 @@ tabButtons.forEach(button => {
 ===================================================== */
 
 function downloadBlob(blob, filename, statusElement = null) {
-
-    if (!(blob instanceof Blob)) {
-
-        console.error(
-            "Invalid download object:",
-            blob
-        );
-
-        if (statusElement) {
-            statusElement.textContent =
-                "Download file is not ready.";
-        }
-
+    if (!(blob instanceof Blob) || blob.size <= 0) {
+        if (statusElement) statusElement.textContent = "Download file is not ready.";
         return;
     }
-
-
-    if (blob.size <= 0) {
-
-        if (statusElement) {
-            statusElement.textContent =
-                "Download file is empty.";
-        }
-
-        return;
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.textContent = "Tap here if the download did not start";
+    link.style.cssText = "display:inline-block;margin:8px 0;padding:9px 12px;border:1px solid #2878F5;border-radius:8px;color:#fff;text-decoration:none";
+    let notice = document.getElementById("downloadFallbackNotice");
+    if (!notice) {
+        notice = document.createElement("div");
+        notice.id = "downloadFallbackNotice";
+        notice.style.cssText = "position:relative;margin:12px auto;padding:12px;background:#101827;border:1px solid #2878F5;border-radius:10px;color:#fff;max-width:850px;overflow-wrap:anywhere";
+        (document.querySelector("main") || document.querySelector(".container") || document.body).prepend(notice);
     }
-
-
-    const reader =
-        new FileReader();
-
-
-    reader.onload = () => {
-
-        const link =
-            document.createElement("a");
-
-        link.href =
-            reader.result;
-
-        link.download =
-            filename;
-
-        link.style.display =
-            "none";
-
-        document.body.appendChild(link);
-
+    notice.replaceChildren();
+    const message = document.createElement("p");
+    message.textContent = "Download requested: " + filename + ". Check your browser Downloads list (Android: Files > Downloads; iPhone/iPad: Files > Downloads). If it did not start, use the link below.";
+    notice.append(message, link);
+    if (statusElement) statusElement.textContent = "Download requested. Check Downloads; use the link shown above if needed.";
+    const file = new File([blob], filename, { type: blob.type || "application/octet-stream" });
+    if (navigator.canShare && navigator.share && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: filename }).then(() => {
+            if (statusElement) statusElement.textContent = "Choose Save to Files or another destination in the share menu.";
+        }).catch(error => {
+            if (error.name !== "AbortError" && statusElement) statusElement.textContent = "Download link is ready below.";
+        });
+    } else {
         link.click();
-
-        link.remove();
-
-
-        if (statusElement) {
-
-            statusElement.textContent =
-                "Download completed successfully.";
-
-        }
-
-    };
-
-
-    reader.onerror = () => {
-
-        if (statusElement) {
-
-            statusElement.textContent =
-                "Download failed.";
-
-        }
-
-    };
-
-
-    reader.readAsDataURL(blob);
-
+    }
+    window.setTimeout(() => URL.revokeObjectURL(url), 10 * 60 * 1000);
 }
 
 
