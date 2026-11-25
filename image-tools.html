@@ -28,7 +28,7 @@ nav a:hover,nav a:focus-visible{color:var(--lime)}
 .tool-card h2{font-size:25px;margin-bottom:8px}
 .tool-description{color:var(--muted);font-size:14px;margin-bottom:25px}
 input[type=file]{width:100%;padding:14px;background:#080B11;border:1px dashed #354154;border-radius:10px;color:#AAB4C2;margin-bottom:20px;max-width:100%}
-.preview{display:none;width:100%;max-height:420px;object-fit:contain;background:#080B11;border:1px solid var(--line);border-radius:12px;margin:15px 0}
+.preview{display:none;width:100%;max-height:420px;object-fit:contain;background-color:#fff;background-image:linear-gradient(45deg,#d9dce2 25%,transparent 25%),linear-gradient(-45deg,#d9dce2 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#d9dce2 75%),linear-gradient(-45deg,transparent 75%,#d9dce2 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0;border:1px solid var(--line);border-radius:12px;margin:15px 0}
 button.action{border:1px solid var(--blue);background:var(--blue2);color:#fff;padding:13px 20px;border-radius:9px;font-weight:700;cursor:pointer;margin:5px 5px 5px 0;transition:background .2s,border-color .2s}
 button.action:hover:not(:disabled){background:var(--blue);border-color:var(--blue)}
 button.secondary{background:#121722;color:#DCE3EC;border:1px solid #303B4D}
@@ -801,118 +801,79 @@ removeBtn.addEventListener(
                 "Loading background remover...";
 
 
-            /* LOAD MODEL */
-
+            /* LOAD A GENERAL-PURPOSE FOREGROUND MODEL */
             if (!remover) {
-
-                const {
-                    pipeline,
-                    env
-                } = await import(
+                const { pipeline, env } = await import(
                     "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1"
                 );
 
-
-                env.allowLocalModels =
-                    false;
-
-
-                remover =
-                    await pipeline(
-                        "background-removal",
-                        "Xenova/modnet",
-                        {
-                            dtype: "fp32"
-                        }
-                    );
-
+                env.allowLocalModels = false;
+                remover = await pipeline(
+                    "background-removal",
+                    "onnx-community/BEN2-ONNX"
+                );
             }
-
 
             removeStatus.textContent =
-                "Removing background...";
+                "Analyzing image and creating a clean transparency mask...";
 
+            /* RUN MODEL — the model returns a foreground mask */
+            const result = await remover([file]);
+            const maskImage = Array.isArray(result) ? result[0] : result;
 
-            /* RUN MODEL */
-
-            const result =
-                await remover(file);
-
-
-            console.log(
-                "Background remover result:",
-                result
-            );
-
-
-            const imageResult =
-                Array.isArray(result)
-                    ? result[0]
-                    : result;
-
-
-            if (!imageResult) {
-
-                throw new Error(
-                    "No image returned."
-                );
-
+            if (!maskImage || typeof maskImage.toCanvas !== "function") {
+                throw new Error("The background mask could not be created.");
             }
 
+            /* APPLY THE MASK TO THE ORIGINAL IMAGE'S ALPHA CHANNEL */
+            const sourceBitmap = await createImageBitmap(file);
+            const width = sourceBitmap.width;
+            const height = sourceBitmap.height;
 
-            if (
-                typeof imageResult.toBlob !==
-                "function"
-            ) {
+            const outputCanvas = document.createElement("canvas");
+            outputCanvas.width = width;
+            outputCanvas.height = height;
+            const outputContext = outputCanvas.getContext("2d", {
+                willReadFrequently: true
+            });
 
-                throw new Error(
-                    "RawImage.toBlob() is unavailable."
-                );
+            outputContext.drawImage(sourceBitmap, 0, 0, width, height);
+            sourceBitmap.close?.();
 
+            const originalPixels = outputContext.getImageData(0, 0, width, height);
+
+            const maskCanvas = maskImage.toCanvas();
+            const scaledMaskCanvas = document.createElement("canvas");
+            scaledMaskCanvas.width = width;
+            scaledMaskCanvas.height = height;
+
+            const maskContext = scaledMaskCanvas.getContext("2d", {
+                willReadFrequently: true
+            });
+            maskContext.drawImage(maskCanvas, 0, 0, width, height);
+
+            const maskPixels = maskContext.getImageData(0, 0, width, height);
+            const pixels = originalPixels.data;
+            const mask = maskPixels.data;
+
+            for (let i = 0; i < pixels.length; i += 4) {
+                // Keep the model's soft edge values for smoother hair and object edges.
+                const foreground = mask[i] / 255;
+                pixels[i + 3] = Math.round(pixels[i + 3] * foreground);
             }
 
+            outputContext.putImageData(originalPixels, 0, 0);
 
-            /* CREATE PNG */
+            removeBlob = await new Promise((resolve, reject) => {
+                outputCanvas.toBlob(blob => {
+                    if (blob) resolve(blob);
+                    else reject(new Error("Transparent PNG export failed."));
+                }, "image/png");
+            });
 
-            const generatedBlob =
-                await imageResult.toBlob();
-
-
-            if (!(generatedBlob instanceof Blob)) {
-
-                throw new Error(
-                    "PNG conversion failed."
-                );
-
+            if (!(removeBlob instanceof Blob) || removeBlob.size <= 0) {
+                throw new Error("The transparent PNG could not be generated.");
             }
-
-
-            if (generatedBlob.size <= 0) {
-
-                throw new Error(
-                    "Generated PNG is empty."
-                );
-
-            }
-
-
-            removeBlob =
-                new Blob(
-                    [generatedBlob],
-                    {
-                        type:"image/png"
-                    }
-                );
-
-
-            if (removeBlob.size <= 0) {
-
-                throw new Error(
-                    "Final PNG is empty."
-                );
-
-            }
-
 
             /* PREVIEW RESULT */
 
