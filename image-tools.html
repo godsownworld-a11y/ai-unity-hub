@@ -779,14 +779,14 @@ removeBtn.addEventListener(
             const originalWidth = sourceBitmap.width;
             const originalHeight = sourceBitmap.height;
 
-            // Keep memory use predictable on laptops with limited RAM.
+            // Limit the working image size to avoid memory spikes on phones and low-RAM laptops.
             const maxOutputSide = 2048;
             const outputScale = Math.min(1, maxOutputSide / Math.max(originalWidth, originalHeight));
             const width = Math.max(1, Math.round(originalWidth * outputScale));
             const height = Math.max(1, Math.round(originalHeight * outputScale));
 
-            // The AI model only needs a smaller working copy for segmentation.
-            const maxModelSide = 768;
+            // Give the model enough detail for cleaner edges while keeping inference manageable.
+            const maxModelSide = 1024;
             const scale = Math.min(1, maxModelSide / Math.max(originalWidth, originalHeight));
             const modelWidth = Math.max(1, Math.round(originalWidth * scale));
             const modelHeight = Math.max(1, Math.round(originalHeight * scale));
@@ -794,58 +794,27 @@ removeBtn.addEventListener(
             modelCanvas.width = modelWidth;
             modelCanvas.height = modelHeight;
             modelCanvas.getContext("2d").drawImage(sourceBitmap, 0, 0, modelWidth, modelHeight);
-            const modelInput = await new Promise((resolve, reject) => modelCanvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Could not prepare image.")), "image/jpeg", 0.88));
+            const modelInput = await new Promise((resolve, reject) => modelCanvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Could not prepare image.")), "image/jpeg", 0.95));
             removeStatus.textContent = "Removing background...";
-            /* Run the model on optimized input. */
+            /* The Transformers.js background-removal pipeline returns an RGBA image.
+               Its alpha channel is already the predicted transparency mask. */
             const result = await remover([modelInput]);
-            const maskImage = Array.isArray(result) ? result[0] : result;
+            const outputImage = Array.isArray(result) ? result[0] : result;
 
-            if (!maskImage || typeof maskImage.toCanvas !== "function") {
-                throw new Error("The background mask could not be created.");
+            if (!outputImage || typeof outputImage.toCanvas !== "function") {
+                throw new Error("The transparent result could not be created.");
             }
 
-            /* APPLY THE MASK TO A MEMORY-SAFE OUTPUT IMAGE */
+            // Use the model's complete RGBA output directly. Do not reinterpret its red
+            // colour channel as a mask; doing so damages colours and edge quality.
             const outputCanvas = document.createElement("canvas");
             outputCanvas.width = width;
             outputCanvas.height = height;
-            const outputContext = outputCanvas.getContext("2d", {
-                willReadFrequently: true
-            });
-
-            outputContext.drawImage(sourceBitmap, 0, 0, width, height);
+            const outputContext = outputCanvas.getContext("2d");
+            if (!outputContext) throw new Error("Canvas is unavailable in this browser.");
+            const modelOutputCanvas = outputImage.toCanvas();
+            outputContext.drawImage(modelOutputCanvas, 0, 0, width, height);
             sourceBitmap.close?.();
-
-            const originalPixels = outputContext.getImageData(0, 0, width, height);
-
-            const maskCanvas = maskImage.toCanvas();
-            const scaledMaskCanvas = document.createElement("canvas");
-            scaledMaskCanvas.width = width;
-            scaledMaskCanvas.height = height;
-
-            const maskContext = scaledMaskCanvas.getContext("2d", {
-                willReadFrequently: true
-            });
-            maskContext.drawImage(maskCanvas, 0, 0, width, height);
-
-            const maskPixels = maskContext.getImageData(0, 0, width, height);
-            const pixels = originalPixels.data;
-            const mask = maskPixels.data;
-
-            // Process in small batches and yield to the browser between batches.
-            // This prevents long pixel loops from freezing the whole tab.
-            const batchSize = 250000;
-            for (let start = 0; start < pixels.length; start += batchSize * 4) {
-                const end = Math.min(pixels.length, start + batchSize * 4);
-                for (let i = start; i < end; i += 4) {
-                    // Preserve soft mask edges for smoother hair and object outlines.
-                    pixels[i + 3] = Math.round(pixels[i + 3] * (mask[i] / 255));
-                }
-                if (end < pixels.length) {
-                    await new Promise(resolve => requestAnimationFrame(resolve));
-                }
-            }
-
-            outputContext.putImageData(originalPixels, 0, 0);
 
             removeBlob = await new Promise((resolve, reject) => {
                 outputCanvas.toBlob(blob => {
