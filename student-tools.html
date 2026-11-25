@@ -424,7 +424,7 @@ function clearResult() {
 </script>
 <script type="module">
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA4aQj8bxLOmIdxJai3LE6T1iV8BF0zJc",
@@ -438,22 +438,21 @@ const firebaseConfig = {
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
-let currentUser = null;
 
-onAuthStateChanged(auth, user => {
-    currentUser = user;
-    if (!user) window.location.replace("login.html");
-});
+// Wait until Firebase has restored the saved login before checking the session.
+await auth.authStateReady();
 
 window.aiUnityGetIdToken = async function () {
-    let attempts = 0;
-    while (!currentUser && attempts < 30) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        attempts++;
+    const user = auth.currentUser;
+    if (!user) {
+        throw new Error("Your login session was not found. Please sign in again.");
     }
-    if (!currentUser) throw new Error("Login session not found. Please sign in again.");
-    return await currentUser.getIdToken(true);
+    return await user.getIdToken();
 };
+
+if (!auth.currentUser) {
+    window.location.replace("login.html");
+}
 </script>
 </body>
 </html>
