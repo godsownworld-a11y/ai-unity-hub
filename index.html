@@ -564,9 +564,9 @@ a:focus-visible {
     }
 }
 
-/* MOBILE APP INTRO */
+/* UNIVERSAL APP INTRO — MOBILE + DESKTOP */
 #app-splash{display:none}
-@media(max-width:700px){
+@media(min-width:0px){
   #app-splash{
     position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
     overflow:hidden;background:radial-gradient(ellipse at 50% 42%,rgba(21,88,201,.22),transparent 48%),#030407;
